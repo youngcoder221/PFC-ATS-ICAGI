@@ -9,7 +9,7 @@ const roles = [
     key: 'candidat',
     label: 'Candidat',
     icon: Users,
-    color: 'from-indigo-600 to-indigo-800',
+    color: 'from-indigo-550 to-indigo-800',
     borderColor: 'border-indigo-500',
     textColor: 'text-indigo-600',
     placeholder: 'candidat@email.com',
