@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/immutability */
+
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -15,6 +15,7 @@ export default function Admin() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability
     chargerDonnees()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
