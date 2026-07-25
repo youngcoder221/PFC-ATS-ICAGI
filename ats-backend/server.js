@@ -21,6 +21,7 @@ app.use(express.urlencoded({ extended: true }))
  app.use('/api/offres',       require('./routes/offreRoutes'))
  app.use('/api/cv',           require('./routes/cvRoutes'))
 // app.use('/api/candidatures', require('./routes/candidatureRoutes'))
+app.use('/api/admin',  require('./routes/adminRoutes'))
 
 // Route de test pour vérifier que le serveur tourne
 app.get('/', (req, res) => {

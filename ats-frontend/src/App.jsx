@@ -5,6 +5,7 @@ import Register           from './pages/Register'
 import DashboardRecruteur from './pages/DashboardRecruteur'
 import DashboardCandidat  from './pages/DashboardCandidat'
 import Ranking            from './pages/Ranking'
+// eslint-disable-next-line no-unused-vars
 import Admin              from './pages/Admin'  
 
 // Route protégée selon le rôle
