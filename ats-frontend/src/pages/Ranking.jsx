@@ -158,7 +158,7 @@ export default function Ranking() {
                     value={candidature.statut}
                     onChange={async (e) => {
                       try {
-                        await api.put(`/candidatures/${candidature._id}/statut`, { statut: e.target.value })
+                        await api.put(`/cv/candidatures/${candidature._id}/statut`, { statut: e.target.value })
                         chargerRanking()
                       } catch (err) {
                         console.error(err)

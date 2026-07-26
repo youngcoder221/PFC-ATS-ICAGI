@@ -13,4 +13,21 @@ router.get('/ranking/:offreId', protect, autoriser('recruteur', 'admin'), getRan
 // Mes candidatures (candidat)
 router.get('/mes-candidatures', protect, autoriser('candidat'), mesCandidatures)
 
+// Changer le status d'une candidature
+router.put('/candidatures/:id/statut', protect, autoriser('recruteur', 'admin'), async (req, res) => {
+  try {
+    const candidature = await Candidature.findByIdAndUpdate(
+      req.params.id,
+      { statut: req.body.statut },
+      { new: true }
+    )
+    if (!candidature) {
+      return res.status(404).json({ message: '❌ Candidature introuvable' })
+    }
+    res.json({ message: '✅ Statut mis à jour', candidature })
+  } catch (err) {
+    res.status(500).json({ message: '❌ Erreur', erreur: err.message })
+  }
+})
+
 module.exports = router
