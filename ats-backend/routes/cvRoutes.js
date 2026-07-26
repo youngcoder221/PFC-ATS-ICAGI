@@ -1,8 +1,9 @@
-const express  = require('express')
-const router   = express.Router()
+const express     = require('express')
+const router      = express.Router()
 const { uploadCV, getRanking, mesCandidatures } = require('../controllers/cvController')
 const { protect, autoriser } = require('../middleware/authMiddleware')
-const upload   = require('../middleware/uploadMiddleware')
+const upload      = require('../middleware/uploadMiddleware')
+const Candidature = require('../models/Candidature')
 
 // Candidat uploade son CV et postule
 router.post('/upload', protect, autoriser('candidat'), upload.single('cv'), uploadCV)
@@ -13,7 +14,7 @@ router.get('/ranking/:offreId', protect, autoriser('recruteur', 'admin'), getRan
 // Mes candidatures (candidat)
 router.get('/mes-candidatures', protect, autoriser('candidat'), mesCandidatures)
 
-// Changer le status d'une candidature
+// Changer le statut d'une candidature (recruteur/admin)
 router.put('/candidatures/:id/statut', protect, autoriser('recruteur', 'admin'), async (req, res) => {
   try {
     const candidature = await Candidature.findByIdAndUpdate(
