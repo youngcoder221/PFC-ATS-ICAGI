@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/immutability */
+import { useSearchParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Briefcase, Upload, FileText, CheckCircle, Clock, XCircle, ChevronRight, Search } from 'lucide-react'
@@ -6,11 +7,14 @@ import Sidebar from '../components/layout/Sidebar'
 import api from '../services/api'
 
 export default function DashboardCandidat() {
+  // eslint-disable-next-line no-unused-vars
   const navigate                        = useNavigate()
   const [offres, setOffres]             = useState([])
   const [candidatures, setCandidatures] = useState([])
   const [loading, setLoading]           = useState(true)
-  const [onglet, setOnglet]             = useState('offres')
+  const [searchParams, setSearchParams] = useSearchParams()
+const onglet = searchParams.get('tab') || 'offres'
+const setOnglet = (tab) => setSearchParams({ tab })
   const [uploadForm, setUploadForm]     = useState({ offreId: '', diplome: '', experience: 0 })
   const [fichier, setFichier]           = useState(null)
   const [uploading, setUploading]       = useState(false)

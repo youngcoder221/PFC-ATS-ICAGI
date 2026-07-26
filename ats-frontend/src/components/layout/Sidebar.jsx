@@ -1,31 +1,47 @@
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import {
   LayoutDashboard, Briefcase, FileText,
-  Users, LogOut, ChevronRight
+  Users, LogOut, ChevronRight, Trophy
 } from 'lucide-react'
 
 const menuRecruteur = [
-  { label: 'Dashboard',    icon: LayoutDashboard, path: '/recruteur' },
-  { label: 'Mes offres',   icon: Briefcase,        path: '/recruteur' },
+  { label: 'Dashboard',   icon: LayoutDashboard, path: '/recruteur', tab: '' },
+  { label: 'Mes offres',  icon: Briefcase,        path: '/recruteur', tab: 'offres' },
 ]
 
 const menuCandidat = [
-  { label: 'Dashboard',      icon: LayoutDashboard, path: '/candidat' },
-  { label: 'Offres',         icon: Briefcase,        path: '/candidat' },
-  { label: 'Mes candidatures', icon: FileText,       path: '/candidat' },
+  { label: 'Dashboard',        icon: LayoutDashboard, path: '/candidat', tab: ''             },
+  { label: 'Offres',           icon: Briefcase,        path: '/candidat', tab: 'offres'       },
+  { label: 'Postuler',         icon: Trophy,           path: '/candidat', tab: 'postuler'     },
+  { label: 'Mes candidatures', icon: FileText,         path: '/candidat', tab: 'candidatures' },
 ]
 
 export default function Sidebar() {
-  const { user, logout } = useAuth()
-  const navigate         = useNavigate()
-  const location         = useLocation()
+  const { user, logout }       = useAuth()
+  const navigate               = useNavigate()
+  const location               = useLocation()
+  const [searchParams]         = useSearchParams()
+  const tabActif               = searchParams.get('tab') || ''
 
   const menu = user?.role === 'recruteur' ? menuRecruteur : menuCandidat
 
   const handleLogout = () => {
     logout()
     navigate('/login')
+  }
+
+  const isActive = (item) => {
+    if (location.pathname !== item.path) return false
+    return tabActif === item.tab
+  }
+
+  const handleClick = (item) => {
+    if (item.tab) {
+      navigate(`${item.path}?tab=${item.tab}`)
+    } else {
+      navigate(item.path)
+    }
   }
 
   return (
@@ -47,13 +63,13 @@ export default function Sidebar() {
       {/* Menu */}
       <nav className="flex-1 p-4 space-y-1">
         {menu.map((item) => {
-          const Icon = item.icon
-          const active = location.pathname === item.path
+          const Icon   = item.icon
+          const active = isActive(item)
           return (
             <button
               key={item.label}
-              onClick={() => navigate(item.path)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all group ${
+              onClick={() => handleClick(item)}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
                 active
                   ? 'bg-indigo-600 text-white'
                   : 'text-gray-400 hover:bg-gray-800 hover:text-white'
@@ -70,7 +86,7 @@ export default function Sidebar() {
       {/* Profil + Déconnexion */}
       <div className="p-4 border-t border-gray-800">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center text-white text-xs font-bold">
+          <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-700 rounded-full flex items-center justify-center text-white text-xs font-bold">
             {user?.prenom?.[0]}{user?.nom?.[0]}
           </div>
           <div className="flex-1 min-w-0">
