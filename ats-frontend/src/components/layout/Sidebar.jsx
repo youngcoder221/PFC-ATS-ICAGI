@@ -41,9 +41,10 @@ export default function Sidebar() {
   }
 
   const isActive = (item) => {
-    if (location.pathname !== item.path) return false
-    return tabActif === item.tab
-  }
+  if (location.pathname !== item.path) return false
+  if (item.tab === '' && (tabActif === '' || tabActif === null)) return true
+  return tabActif === item.tab
+}
 
   const handleClick = (item) => {
     if (item.tab) {

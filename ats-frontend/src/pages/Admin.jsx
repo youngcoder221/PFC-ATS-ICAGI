@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Users, Briefcase, FileText, Shield, Trash2 } from 'lucide-react'
 import Layout from '../components/layout/Layout'
+import { useSearchParams } from 'react-router-dom'
 import api from '../services/api'
 
 export default function Admin() {
-  const [onglet, setOnglet]       = useState('stats')
+const [searchParams, setSearchParams] = useSearchParams()
+const onglet                          = searchParams.get('tab') || 'stats'
+const setOnglet                       = (tab) => setSearchParams({ tab })
   const [statsData, setStatsData] = useState({ totalUsers: 0, totalOffres: 0, totalCandidatures: 0 })
   const [users, setUsers]         = useState([])
   const [offres, setOffres]       = useState([])

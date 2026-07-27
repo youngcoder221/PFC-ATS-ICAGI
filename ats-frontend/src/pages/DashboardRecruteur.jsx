@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Plus, X, Briefcase, Users, ChevronRight, Clock } from 'lucide-react'
 import Layout from '../components/layout/Layout'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import api from '../services/api'
 
 export default function DashboardRecruteur() {
@@ -13,6 +14,8 @@ export default function DashboardRecruteur() {
     titre: '', description: '',
     competences: '', niveauRequis: 'Licence', typeContrat: 'Stage'
   })
+  const [searchParams] = useSearchParams()
+  const tabActif       = searchParams.get('tab') || ''
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/immutability
