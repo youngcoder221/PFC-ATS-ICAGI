@@ -2,8 +2,16 @@ import { useNavigate, useLocation, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import {
   LayoutDashboard, Briefcase, FileText,
-  Users, LogOut, ChevronRight, Trophy
+  Users, LogOut, ChevronRight, Trophy,Shield
 } from 'lucide-react'
+
+const menuAdmin = [
+  { label: 'Dashboard',      icon: LayoutDashboard, path: '/admin', tab: ''             },
+  { label: 'Statistiques',   icon: FileText,         path: '/admin', tab: 'stats'        },
+  { label: 'Offres',         icon: Briefcase,        path: '/admin', tab: 'offres'       },
+  { label: 'Utilisateurs',   icon: Users,            path: '/admin', tab: 'utilisateurs' },
+  { label: 'Système',        icon: Shield,           path: '/admin', tab: 'system'       },
+]
 
 const menuRecruteur = [
   { label: 'Dashboard',   icon: LayoutDashboard, path: '/recruteur', tab: '' },
@@ -24,7 +32,8 @@ export default function Sidebar() {
   const [searchParams]         = useSearchParams()
   const tabActif               = searchParams.get('tab') || ''
 
-  const menu = user?.role === 'recruteur' ? menuRecruteur : menuCandidat
+    const menu = user?.role === 'recruteur' ? menuRecruteur :
+                 user?.role === 'admin'     ? menuAdmin     : menuCandidat
 
   const handleLogout = () => {
     logout()
