@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Plus, X, Briefcase, Users, ChevronRight, Clock } from 'lucide-react'
 import Layout from '../components/layout/Layout'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import api from '../services/api'
 
 export default function DashboardRecruteur() {
