@@ -9,7 +9,7 @@ export default function DashboardCandidat() {
   // eslint-disable-next-line no-unused-vars
   const navigate                        = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
-  const onglet                          = searchParams.get('tab') || 'offres'
+  const onglet                          = searchParams.get('tab') || ''
   const setOnglet                       = (tab) => setSearchParams({ tab })
 
   const [offres, setOffres]             = useState([])
@@ -100,6 +100,7 @@ export default function DashboardCandidat() {
   }
 
   const onglets = [
+    { key: '',             label: 'Dashboard',        icon: LayoutDashboard, count: null              },
     { key: 'offres',       label: 'Offres',           icon: Briefcase, count: offres.length       },
     { key: 'postuler',     label: 'Postuler',          icon: Upload,    count: null                },
     { key: 'candidatures', label: 'Mes candidatures',  icon: FileText,  count: candidatures.length },
