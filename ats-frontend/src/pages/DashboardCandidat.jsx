@@ -150,6 +150,148 @@ export default function DashboardCandidat() {
         })}
       </div>
 
+      {/* ── DASHBOARD (page d'accueil) ── */}
+{onglet === '' && (
+  <div>
+    {/* Bienvenue */}
+    <div className="bg-gradient-to-r from-indigo-900/40 to-purple-900/40 border border-indigo-700/50 rounded-2xl p-6 mb-6">
+      <h2 className="text-xl font-bold text-white mb-1">
+        Bienvenue sur ATS 👋
+      </h2>
+      <p className="text-gray-400 text-sm">
+        Trouvez votre prochaine opportunité et suivez vos candidatures en temps réel.
+      </p>
+      <button
+        onClick={() => setOnglet('offres')}
+        className="mt-4 flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all"
+      >
+        <Briefcase className="w-4 h-4" />
+        Voir les offres disponibles
+      </button>
+    </div>
+
+    {/* Stats */}
+    <div className="grid grid-cols-3 gap-4 mb-6">
+      {[
+        { label: 'Offres disponibles', value: offres.length,                                           color: 'text-indigo-400', bg: 'bg-indigo-900/20 border-indigo-700' },
+        { label: 'Mes candidatures',   value: candidatures.length,                                     color: 'text-teal-400',   bg: 'bg-teal-900/20 border-teal-700'     },
+        { label: 'Profil retenu',      value: candidatures.filter(c => c.statut === 'retenu').length,  color: 'text-green-400',  bg: 'bg-green-900/20 border-green-700'   },
+      ].map((s, i) => (
+        <div key={i} className={`bg-gray-900 border rounded-xl p-5 ${s.bg}`}>
+          <p className={`text-3xl font-bold ${s.color}`}>{s.value}</p>
+          <p className="text-gray-500 text-xs mt-1">{s.label}</p>
+        </div>
+      ))}
+    </div>
+
+    <div className="grid grid-cols-3 gap-6">
+
+      {/* Dernières candidatures */}
+      <div className="col-span-2 bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-800 flex items-center justify-between">
+          <h3 className="text-white font-semibold">Mes dernières candidatures</h3>
+          <button
+            onClick={() => setOnglet('candidatures')}
+            className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1"
+          >
+            Voir tout <ChevronRight className="w-3 h-3" />
+          </button>
+        </div>
+
+        {candidatures.length === 0 ? (
+          <div className="text-center py-10">
+            <FileText className="w-10 h-10 text-gray-700 mx-auto mb-2" />
+            <p className="text-gray-500 text-sm">Aucune candidature</p>
+            <button
+              onClick={() => setOnglet('offres')}
+              className="mt-3 text-xs text-indigo-400 hover:underline"
+            >
+              Parcourir les offres
+            </button>
+          </div>
+        ) : (
+          <div className="divide-y divide-gray-800">
+            {candidatures.slice(0, 3).map(c => {
+              const statut = statutConfig[c.statut] || statutConfig['en_attente']
+              const SIcon  = statut.icon
+              return (
+                <div key={c._id} className="px-6 py-4 flex items-center justify-between hover:bg-gray-800/50 transition-all">
+                  <div className="flex-1">
+                    <p className="text-white text-sm font-medium">{c.offreId?.titre || 'Offre supprimée'}</p>
+                    <p className="text-gray-500 text-xs mt-0.5">
+                      {new Date(c.createdAt).toLocaleDateString('fr-FR')}
+                    </p>
+                    <div className="mt-1.5 flex items-center gap-2">
+                      <div className="w-20 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full rounded-full ${scoreBar(c.score)}`}
+                          style={{ width: `${c.score}%` }}
+                        />
+                      </div>
+                      <span className={`text-xs font-bold ${scoreColor(c.score)}`}>{c.score}/100</span>
+                    </div>
+                  </div>
+                  <div className={`flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border ${statut.bg} ${statut.color}`}>
+                    <SIcon className="w-3 h-3" />
+                    {statut.label}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Actions rapides */}
+      <div className="space-y-4">
+        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
+          <h3 className="text-white font-semibold mb-4">Actions rapides</h3>
+          <div className="space-y-2">
+            {[
+              { label: 'Voir les offres',       icon: Briefcase, action: () => setOnglet('offres'),       color: 'text-indigo-400' },
+              { label: 'Postuler',              icon: Upload,    action: () => setOnglet('postuler'),     color: 'text-teal-400'   },
+              { label: 'Mes candidatures',      icon: FileText,  action: () => setOnglet('candidatures'), color: 'text-amber-400'  },
+            ].map((a, i) => {
+              const Icon = a.icon
+              return (
+                <button
+                  key={i}
+                  onClick={a.action}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition-all"
+                >
+                  <Icon className={`w-4 h-4 ${a.color}`} />
+                  {a.label}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Offres récentes */}
+        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
+          <h3 className="text-white font-semibold mb-4">Offres récentes</h3>
+          <div className="space-y-2">
+            {offres.slice(0, 3).map((o, i) => (
+              <div
+                key={i}
+                onClick={() => { setUploadForm({...uploadForm, offreId: o._id}); setOnglet('postuler') }}
+                className="flex items-center gap-2 cursor-pointer hover:bg-gray-800 rounded-lg p-2 transition-all"
+              >
+                <div className="w-1.5 h-1.5 rounded-full bg-teal-500 flex-shrink-0" />
+                <p className="text-gray-400 text-xs truncate hover:text-white">{o.titre}</p>
+              </div>
+            ))}
+            {offres.length === 0 && (
+              <p className="text-gray-600 text-xs">Aucune offre disponible</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+)}
+
       {/* ── OFFRES ── */}
       {onglet === 'offres' && (
         <div>
