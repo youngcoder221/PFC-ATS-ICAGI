@@ -17,6 +17,7 @@ export default function DashboardRecruteur() {
   })
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability
     chargerOffres()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
