@@ -5,6 +5,7 @@ const {
   modifierOffre, supprimerOffre, mesOffres
 } = require('../controllers/offreController')
 const { protect, autoriser } = require('../middleware/authMiddleware')
+const Offre = require('../models/Offre')
 
 // Routes publiques
 router.get('/',     getOffres)
