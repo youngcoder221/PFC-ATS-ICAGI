@@ -178,12 +178,30 @@ export default function DashboardRecruteur() {
                         ))}
                       </div>
                     </div>
-                    <button
-                      onClick={() => navigate(`/ranking/${offre._id}`)}
-                      className="ml-4 flex items-center gap-1 text-sm text-indigo-400 hover:text-indigo-300 transition-all flex-shrink-0"
-                    >
-                      Voir candidats <ChevronRight className="w-4 h-4" />
-                    </button>
+                   <div className="ml-4 flex items-center gap-2 flex-shrink-0">
+  {/* Bouton fermer/ouvrir */}
+  <button
+    onClick={async () => {
+      await api.patch(`/offres/${offre._id}/statut`)
+      chargerOffres()
+    }}
+    className={`text-xs px-3 py-1.5 rounded-lg border transition-all ${
+      offre.statut === 'ouverte'
+        ? 'border-red-700 text-red-400 hover:bg-red-900/20'
+        : 'border-green-700 text-green-400 hover:bg-green-900/20'
+    }`}
+  >
+    {offre.statut === 'ouverte' ? 'Fermer' : 'Rouvrir'}
+  </button>
+
+  {/* Bouton voir candidats */}
+  <button
+    onClick={() => navigate(`/ranking/${offre._id}`)}
+    className="flex items-center gap-1 text-sm text-indigo-400 hover:text-indigo-300 transition-all"
+  >
+    Voir candidats <ChevronRight className="w-4 h-4" />
+  </button>
+</div>
                   </div>
                 </div>
               ))}
