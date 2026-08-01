@@ -4,62 +4,16 @@ import { Plus, X, Briefcase, Users, ChevronRight, Clock, TrendingUp, XCircle } f
 import Layout from '../components/layout/Layout'
 import api from '../services/api'
 
-export default function DashboardRecruteur() {
-  const navigate                = useNavigate()
-  const [searchParams]          = useSearchParams()
-  const tabActif                = searchParams.get('tab') || ''
-  const [offres, setOffres]     = useState([])
-  const [loading, setLoading]   = useState(true)
-  const [showForm, setShowForm] = useState(false)
-  const [form, setForm]         = useState({
-    titre: '', description: '',
-    competences: '', niveauRequis: 'Licence', typeContrat: 'Stage'
-  })
+const typeColors = {
+  'Stage':     'bg-blue-900/30 text-blue-400 border-blue-700',
+  'CDI':       'bg-green-900/30 text-green-400 border-green-700',
+  'CDD':       'bg-amber-900/30 text-amber-400 border-amber-700',
+  'Freelance': 'bg-purple-900/30 text-purple-400 border-purple-700',
+}
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/immutability
-    chargerOffres()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  const chargerOffres = async () => {
-    try {
-      const res = await api.get('/offres/mes/offres')
-      setOffres(res.data)
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    try {
-      await api.post('/offres', {
-        ...form,
-        competences: form.competences.split(',').map(c => c.trim())
-      })
-      setShowForm(false)
-      setForm({ titre: '', description: '', competences: '', niveauRequis: 'Licence', typeContrat: 'Stage' })
-      chargerOffres()
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-  const typeColors = {
-    'Stage':     'bg-blue-900/30 text-blue-400 border-blue-700',
-    'CDI':       'bg-green-900/30 text-green-400 border-green-700',
-    'CDD':       'bg-amber-900/30 text-amber-400 border-amber-700',
-    'Freelance': 'bg-purple-900/30 text-purple-400 border-purple-700',
-  }
-
-  const offresOuvertes  = offres.filter(o => o.statut === 'ouverte').length
-  const offresFermees   = offres.filter(o => o.statut === 'fermée').length
-  const dernieresOffres = offres.slice(0, 3)
-
-  // ── Formulaire partagé ──
-  const FormulaireOffre = () => (
+// ── Formulaire en dehors du composant ──
+function FormulaireOffre({ form, setForm, handleSubmit }) {
+  return (
     <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 mb-6">
       <h3 className="text-white font-semibold mb-4">Créer une nouvelle offre</h3>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -123,6 +77,54 @@ export default function DashboardRecruteur() {
       </form>
     </div>
   )
+}
+
+export default function DashboardRecruteur() {
+  const navigate                = useNavigate()
+  const [searchParams]          = useSearchParams()
+  const tabActif                = searchParams.get('tab') || ''
+  const [offres, setOffres]     = useState([])
+  const [loading, setLoading]   = useState(true)
+  const [showForm, setShowForm] = useState(false)
+  const [form, setForm]         = useState({
+    titre: '', description: '',
+    competences: '', niveauRequis: 'Licence', typeContrat: 'Stage'
+  })
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability
+    chargerOffres()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const chargerOffres = async () => {
+    try {
+      const res = await api.get('/offres/mes/offres')
+      setOffres(res.data)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      await api.post('/offres', {
+        ...form,
+        competences: form.competences.split(',').map(c => c.trim())
+      })
+      setShowForm(false)
+      setForm({ titre: '', description: '', competences: '', niveauRequis: 'Licence', typeContrat: 'Stage' })
+      chargerOffres()
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const offresOuvertes  = offres.filter(o => o.statut === 'ouverte').length
+  const offresFermees   = offres.filter(o => o.statut === 'fermée').length
+  const dernieresOffres = offres.slice(0, 3)
 
   return (
     <Layout>
@@ -144,7 +146,13 @@ export default function DashboardRecruteur() {
             </button>
           </div>
 
-          {showForm && <FormulaireOffre />}
+          {showForm && (
+            <FormulaireOffre
+              form={form}
+              setForm={setForm}
+              handleSubmit={handleSubmit}
+            />
+          )}
 
           {loading ? (
             <div className="text-center py-16 text-gray-500">Chargement...</div>
@@ -179,30 +187,27 @@ export default function DashboardRecruteur() {
                         ))}
                       </div>
                     </div>
-                   <div className="ml-4 flex items-center gap-2 flex-shrink-0">
-  {/* Bouton fermer/ouvrir */}
-  <button
-    onClick={async () => {
-      await api.patch(`/offres/${offre._id}/statut`)
-      chargerOffres()
-    }}
-    className={`text-xs px-3 py-1.5 rounded-lg border transition-all ${
-      offre.statut === 'ouverte'
-        ? 'border-red-700 text-red-400 hover:bg-red-900/20'
-        : 'border-green-700 text-green-400 hover:bg-green-900/20'
-    }`}
-  >
-    {offre.statut === 'ouverte' ? 'Fermer' : 'Rouvrir'}
-  </button>
-
-  {/* Bouton voir candidats */}
-  <button
-    onClick={() => navigate(`/ranking/${offre._id}`)}
-    className="flex items-center gap-1 text-sm text-indigo-400 hover:text-indigo-300 transition-all"
-  >
-    Voir candidats <ChevronRight className="w-4 h-4" />
-  </button>
-</div>
+                    <div className="ml-4 flex items-center gap-2 flex-shrink-0">
+                      <button
+                        onClick={async () => {
+                          await api.patch(`/offres/${offre._id}/statut`)
+                          chargerOffres()
+                        }}
+                        className={`text-xs px-3 py-1.5 rounded-lg border transition-all ${
+                          offre.statut === 'ouverte'
+                            ? 'border-red-700 text-red-400 hover:bg-red-900/20'
+                            : 'border-green-700 text-green-400 hover:bg-green-900/20'
+                        }`}
+                      >
+                        {offre.statut === 'ouverte' ? 'Fermer' : 'Rouvrir'}
+                      </button>
+                      <button
+                        onClick={() => navigate(`/ranking/${offre._id}`)}
+                        className="flex items-center gap-1 text-sm text-indigo-400 hover:text-indigo-300 transition-all"
+                      >
+                        Voir candidats <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -214,7 +219,6 @@ export default function DashboardRecruteur() {
       {/* ══ VUE : DASHBOARD (défaut) ══ */}
       {tabActif === '' && (
         <div>
-          {/* Header */}
           <div className="flex justify-between items-center mb-8">
             <div>
               <h1 className="text-2xl font-bold text-white">Tableau de bord</h1>
@@ -229,15 +233,21 @@ export default function DashboardRecruteur() {
             </button>
           </div>
 
-          {showForm && <FormulaireOffre />}
+          {showForm && (
+            <FormulaireOffre
+              form={form}
+              setForm={setForm}
+              handleSubmit={handleSubmit}
+            />
+          )}
 
           {/* Stats */}
           <div className="grid grid-cols-4 gap-4 mb-8">
             {[
-              { label: 'Total offres',   value: offres.length,  icon: Briefcase,  color: 'text-indigo-400', bg: 'bg-indigo-900/20 border-indigo-700' },
-              { label: 'Offres actives', value: offresOuvertes, icon: TrendingUp, color: 'text-green-400',  bg: 'bg-green-900/20 border-green-700'   },
-              { label: 'Offres fermées', value: offresFermees,  icon: XCircle,    color: 'text-red-400',    bg: 'bg-red-900/20 border-red-700'       },
-              { label: 'Types de contrats', value: [...new Set(offres.map(o => o.typeContrat))].length,            icon: Clock,      color: 'text-amber-400',  bg: 'bg-amber-900/20 border-amber-700'   },
+              { label: 'Total offres',      value: offres.length,                                        icon: Briefcase,  color: 'text-indigo-400', bg: 'bg-indigo-900/20 border-indigo-700' },
+              { label: 'Offres actives',    value: offresOuvertes,                                       icon: TrendingUp, color: 'text-green-400',  bg: 'bg-green-900/20 border-green-700'   },
+              { label: 'Offres fermées',    value: offresFermees,                                        icon: XCircle,    color: 'text-red-400',    bg: 'bg-red-900/20 border-red-700'       },
+              { label: 'Types contrats',    value: [...new Set(offres.map(o => o.typeContrat))].length,  icon: Clock,      color: 'text-amber-400',  bg: 'bg-amber-900/20 border-amber-700'   },
             ].map((s, i) => {
               const Icon = s.icon
               return (
@@ -255,8 +265,6 @@ export default function DashboardRecruteur() {
           </div>
 
           <div className="grid grid-cols-3 gap-6">
-
-            {/* Dernières offres */}
             <div className="col-span-2 bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
               <div className="px-6 py-4 border-b border-gray-800 flex items-center justify-between">
                 <h2 className="text-white font-semibold">Dernières offres</h2>
@@ -267,17 +275,13 @@ export default function DashboardRecruteur() {
                   Voir tout <ChevronRight className="w-3 h-3" />
                 </button>
               </div>
-
               {loading ? (
                 <p className="text-center text-gray-500 py-12">Chargement...</p>
               ) : dernieresOffres.length === 0 ? (
                 <div className="text-center py-12">
                   <Briefcase className="w-10 h-10 text-gray-700 mx-auto mb-2" />
                   <p className="text-gray-500 text-sm">Aucune offre publiée</p>
-                  <button
-                    onClick={() => setShowForm(true)}
-                    className="mt-3 text-xs text-indigo-400 hover:underline"
-                  >
+                  <button onClick={() => setShowForm(true)} className="mt-3 text-xs text-indigo-400 hover:underline">
                     Créer ma première offre
                   </button>
                 </div>
@@ -294,9 +298,7 @@ export default function DashboardRecruteur() {
                         </div>
                         <div className="flex gap-1.5 flex-wrap">
                           {offre.competences.slice(0, 3).map((c, i) => (
-                            <span key={i} className="text-xs bg-gray-800 text-gray-400 px-2 py-0.5 rounded">
-                              {c}
-                            </span>
+                            <span key={i} className="text-xs bg-gray-800 text-gray-400 px-2 py-0.5 rounded">{c}</span>
                           ))}
                         </div>
                       </div>
@@ -312,10 +314,7 @@ export default function DashboardRecruteur() {
               )}
             </div>
 
-            {/* Colonne droite */}
             <div className="space-y-4">
-
-              {/* Actions rapides */}
               <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
                 <h3 className="text-white font-semibold mb-4">Actions rapides</h3>
                 <div className="space-y-2">
@@ -326,11 +325,7 @@ export default function DashboardRecruteur() {
                   ].map((a, i) => {
                     const Icon = a.icon
                     return (
-                      <button
-                        key={i}
-                        onClick={a.action}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition-all"
-                      >
+                      <button key={i} onClick={a.action} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition-all">
                         <Icon className={`w-4 h-4 ${a.color}`} />
                         {a.label}
                       </button>
@@ -339,7 +334,6 @@ export default function DashboardRecruteur() {
                 </div>
               </div>
 
-              {/* Activité récente */}
               <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
                 <h3 className="text-white font-semibold mb-4">Activité récente</h3>
                 <div className="space-y-3">
@@ -351,12 +345,9 @@ export default function DashboardRecruteur() {
                       </p>
                     </div>
                   ))}
-                  {offres.length === 0 && (
-                    <p className="text-gray-600 text-xs">Aucune activité récente</p>
-                  )}
+                  {offres.length === 0 && <p className="text-gray-600 text-xs">Aucune activité récente</p>}
                 </div>
               </div>
-
             </div>
           </div>
         </div>
