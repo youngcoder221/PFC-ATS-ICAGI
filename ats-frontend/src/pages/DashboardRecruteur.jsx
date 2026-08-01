@@ -218,7 +218,7 @@ export default function DashboardRecruteur() {
               { label: 'Total offres',   value: offres.length,  icon: Briefcase,  color: 'text-indigo-400', bg: 'bg-indigo-900/20 border-indigo-700' },
               { label: 'Offres actives', value: offresOuvertes, icon: TrendingUp, color: 'text-green-400',  bg: 'bg-green-900/20 border-green-700'   },
               { label: 'Offres fermées', value: offresFermees,  icon: XCircle,    color: 'text-red-400',    bg: 'bg-red-900/20 border-red-700'       },
-              { label: 'En attente',     value: '—',            icon: Clock,      color: 'text-amber-400',  bg: 'bg-amber-900/20 border-amber-700'   },
+              { label: 'Types de contrats', value: [...new Set(offres.map(o => o.typeContrat))].length,            icon: Clock,      color: 'text-amber-400',  bg: 'bg-amber-900/20 border-amber-700'   },
             ].map((s, i) => {
               const Icon = s.icon
               return (
