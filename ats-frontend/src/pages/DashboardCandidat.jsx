@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 // eslint-disable-next-line no-unused-vars
-import { Briefcase, Upload, FileText, CheckCircle, Clock, XCircle, ChevronRight, Search, Trophy } from 'lucide-react'
+import { Briefcase, Upload, FileText, CheckCircle, Clock, XCircle, ChevronRight, Search, Trophy, LayoutDashboard } from 'lucide-react'
 import Layout from '../components/layout/Layout'
 import api from '../services/api'
 
