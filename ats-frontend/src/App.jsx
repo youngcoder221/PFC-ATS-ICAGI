@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import Login              from './pages/Login'
+import Landing from './pages/Landing'
 import Register           from './pages/Register'
 import DashboardRecruteur from './pages/DashboardRecruteur'
 import DashboardCandidat  from './pages/DashboardCandidat'
@@ -20,7 +21,7 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/"        element={<Navigate to="/login" />} />
+          <Route path="/" element={<Landing />} />
           <Route path="/login"   element={<Login />} />
           <Route path="/register" element={<Register />} />
 
