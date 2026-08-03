@@ -66,21 +66,14 @@ export default function Landing() {
         </p>
 
         {/* CTA */}
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <button
-            onClick={() => navigate('/register')}
-            className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-6 py-3 rounded-xl text-sm font-medium hover:opacity-90 transition-all shadow-lg"
-          >
-            Postuler à une offre
-            <ChevronRight className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => navigate('/login')}
-            className="flex items-center gap-2 text-gray-300 border border-gray-700 px-6 py-3 rounded-xl text-sm font-medium hover:border-gray-500 hover:text-white transition-all"
-          >
-            Espace recruteur
-            <ChevronRight className="w-4 h-4" />
-          </button>
+        <div className="flex justify-center">
+            <button
+                onClick={() => navigate('/login')}
+                className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-6 py-3 rounded-xl text-sm font-medium hover:opacity-90 transition-all shadow-lg"
+            >
+                Postuler à une offre
+                <ChevronRight className="w-4 h-4" />
+            </button>
         </div>
 
         {/* Stats */}
@@ -246,20 +239,14 @@ export default function Landing() {
           <p className="text-gray-400 text-sm mb-6">
             Rejoignez les entreprises qui recrutent intelligemment avec ATS Platform.
           </p>
-          <div className="flex gap-3 justify-center">
+          <div className="flex justify-center">
             <button
-              onClick={() => navigate('/register')}
-              className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:opacity-90 transition-all shadow-lg"
+                onClick={() => navigate('/login')}
+                className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:opacity-90 transition-all shadow-lg"
             >
-              Commencer gratuitement
+                Commencer gratuitement
             </button>
-            <button
-              onClick={() => navigate('/login')}
-              className="text-gray-300 border border-gray-700 px-6 py-2.5 rounded-xl text-sm hover:border-gray-500 transition-all"
-            >
-              Se connecter
-            </button>
-          </div>
+        </div>
         </div>
       </section>
 
