@@ -11,6 +11,11 @@ export default function Ranking() {
   const [ranking, setRanking] = useState([])
   const [offre, setOffre]     = useState(null)
   const [loading, setLoading] = useState(true)
+  const [raisonsOuvertes, setRaisonsOuvertes] = useState({})
+
+  const toggleRaison = (id) => {
+    setRaisonsOuvertes(prev => ({ ...prev, [id]: !prev[id] }))
+  }
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/immutability
@@ -120,8 +125,9 @@ export default function Ranking() {
           <div className="divide-y divide-gray-800">
             {ranking.map((candidature, index) => {
               const badge = rangBadge(index)
+              const estOuvert = !!raisonsOuvertes[candidature._id]
               return (
-                <div key={candidature._id} className="px-6 py-4 flex items-center gap-4 hover:bg-gray-800/50 transition-all">
+                <div key={candidature._id} className="px-6 py-4 flex items-start gap-4 hover:bg-gray-800/50 transition-all">
 
                   {/* Rang */}
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0 ${badge.bg} text-white`}>
@@ -139,7 +145,17 @@ export default function Ranking() {
                       {candidature.candidatId?.prenom} {candidature.candidatId?.nom}
                     </p>
                     <p className="text-gray-500 text-xs">{candidature.candidatId?.email}</p>
-                    <p className="text-gray-400 text-xs mt-1 truncate">{candidature.raisons}</p>
+                    <p className={`text-gray-400 text-xs mt-1 ${estOuvert ? '' : 'truncate'}`}>
+                      {candidature.raisons}
+                    </p>
+                    {candidature.raisons && candidature.raisons.length > 60 && (
+                      <button
+                        onClick={() => toggleRaison(candidature._id)}
+                        className="text-[11px] text-indigo-400 hover:text-indigo-300 font-medium"
+                      >
+                        {estOuvert ? 'Voir moins' : 'Voir plus'}
+                      </button>
+                    )}
                     <div className="mt-2 h-1.5 bg-gray-800 rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full ${scoreBar(candidature.score)}`}

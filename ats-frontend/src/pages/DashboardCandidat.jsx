@@ -20,6 +20,11 @@ export default function DashboardCandidat() {
   const [uploading, setUploading]       = useState(false)
   const [message, setMessage]           = useState(null)
   const [search, setSearch]             = useState('')
+  const [raisonsOuvertes, setRaisonsOuvertes] = useState({})
+
+  const toggleRaison = (id) => {
+    setRaisonsOuvertes(prev => ({ ...prev, [id]: !prev[id] }))
+  }
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/immutability
@@ -461,6 +466,7 @@ export default function DashboardCandidat() {
           ) : candidatures.map(c => {
             const statut = statutConfig[c.statut] || statutConfig['en_attente']
             const SIcon  = statut.icon
+            const estOuvert = !!raisonsOuvertes[c._id]
             return (
               <div key={c._id} className="bg-gray-900 border border-gray-800 rounded-xl p-5">
                 <div className="flex justify-between items-start">
@@ -469,7 +475,17 @@ export default function DashboardCandidat() {
                     <p className="text-gray-500 text-xs mt-1">
                       {c.offreId?.typeContrat} · {new Date(c.createdAt).toLocaleDateString('fr-FR')}
                     </p>
-                    <p className="text-gray-400 text-sm mt-2 line-clamp-2">{c.raisons}</p>
+                    <p className={`text-gray-400 text-sm mt-2 ${estOuvert ? '' : 'line-clamp-2'}`}>
+                      {c.raisons}
+                    </p>
+                    {c.raisons && c.raisons.length > 100 && (
+                      <button
+                        onClick={() => toggleRaison(c._id)}
+                        className="text-xs text-indigo-400 hover:text-indigo-300 mt-1 font-medium"
+                      >
+                        {estOuvert ? 'Voir moins' : 'Voir plus'}
+                      </button>
+                    )}
                     <div className="mt-3 flex items-center gap-3">
                       <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
                         <div
