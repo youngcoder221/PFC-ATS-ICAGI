@@ -20,11 +20,6 @@ export default function DashboardCandidat() {
   const [uploading, setUploading]       = useState(false)
   const [message, setMessage]           = useState(null)
   const [search, setSearch]             = useState('')
-  const [raisonsOuvertes, setRaisonsOuvertes] = useState({})
-
-  const toggleRaison = (id) => {
-    setRaisonsOuvertes(prev => ({ ...prev, [id]: !prev[id] }))
-  }
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/immutability
@@ -89,8 +84,14 @@ export default function DashboardCandidat() {
     'refusé':     { label: 'Refusé',      icon: XCircle,      color: 'text-red-400',    bg: 'bg-red-900/20 border-red-700'      },
   }
 
-  const scoreColor = (s) => s >= 75 ? 'text-green-400' : s >= 50 ? 'text-amber-400' : 'text-red-400'
-  const scoreBar   = (s) => s >= 75 ? 'bg-green-500'  : s >= 50 ? 'bg-amber-500'  : 'bg-red-500'
+  // Note : le score et l'explication détaillée de l'IA sont des outils internes
+  // réservés au recruteur (voir Ranking.jsx). Le candidat ne voit qu'un message
+  // de statut clair, jamais le score chiffré ni le détail de l'analyse.
+  const statutMessage = {
+    'en_attente': "Votre candidature est en cours d'examen par le recruteur.",
+    'retenu':     "Félicitations ! Votre profil a retenu l'attention du recruteur.",
+    'refusé':     "Cette candidature n'a pas été retenue cette fois-ci. Continuez à postuler !",
+  }
 
   const offresFiltrees = offres.filter(o =>
     o.titre.toLowerCase().includes(search.toLowerCase()) ||
@@ -227,15 +228,6 @@ export default function DashboardCandidat() {
                     <p className="text-gray-500 text-xs mt-0.5">
                       {new Date(c.createdAt).toLocaleDateString('fr-FR')}
                     </p>
-                    <div className="mt-1.5 flex items-center gap-2">
-                      <div className="w-20 h-1.5 bg-gray-800 rounded-full overflow-hidden">
-                        <div
-                          className={`h-full rounded-full ${scoreBar(c.score)}`}
-                          style={{ width: `${c.score}%` }}
-                        />
-                      </div>
-                      <span className={`text-xs font-bold ${scoreColor(c.score)}`}>{c.score}/100</span>
-                    </div>
                   </div>
                   <div className={`flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border ${statut.bg} ${statut.color}`}>
                     <SIcon className="w-3 h-3" />
@@ -466,7 +458,6 @@ export default function DashboardCandidat() {
           ) : candidatures.map(c => {
             const statut = statutConfig[c.statut] || statutConfig['en_attente']
             const SIcon  = statut.icon
-            const estOuvert = !!raisonsOuvertes[c._id]
             return (
               <div key={c._id} className="bg-gray-900 border border-gray-800 rounded-xl p-5">
                 <div className="flex justify-between items-start">
@@ -475,28 +466,9 @@ export default function DashboardCandidat() {
                     <p className="text-gray-500 text-xs mt-1">
                       {c.offreId?.typeContrat} · {new Date(c.createdAt).toLocaleDateString('fr-FR')}
                     </p>
-                    <p className={`text-gray-400 text-sm mt-2 ${estOuvert ? '' : 'line-clamp-2'}`}>
-                      {c.raisons}
+                    <p className="text-gray-400 text-sm mt-2 italic">
+                      {statutMessage[c.statut] || statutMessage['en_attente']}
                     </p>
-                    {c.raisons && c.raisons.length > 100 && (
-                      <button
-                        onClick={() => toggleRaison(c._id)}
-                        className="text-xs text-indigo-400 hover:text-indigo-300 mt-1 font-medium"
-                      >
-                        {estOuvert ? 'Voir moins' : 'Voir plus'}
-                      </button>
-                    )}
-                    <div className="mt-3 flex items-center gap-3">
-                      <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
-                        <div
-                          className={`h-full rounded-full ${scoreBar(c.score)}`}
-                          style={{ width: `${c.score}%` }}
-                        />
-                      </div>
-                      <span className={`text-sm font-bold ${scoreColor(c.score)}`}>
-                        {c.score}/100
-                      </span>
-                    </div>
                   </div>
                   <div className={`ml-4 flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border ${statut.bg} ${statut.color} flex-shrink-0`}>
                     <SIcon className="w-3 h-3" />
