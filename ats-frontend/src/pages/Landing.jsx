@@ -9,12 +9,15 @@ export default function Landing() {
 
       {/* ── TOPBAR ── */}
       <nav className="flex items-center justify-between px-8 py-4 border-b border-gray-800/50 bg-[#0a0c12] sticky top-0 z-50 backdrop-blur-md">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-lg flex items-center justify-center">
+        <button
+          onClick={() => navigate('/')}
+          className="flex items-center gap-3 cursor-pointer group"
+        >
+          <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-lg flex items-center justify-center group-hover:opacity-90 transition-opacity">
             <Users className="w-4 h-4 text-white" />
           </div>
           <span className="text-white font-semibold text-sm">ATS Platform</span>
-        </div>
+        </button>
 
         <div className="hidden md:flex items-center gap-8">
           {['Fonctionnalités', 'Comment ça marche', 'À propos'].map(item => (
