@@ -1,5 +1,6 @@
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import logo from '../../assets/logo-icon-small.png'
 import {
   LayoutDashboard, Briefcase, FileText,
   Users, LogOut, ChevronRight, Trophy,Shield
@@ -60,9 +61,11 @@ export default function Sidebar() {
       {/* Logo */}
       <div className="p-6 border-b border-gray-800">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-gradient-to-br from-indigo-600 to-purple-700 rounded-xl flex items-center justify-center">
-            <Users className="w-5 h-5 text-white" />
-          </div>
+          <img
+            src={logo}
+            alt="ATS Platform"
+            className="w-9 h-9 object-contain"
+          />
           <div>
             <h1 className="text-white font-bold text-sm">ATS Platform</h1>
             <p className="text-gray-500 text-xs capitalize">{user?.role}</p>

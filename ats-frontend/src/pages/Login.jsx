@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { Eye, EyeOff, Mail, Lock, Users, ArrowLeft } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock, ArrowLeft } from 'lucide-react'
 import api from '../services/api'
+import logoSmall from '../assets/logo-icon-small.png'
+import logoFull from '../assets/logo-icon-full.png'
 
 export default function Login() {
   const [form, setForm]       = useState({ email: '', motDePasse: '' })
@@ -39,9 +41,11 @@ export default function Login() {
       {/* Topbar */}
       <nav className="flex items-center justify-between px-8 py-4 border-b border-gray-800/50 bg-[#0a0c12]">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-lg flex items-center justify-center">
-            <Users className="w-4 h-4 text-white" />
-          </div>
+          <img
+            src={logoSmall}
+            alt="ATS Platform"
+            className="w-8 h-8 object-contain"
+          />
           <span className="text-white font-semibold text-sm">ATS Platform</span>
         </div>
         <button
@@ -62,6 +66,11 @@ export default function Login() {
           <div className="absolute bottom-0 right-0 w-64 h-64 bg-violet-900/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3 pointer-events-none" />
 
           <div className="relative z-10">
+            <img
+              src={logoFull}
+              alt="ATS Platform"
+              className="w-20 h-20 object-contain mb-6"
+            />
             <div className="inline-flex items-center gap-2 bg-indigo-900/30 border border-indigo-700/50 rounded-full px-3 py-1 text-indigo-300 text-xs mb-6">
               ✨ IA intégrée
             </div>

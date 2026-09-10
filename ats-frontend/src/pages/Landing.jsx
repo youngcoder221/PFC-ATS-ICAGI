@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { Users, Briefcase, FileText, ChevronRight, Zap, Trophy, Shield } from 'lucide-react'
+import logo from '../assets/logo-icon-small.png'
+
 
 export default function Landing() {
   const navigate = useNavigate()
@@ -13,9 +15,11 @@ export default function Landing() {
           onClick={() => navigate('/')}
           className="flex items-center gap-3 cursor-pointer group"
         >
-          <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-lg flex items-center justify-center group-hover:opacity-90 transition-opacity">
-            <Users className="w-4 h-4 text-white" />
-          </div>
+          <img
+            src={logo}
+            alt="ATS Platform"
+            className="w-8 h-8 object-contain group-hover:opacity-90 transition-opacity"
+          />
           <span className="text-white font-semibold text-sm">ATS Platform</span>
         </button>
 
