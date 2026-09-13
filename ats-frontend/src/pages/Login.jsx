@@ -40,14 +40,17 @@ export default function Login() {
 
       {/* Topbar */}
       <nav className="flex items-center justify-between px-8 py-4 border-b border-gray-800/50 bg-[#0a0c12]">
-        <div className="flex items-center gap-3">
+        <button
+          onClick={() => navigate('/')}
+          className="flex items-center gap-3 cursor-pointer group"
+        >
           <img
             src={logoSmall}
             alt="ATS Platform"
-            className="w-8 h-8 object-contain"
+            className="w-8 h-8 object-contain group-hover:opacity-90 transition-opacity"
           />
           <span className="text-white font-semibold text-sm">ATS Platform</span>
-        </div>
+        </button>
         <button
           onClick={() => navigate('/')}
           className="flex items-center gap-2 text-gray-400 hover:text-white text-sm transition-colors"
