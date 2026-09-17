@@ -65,10 +65,10 @@ export default function DashboardCandidat() {
       formData.append('offreId',    uploadForm.offreId)
       formData.append('diplome',    uploadForm.diplome)
       formData.append('experience', uploadForm.experience)
-      const res = await api.post('/cv/upload', formData, {
+      await api.post('/cv/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
-      setMessage({ type: 'success', text: `✅ CV analysé ! Score : ${res.data.score}/100` })
+      setMessage({ type: 'success', text: '✅ Candidature envoyée ! Le recruteur examinera votre profil.' })
       chargerCandidatures()
       setTimeout(() => setOnglet('candidatures'), 1500)
     } catch (err) {
