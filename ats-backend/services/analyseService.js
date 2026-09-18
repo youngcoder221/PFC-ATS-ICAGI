@@ -31,7 +31,60 @@ Consignes d'évaluation :
 - Réponds STRICTEMENT en JSON valide, rien d'autre.`
 }
 
-// ─── Algorithme de secours (mots-clés) — utilisé si Gemini est indisponible ───
+// ─── Détection des erreurs temporaires (à retenter) vs définitives ───
+// 503 = serveurs Gemini surchargés · 429 = quota/débit dépassé · 500/504 = erreurs serveur passagères
+const CODES_TEMPORAIRES = ['503', '429', '500', '504', 'UNAVAILABLE', 'RESOURCE_EXHAUSTED', 'DEADLINE_EXCEEDED']
+
+const estErreurTemporaire = (error) => {
+  const message = error?.message || ''
+  return CODES_TEMPORAIRES.some(code => message.includes(code))
+}
+
+const attendre = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+
+// ─── Appel Gemini avec réessai automatique (backoff exponentiel : 1s, 2s, 4s) ───
+const appellerGeminiAvecReessai = async (prompt, maxTentatives = 3) => {
+  let derniereErreur
+
+  for (let tentative = 1; tentative <= maxTentatives; tentative++) {
+    try {
+      const response = await ai.models.generateContent({
+        model: 'gemini-3.6-flash',
+        contents: prompt,
+        config: {
+          responseMimeType: 'application/json',
+          temperature: 0.3,
+        },
+      })
+      if (tentative > 1) {
+        console.log(`✅ Gemini a répondu après ${tentative} tentative(s)`)
+      }
+      return response
+
+    } catch (error) {
+      derniereErreur = error
+      const temporaire = estErreurTemporaire(error)
+
+      // Erreur définitive (clé invalide, etc.) → on arrête immédiatement, pas de réessai inutile
+      if (!temporaire) {
+        throw error
+      }
+
+      // Dernière tentative épuisée → on laisse remonter l'erreur (le repli mots-clés prendra le relais)
+      if (tentative === maxTentatives) {
+        throw error
+      }
+
+      const delai = 1000 * Math.pow(2, tentative - 1) // 1000ms, 2000ms, 4000ms
+      console.warn(`⏳ Gemini indisponible (tentative ${tentative}/${maxTentatives}), nouvel essai dans ${delai / 1000}s...`)
+      await attendre(delai)
+    }
+  }
+
+  throw derniereErreur
+}
+
+// ─── Algorithme de secours (mots-clés) — utilisé si Gemini reste indisponible après les réessais ───
 const analyserAvecMotsCles = (texteCV, criteresOffre) => {
   const texteLower = texteCV.toLowerCase()
 
@@ -61,7 +114,7 @@ const analyserAvecMotsCles = (texteCV, criteresOffre) => {
   }
 }
 
-// ─── Analyse principale : Gemini, avec repli automatique ───
+// ─── Analyse principale : Gemini (avec réessai), puis repli automatique ───
 const analyserCV = async (texteCV, criteresOffre) => {
   try {
     if (!process.env.GEMINI_API_KEY) {
@@ -69,16 +122,7 @@ const analyserCV = async (texteCV, criteresOffre) => {
     }
 
     const prompt = construirePrompt(texteCV, criteresOffre)
-
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.6-flash',
-      contents: prompt,
-      config: {
-        responseMimeType: 'application/json',
-        temperature: 0.3,
-      },
-    })
-
+    const response = await appellerGeminiAvecReessai(prompt)
     const analyse = JSON.parse(response.text)
 
     // Validation minimale de la structure renvoyée par l'IA
@@ -100,7 +144,7 @@ const analyserCV = async (texteCV, criteresOffre) => {
     }
 
   } catch (error) {
-    console.warn('⚠️  Analyse Gemini indisponible, bascule sur l\'algorithme de secours :', error.message)
+    console.warn('⚠️  Analyse Gemini indisponible après réessais, bascule sur l\'algorithme de secours :', error.message)
     return analyserAvecMotsCles(texteCV, criteresOffre)
   }
 }
