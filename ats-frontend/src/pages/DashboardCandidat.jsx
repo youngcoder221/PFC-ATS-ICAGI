@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 // eslint-disable-next-line no-unused-vars
 import { Briefcase, Upload, FileText, CheckCircle, Clock, XCircle, ChevronRight, Search, Trophy, LayoutDashboard } from 'lucide-react'
 import Layout from '../components/layout/Layout'
+import OffreCard from '../components/OffreCard'
 import api from '../services/api'
 
 export default function DashboardCandidat() {
@@ -304,47 +305,26 @@ export default function DashboardCandidat() {
             />
           </div>
 
-          {loading ? (
-            <p className="text-center text-gray-500 py-16">Chargement...</p>
-          ) : offresFiltrees.length === 0 ? (
-            <div className="text-center py-16">
-              <Briefcase className="w-12 h-12 text-gray-700 mx-auto mb-3" />
-              <p className="text-gray-500">Aucune offre trouvée</p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {offresFiltrees.map(offre => (
-                <div key={offre._id} className="bg-gray-900 border border-gray-800 rounded-xl p-5 hover:border-gray-700 transition-all">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-white font-semibold">{offre.titre}</h3>
-                        <span className={`text-xs px-2 py-0.5 rounded-full border ${typeColors[offre.typeContrat] || ''}`}>
-                          {offre.typeContrat}
-                        </span>
-                        <span className="text-xs text-gray-500">{offre.niveauRequis}</span>
-                      </div>
-                      <p className="text-gray-400 text-sm mb-3 line-clamp-1">{offre.description}</p>
-                      <div className="flex gap-2 flex-wrap">
-                        {offre.competences.map((c, i) => (
-                          <span key={i} className="text-xs bg-gray-800 border border-gray-700 text-gray-300 px-2.5 py-1 rounded-lg">
-                            {c}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => handlePostuler(offre._id)}
-                      className="ml-4 flex items-center gap-1 bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-lg transition-all flex-shrink-0"
-                    >
-                      Postuler
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          {/* Remplacement dans la section ── OFFRES ── */}
+            {loading ? (
+              <p className="text-center text-gray-500 py-16">Chargement...</p>
+            ) : offresFiltrees.length === 0 ? (
+              <div className="text-center py-16">
+                <Briefcase className="w-12 h-12 text-gray-700 mx-auto mb-3" />
+                <p className="text-gray-500">Aucune offre trouvée</p>
+              </div>
+            ) : (
+              /* ✨ Voici la nouvelle grille responsive */
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {offresFiltrees.map(offre => (
+                  <OffreCard 
+                    key={offre._id} 
+                    offre={offre} 
+                    onPostuler={handlePostuler} 
+                  />
+                ))}
+              </div>
+            )}
         </div>
       )}
 
