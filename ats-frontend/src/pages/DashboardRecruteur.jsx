@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Plus, X, Briefcase, Users, ChevronRight, Clock, TrendingUp, XCircle } from 'lucide-react'
 import Layout from '../components/layout/Layout'
 import api from '../services/api'
+import OffreCardRecruteur from '../components/OffreCardRecruteur'
 
 const typeColors = {
   'Stage':     'bg-blue-900/30 text-blue-400 border-blue-700',
@@ -162,54 +163,17 @@ export default function DashboardRecruteur() {
               <p className="text-gray-500">Aucune offre publiée</p>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {offres.map(offre => (
-                <div key={offre._id} className="bg-gray-900 border border-gray-800 rounded-xl p-5 hover:border-gray-700 transition-all">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-white font-semibold">{offre.titre}</h3>
-                        <span className={`text-xs px-2 py-0.5 rounded-full border ${typeColors[offre.typeContrat] || ''}`}>
-                          {offre.typeContrat}
-                        </span>
-                        <span className={`text-xs px-2 py-0.5 rounded-full ${
-                          offre.statut === 'ouverte' ? 'bg-green-900/30 text-green-400' : 'bg-gray-800 text-gray-500'
-                        }`}>
-                          {offre.statut}
-                        </span>
-                      </div>
-                      <p className="text-gray-400 text-sm mb-3 line-clamp-1">{offre.description}</p>
-                      <div className="flex gap-2 flex-wrap">
-                        {offre.competences.map((comp, i) => (
-                          <span key={i} className="text-xs bg-gray-800 text-gray-300 border border-gray-700 px-2.5 py-1 rounded-lg">
-                            {comp}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="ml-4 flex items-center gap-2 flex-shrink-0">
-                      <button
-                        onClick={async () => {
-                          await api.patch(`/offres/${offre._id}/statut`)
-                          chargerOffres()
-                        }}
-                        className={`text-xs px-3 py-1.5 rounded-lg border transition-all ${
-                          offre.statut === 'ouverte'
-                            ? 'border-red-700 text-red-400 hover:bg-red-900/20'
-                            : 'border-green-700 text-green-400 hover:bg-green-900/20'
-                        }`}
-                      >
-                        {offre.statut === 'ouverte' ? 'Fermer' : 'Rouvrir'}
-                      </button>
-                      <button
-                        onClick={() => navigate(`/ranking/${offre._id}`)}
-                        className="flex items-center gap-1 text-sm text-indigo-400 hover:text-indigo-300 transition-all"
-                      >
-                        Voir candidats <ChevronRight className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <OffreCardRecruteur 
+                  key={offre._id} 
+                  offre={offre} 
+                  onToggleStatut={async (id) => {
+                    await api.patch(`/offres/${id}/statut`)
+                    chargerOffres()
+                  }}
+                  onVoirCandidats={(id) => navigate(`/ranking/${id}`)}
+                />
               ))}
             </div>
           )}
@@ -286,29 +250,17 @@ export default function DashboardRecruteur() {
                   </button>
                 </div>
               ) : (
-                <div className="divide-y divide-gray-800">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6 pt-0">
                   {dernieresOffres.map(offre => (
-                    <div key={offre._id} className="px-6 py-4 flex items-center justify-between hover:bg-gray-800/50 transition-all">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-white text-sm font-medium">{offre.titre}</h3>
-                          <span className={`text-xs px-2 py-0.5 rounded-full border ${typeColors[offre.typeContrat] || ''}`}>
-                            {offre.typeContrat}
-                          </span>
-                        </div>
-                        <div className="flex gap-1.5 flex-wrap">
-                          {offre.competences.slice(0, 3).map((c, i) => (
-                            <span key={i} className="text-xs bg-gray-800 text-gray-400 px-2 py-0.5 rounded">{c}</span>
-                          ))}
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => navigate(`/ranking/${offre._id}`)}
-                        className="ml-4 flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300 transition-all flex-shrink-0"
-                      >
-                        Candidats <ChevronRight className="w-3 h-3" />
-                      </button>
-                    </div>
+                    <OffreCardRecruteur 
+                      key={offre._id} 
+                      offre={offre} 
+                      onToggleStatut={async (id) => {
+                        await api.patch(`/offres/${id}/statut`)
+                        chargerOffres()
+                      }}
+                      onVoirCandidats={(id) => navigate(`/ranking/${id}`)}
+                    />
                   ))}
                 </div>
               )}
