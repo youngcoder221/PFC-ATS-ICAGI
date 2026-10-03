@@ -1,7 +1,7 @@
 // src/components/OffreCard.jsx
 import { MapPin, Briefcase, GraduationCap, Sparkles, Building2, ChevronRight } from 'lucide-react'
 
-export default function OffreCard({ offre, onPostuler }) {
+export default function OffreCardCandidat({ offre, onPostuler }) {
   // Valeurs de repli au cas où le backend ne fournit pas encore ces données
   const localisation = offre.localisation || 'Dakar, Sénégal'
   const secteur = offre.secteur || 'Technologie / Numérique'

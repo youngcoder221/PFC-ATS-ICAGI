@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 // eslint-disable-next-line no-unused-vars
 import { Briefcase, Upload, FileText, CheckCircle, Clock, XCircle, ChevronRight, Search, Trophy, LayoutDashboard } from 'lucide-react'
 import Layout from '../components/layout/Layout'
-import OffreCard from '../components/OffreCard'
+import OffreCardCandidat from '../components/OffreCardCandidat'
 import api from '../services/api'
 
 export default function DashboardCandidat() {
@@ -317,7 +317,7 @@ export default function DashboardCandidat() {
               /* ✨ Voici la nouvelle grille responsive */
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {offresFiltrees.map(offre => (
-                  <OffreCard 
+                  <OffreCardCandidat 
                     key={offre._id} 
                     offre={offre} 
                     onPostuler={handlePostuler} 
