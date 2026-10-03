@@ -126,17 +126,21 @@ export default function DashboardRecruteur() {
       {/* ══ VUE : MES OFFRES ══ */}
       {tabActif === 'offres' && (
         <div>
-          <div className="flex justify-between items-center mb-8">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>
-              <h1 className="text-2xl font-bold text-white">Mes offres</h1>
-              <p className="text-gray-400 text-sm mt-1">{offres.length} offre(s) publiée(s)</p>
+              <h1 className="text-2xl font-bold text-white tracking-tight">Mes offres</h1>
+              <p className="text-gray-400 text-sm mt-1">{offres.length} offre(s) publiée(s) sur la plateforme</p>
             </div>
             <button
               onClick={() => setShowForm(!showForm)}
-              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-all shadow-lg"
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg ${
+                showForm 
+                  ? 'bg-gray-800 text-white hover:bg-gray-700' 
+                  : 'bg-white text-gray-950 hover:bg-indigo-500 hover:text-white hover:shadow-[0_0_20px_rgba(79,70,229,0.3)]'
+              }`}
             >
               {showForm ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-              {showForm ? 'Annuler' : 'Nouvelle offre'}
+              {showForm ? 'Annuler la création' : 'Publier une offre'}
             </button>
           </div>
 
@@ -175,18 +179,24 @@ export default function DashboardRecruteur() {
 
       {/* ══ VUE : DASHBOARD (défaut) ══ */}
       {tabActif === '' && (
-        <div>
-          <div className="flex justify-between items-center mb-8">
+        <div className="space-y-8">
+          
+          {/* Header */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-white">Tableau de bord</h1>
-              <p className="text-gray-400 text-sm mt-1">Gérez vos offres et suivez vos candidats</p>
+              <h1 className="text-2xl font-bold text-white tracking-tight">Tableau de bord Recruteur</h1>
+              <p className="text-gray-400 text-sm mt-1">Gérez vos offres et découvrez vos futurs talents grâce à l'IA.</p>
             </div>
             <button
               onClick={() => setShowForm(!showForm)}
-              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-all shadow-lg"
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg ${
+                showForm 
+                  ? 'bg-gray-800 text-white hover:bg-gray-700' 
+                  : 'bg-white text-gray-950 hover:bg-indigo-500 hover:text-white hover:shadow-[0_0_20px_rgba(79,70,229,0.3)]'
+              }`}
             >
               {showForm ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-              {showForm ? 'Annuler' : 'Nouvelle offre'}
+              {showForm ? 'Annuler la création' : 'Publier une offre'}
             </button>
           </div>
 
@@ -199,51 +209,58 @@ export default function DashboardRecruteur() {
           )}
 
           {/* Stats */}
-          <div className="grid grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
             {[
-              { label: 'Total offres',      value: offres.length,                                        icon: Briefcase,  color: 'text-indigo-400', bg: 'bg-indigo-900/20 border-indigo-700' },
-              { label: 'Offres actives',    value: offresOuvertes,                                       icon: TrendingUp, color: 'text-green-400',  bg: 'bg-green-900/20 border-green-700'   },
-              { label: 'Offres fermées',    value: offresFermees,                                        icon: XCircle,    color: 'text-red-400',    bg: 'bg-red-900/20 border-red-700'       },
-              { label: 'Types contrats',    value: [...new Set(offres.map(o => o.typeContrat))].length,  icon: Clock,      color: 'text-amber-400',  bg: 'bg-amber-900/20 border-amber-700'   },
+              { label: 'Total offres',      value: offres.length,                                        icon: Briefcase,  color: 'text-indigo-400' },
+              { label: 'Offres actives',    value: offresOuvertes,                                       icon: TrendingUp, color: 'text-green-400'  },
+              { label: 'Offres fermées',    value: offresFermees,                                        icon: XCircle,    color: 'text-red-400'    },
+              { label: 'Types contrats',    value: [...new Set(offres.map(o => o.typeContrat))].length,  icon: Clock,      color: 'text-amber-400'  },
             ].map((s, i) => {
               const Icon = s.icon
               return (
-                <div key={i} className={`bg-gray-900 border rounded-xl p-5 ${s.bg}`}>
-                  <div className="flex items-center justify-between mb-3">
-                    <p className="text-gray-400 text-xs font-medium">{s.label}</p>
-                    <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center">
-                      <Icon className={`w-4 h-4 ${s.color}`} />
+                <div key={i} className="relative overflow-hidden bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-5 hover:border-gray-700 hover:-translate-y-1 transition-all duration-300 group">
+                  <div className="absolute -inset-2 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] transition-all duration-500 pointer-events-none" />
+                  <div className="flex items-center justify-between mb-4">
+                    <p className="text-gray-400 text-sm font-medium">{s.label}</p>
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-950 border border-gray-800 group-hover:scale-110 transition-transform duration-300">
+                      <Icon className={`w-5 h-5 ${s.color}`} />
                     </div>
                   </div>
-                  <p className={`text-3xl font-bold ${s.color}`}>{s.value}</p>
+                  <p className={`text-3xl font-bold text-white tracking-tight`}>{s.value}</p>
                 </div>
               )
             })}
           </div>
 
-          <div className="grid grid-cols-3 gap-6">
-            <div className="col-span-2 bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-800 flex items-center justify-between">
-                <h2 className="text-white font-semibold">Dernières offres</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            {/* Dernières offres */}
+            <div className="lg:col-span-2 bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-3xl p-6 hover:border-gray-700 transition-colors duration-300">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-white font-semibold text-lg flex items-center gap-2">
+                  <Briefcase className="w-5 h-5 text-indigo-400" />
+                  Dernières offres publiées
+                </h2>
                 <button
                   onClick={() => navigate('/recruteur?tab=offres')}
-                  className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1"
+                  className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-medium bg-indigo-500/10 px-3 py-1.5 rounded-lg transition-colors"
                 >
                   Voir tout <ChevronRight className="w-3 h-3" />
                 </button>
               </div>
+
               {loading ? (
                 <p className="text-center text-gray-500 py-12">Chargement...</p>
               ) : dernieresOffres.length === 0 ? (
-                <div className="text-center py-12">
-                  <Briefcase className="w-10 h-10 text-gray-700 mx-auto mb-2" />
-                  <p className="text-gray-500 text-sm">Aucune offre publiée</p>
-                  <button onClick={() => setShowForm(true)} className="mt-3 text-xs text-indigo-400 hover:underline">
+                <div className="text-center py-10 bg-gray-950/50 rounded-2xl border border-gray-800/50">
+                  <Briefcase className="w-10 h-10 text-gray-700 mx-auto mb-3" />
+                  <p className="text-gray-500 text-sm">Aucune offre publiée pour le moment.</p>
+                  <button onClick={() => setShowForm(true)} className="mt-4 text-xs text-indigo-400 hover:text-indigo-300 font-medium bg-indigo-500/10 px-4 py-2 rounded-lg transition-colors">
                     Créer ma première offre
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6 pt-0">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {dernieresOffres.map(offre => (
                     <OffreCardRecruteur 
                       key={offre._id} 
@@ -259,40 +276,45 @@ export default function DashboardRecruteur() {
               )}
             </div>
 
-            <div className="space-y-4">
-              <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
-                <h3 className="text-white font-semibold mb-4">Actions rapides</h3>
-                <div className="space-y-2">
+            {/* Actions rapides & Activité */}
+            <div className="space-y-6">
+              
+              <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-3xl p-6 hover:border-gray-700 transition-colors duration-300">
+                <h3 className="text-white font-semibold text-lg mb-5">Actions rapides</h3>
+                <div className="space-y-3">
                   {[
-                    { label: 'Publier une offre',  icon: Plus,      action: () => setShowForm(true),                color: 'text-indigo-400' },
-                    { label: 'Voir mes offres',    icon: Briefcase, action: () => navigate('/recruteur?tab=offres'), color: 'text-teal-400'   },
-                    { label: 'Voir les candidats', icon: Users,     action: () => navigate('/recruteur?tab=offres'), color: 'text-amber-400'  },
+                    { label: 'Publier une offre',  icon: Plus,      action: () => setShowForm(true),                color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
+                    { label: 'Voir mes offres',    icon: Briefcase, action: () => navigate('/recruteur?tab=offres'), color: 'text-teal-400',   bg: 'bg-teal-500/10'   },
+                    { label: 'Voir les candidats', icon: Users,     action: () => navigate('/recruteur?tab=offres'), color: 'text-amber-400',  bg: 'bg-amber-500/10'  },
                   ].map((a, i) => {
                     const Icon = a.icon
                     return (
-                      <button key={i} onClick={a.action} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition-all">
-                        <Icon className={`w-4 h-4 ${a.color}`} />
-                        {a.label}
+                      <button key={i} onClick={a.action} className="w-full flex items-center gap-3 p-3 rounded-2xl text-sm text-gray-300 bg-gray-950/50 border border-gray-800 hover:border-gray-600 hover:bg-gray-800/80 transition-all group">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${a.bg}`}>
+                          <Icon className={`w-4 h-4 ${a.color}`} />
+                        </div>
+                        <span className="font-medium group-hover:text-white transition-colors">{a.label}</span>
                       </button>
                     )
                   })}
                 </div>
               </div>
 
-              <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
-                <h3 className="text-white font-semibold mb-4">Activité récente</h3>
+              <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-3xl p-6 hover:border-gray-700 transition-colors duration-300">
+                <h3 className="text-white font-semibold text-lg mb-5">Activité récente</h3>
                 <div className="space-y-3">
                   {offres.slice(0, 4).map((o, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 flex-shrink-0" />
-                      <p className="text-gray-400 text-xs truncate">
-                        Offre <span className="text-white">"{o.titre}"</span> publiée
+                    <div key={i} className="flex items-center gap-3 p-2 hover:bg-gray-800/40 rounded-xl transition-colors cursor-default group">
+                      <div className="w-2 h-2 rounded-full bg-teal-500 group-hover:scale-150 transition-transform flex-shrink-0" />
+                      <p className="text-gray-400 text-sm truncate">
+                        Offre <span className="text-white font-medium">"{o.titre}"</span> publiée
                       </p>
                     </div>
                   ))}
-                  {offres.length === 0 && <p className="text-gray-600 text-xs">Aucune activité récente</p>}
+                  {offres.length === 0 && <p className="text-gray-600 text-sm p-2">Aucune activité récente</p>}
                 </div>
               </div>
+
             </div>
           </div>
         </div>
