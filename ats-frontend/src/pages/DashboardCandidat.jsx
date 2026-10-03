@@ -111,39 +111,56 @@ export default function DashboardCandidat() {
   return (
     <Layout>
 
-      {/* Stats rapides */}
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      {/* Header & Stats rapides */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+          <h1 className="text-2xl font-bold text-white tracking-tight">Espace Candidat</h1>
+          <p className="text-gray-400 text-sm mt-1">Gérez vos candidatures et trouvez votre prochaine opportunité.</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
         {[
-          { label: 'Offres disponibles', value: offres.length,                                              color: 'text-indigo-400' },
-          { label: 'Candidatures',        value: candidatures.length,                                       color: 'text-teal-400'   },
-          { label: 'Retenus',             value: candidatures.filter(c => c.statut === 'retenu').length,    color: 'text-green-400'  },
-        ].map((s, i) => (
-          <div key={i} className="bg-gray-900 border border-gray-800 rounded-xl p-4">
-            <p className={`text-3xl font-bold ${s.color}`}>{s.value}</p>
-            <p className="text-gray-500 text-xs mt-1">{s.label}</p>
-          </div>
-        ))}
+          { label: 'Offres disponibles', value: offres.length, icon: Briefcase, color: 'text-indigo-400' },
+          { label: 'Mes candidatures',   value: candidatures.length, icon: FileText, color: 'text-teal-400'   },
+          { label: 'Profil retenu',      value: candidatures.filter(c => c.statut === 'retenu').length, icon: Trophy, color: 'text-green-400'  },
+        ].map((s, i) => {
+          const Icon = s.icon
+          return (
+            <div key={i} className="relative overflow-hidden bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-5 hover:border-gray-700 hover:-translate-y-1 transition-all duration-300 group">
+              <div className="absolute -inset-2 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] transition-all duration-500 pointer-events-none" />
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-gray-400 text-sm font-medium">{s.label}</p>
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-950 border border-gray-800 group-hover:scale-110 transition-transform duration-300">
+                  <Icon className={`w-5 h-5 ${s.color}`} />
+                </div>
+              </div>
+              <p className={`text-3xl font-bold text-white tracking-tight`}>{s.value}</p>
+            </div>
+          )
+        })}
       </div>
 
       {/* Onglets */}
-      <div className="flex gap-1 bg-gray-900 border border-gray-800 p-1 rounded-xl w-fit mb-6">
+      <div className="flex overflow-x-auto no-scrollbar gap-2 bg-gray-900/50 backdrop-blur-md border border-gray-800 p-1.5 rounded-2xl w-fit mb-8 shadow-sm">
         {onglets.map(o => {
           const Icon = o.icon
+          const isActive = onglet === o.key
           return (
             <button
               key={o.key}
               onClick={() => setOnglet(o.key)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                onglet === o.key
-                  ? 'bg-indigo-600 text-white'
-                  : 'text-gray-400 hover:text-white'
+              className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+                isActive 
+                  ? 'bg-gray-800 text-white shadow-sm ring-1 ring-gray-700/50' 
+                  : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/50'
               }`}
             >
-              <Icon className="w-4 h-4" />
+              <Icon className={`w-4 h-4 ${isActive ? 'text-indigo-400' : ''}`} />
               {o.label}
               {o.count !== null && (
-                <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-                  onglet === o.key ? 'bg-indigo-500' : 'bg-gray-700 text-gray-300'
+                <span className={`text-xs px-2 py-0.5 rounded-full ${
+                  isActive ? 'bg-gray-700 text-white' : 'bg-gray-800 text-gray-400'
                 }`}>
                   {o.count}
                 </span>
@@ -154,137 +171,140 @@ export default function DashboardCandidat() {
       </div>
 
       {/* ── DASHBOARD (page d'accueil) ── */}
-{onglet === '' && (
-  <div>
-    {/* Bienvenue */}
-    <div className="bg-gradient-to-r from-indigo-900/40 to-purple-900/40 border border-indigo-700/50 rounded-2xl p-6 mb-6">
-      <h2 className="text-xl font-bold text-white mb-1">
-        Bienvenue sur ATS 👋
-      </h2>
-      <p className="text-gray-400 text-sm">
-        Trouvez votre prochaine opportunité et suivez vos candidatures en temps réel.
-      </p>
-      <button
-        onClick={() => setOnglet('offres')}
-        className="mt-4 flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all"
-      >
-        <Briefcase className="w-4 h-4" />
-        Voir les offres disponibles
-      </button>
-    </div>
-
-    {/* Stats */}
-    <div className="grid grid-cols-3 gap-4 mb-6">
-      {[
-        { label: 'Offres disponibles', value: offres.length,                                           color: 'text-indigo-400', bg: 'bg-indigo-900/20 border-indigo-700' },
-        { label: 'Mes candidatures',   value: candidatures.length,                                     color: 'text-teal-400',   bg: 'bg-teal-900/20 border-teal-700'     },
-        { label: 'Profil retenu',      value: candidatures.filter(c => c.statut === 'retenu').length,  color: 'text-green-400',  bg: 'bg-green-900/20 border-green-700'   },
-      ].map((s, i) => (
-        <div key={i} className={`bg-gray-900 border rounded-xl p-5 ${s.bg}`}>
-          <p className={`text-3xl font-bold ${s.color}`}>{s.value}</p>
-          <p className="text-gray-500 text-xs mt-1">{s.label}</p>
-        </div>
-      ))}
-    </div>
-
-    <div className="grid grid-cols-3 gap-6">
-
-      {/* Dernières candidatures */}
-      <div className="col-span-2 bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-800 flex items-center justify-between">
-          <h3 className="text-white font-semibold">Mes dernières candidatures</h3>
-          <button
-            onClick={() => setOnglet('candidatures')}
-            className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1"
-          >
-            Voir tout <ChevronRight className="w-3 h-3" />
-          </button>
-        </div>
-
-        {candidatures.length === 0 ? (
-          <div className="text-center py-10">
-            <FileText className="w-10 h-10 text-gray-700 mx-auto mb-2" />
-            <p className="text-gray-500 text-sm">Aucune candidature</p>
-            <button
-              onClick={() => setOnglet('offres')}
-              className="mt-3 text-xs text-indigo-400 hover:underline"
-            >
-              Parcourir les offres
-            </button>
-          </div>
-        ) : (
-          <div className="divide-y divide-gray-800">
-            {candidatures.slice(0, 3).map(c => {
-              const statut = statutConfig[c.statut] || statutConfig['en_attente']
-              const SIcon  = statut.icon
-              return (
-                <div key={c._id} className="px-6 py-4 flex items-center justify-between hover:bg-gray-800/50 transition-all">
-                  <div className="flex-1">
-                    <p className="text-white text-sm font-medium">{c.offreId?.titre || 'Offre supprimée'}</p>
-                    <p className="text-gray-500 text-xs mt-0.5">
-                      {new Date(c.createdAt).toLocaleDateString('fr-FR')}
-                    </p>
-                  </div>
-                  <div className={`flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border ${statut.bg} ${statut.color}`}>
-                    <SIcon className="w-3 h-3" />
-                    {statut.label}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        )}
-      </div>
-
-      {/* Actions rapides */}
-      <div className="space-y-4">
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
-          <h3 className="text-white font-semibold mb-4">Actions rapides</h3>
-          <div className="space-y-2">
-            {[
-              { label: 'Voir les offres',       icon: Briefcase, action: () => setOnglet('offres'),       color: 'text-indigo-400' },
-              { label: 'Postuler',              icon: Upload,    action: () => setOnglet('postuler'),     color: 'text-teal-400'   },
-              { label: 'Mes candidatures',      icon: FileText,  action: () => setOnglet('candidatures'), color: 'text-amber-400'  },
-            ].map((a, i) => {
-              const Icon = a.icon
-              return (
-                <button
-                  key={i}
-                  onClick={a.action}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition-all"
-                >
-                  <Icon className={`w-4 h-4 ${a.color}`} />
-                  {a.label}
-                </button>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Offres récentes */}
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
-          <h3 className="text-white font-semibold mb-4">Offres récentes</h3>
-          <div className="space-y-2">
-            {offres.slice(0, 3).map((o, i) => (
-              <div
-                key={i}
-                onClick={() => { setUploadForm({...uploadForm, offreId: o._id}); setOnglet('postuler') }}
-                className="flex items-center gap-2 cursor-pointer hover:bg-gray-800 rounded-lg p-2 transition-all"
+      {onglet === '' && (
+        <div className="space-y-6">
+          
+          {/* Bienvenue */}
+          <div className="relative overflow-hidden bg-gradient-to-br from-indigo-900/40 via-purple-900/20 to-gray-900 border border-indigo-700/30 rounded-3xl p-8 md:p-10">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+            <div className="relative z-10 max-w-2xl">
+              <h2 className="text-3xl font-bold text-white mb-3 tracking-tight">
+                Trouvez votre prochaine opportunité 🚀
+              </h2>
+              <p className="text-gray-400 text-base leading-relaxed mb-6">
+                Votre espace est prêt. Découvrez les offres correspondant à vos compétences, soumettez votre CV et suivez l'évolution de vos candidatures grâce à notre système d'analyse.
+              </p>
+              <button
+                onClick={() => setOnglet('offres')}
+                className="flex items-center gap-2 bg-white text-gray-950 hover:bg-indigo-500 hover:text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_20px_rgba(79,70,229,0.3)] w-fit"
               >
-                <div className="w-1.5 h-1.5 rounded-full bg-teal-500 flex-shrink-0" />
-                <p className="text-gray-400 text-xs truncate hover:text-white">{o.titre}</p>
+                <Briefcase className="w-4 h-4" />
+                Explorer les offres
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            {/* Dernières candidatures */}
+            <div className="lg:col-span-2 bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-3xl p-6 hover:border-gray-700 transition-colors duration-300">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-white font-semibold text-lg flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-indigo-400" />
+                  Mes dernières candidatures
+                </h3>
+                <button
+                  onClick={() => setOnglet('candidatures')}
+                  className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-medium bg-indigo-500/10 px-3 py-1.5 rounded-lg transition-colors"
+                >
+                  Voir tout <ChevronRight className="w-3 h-3" />
+                </button>
               </div>
-            ))}
-            {offres.length === 0 && (
-              <p className="text-gray-600 text-xs">Aucune offre disponible</p>
-            )}
+
+              {candidatures.length === 0 ? (
+                <div className="text-center py-10 bg-gray-950/50 rounded-2xl border border-gray-800/50">
+                  <FileText className="w-10 h-10 text-gray-700 mx-auto mb-3" />
+                  <p className="text-gray-500 text-sm">Vous n'avez postulé à aucune offre pour le moment.</p>
+                  <button
+                    onClick={() => setOnglet('offres')}
+                    className="mt-4 text-xs text-indigo-400 hover:text-indigo-300 font-medium bg-indigo-500/10 px-4 py-2 rounded-lg transition-colors"
+                  >
+                    Parcourir les offres
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {candidatures.slice(0, 4).map(c => {
+                    const statut = statutConfig[c.statut] || statutConfig['en_attente']
+                    const SIcon  = statut.icon
+                    return (
+                      <div key={c._id} className="p-4 bg-gray-950/50 border border-gray-800/80 rounded-2xl flex items-center justify-between hover:bg-gray-800/50 transition-all group">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-xl bg-gray-900 border border-gray-700 flex items-center justify-center flex-shrink-0 group-hover:border-indigo-500/50 transition-colors">
+                            <Briefcase className="w-4 h-4 text-gray-400 group-hover:text-indigo-400" />
+                          </div>
+                          <div>
+                            <p className="text-white text-sm font-medium">{c.offreId?.titre || 'Offre supprimée'}</p>
+                            <p className="text-gray-500 text-xs mt-1 flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              {new Date(c.createdAt).toLocaleDateString('fr-FR')}
+                            </p>
+                          </div>
+                        </div>
+                        <div className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-xl border ${statut.bg} ${statut.color}`}>
+                          <SIcon className="w-3.5 h-3.5" />
+                          {statut.label}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Actions rapides & Offres récentes */}
+            <div className="space-y-6">
+              
+              {/* Actions rapides */}
+              <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-3xl p-6 hover:border-gray-700 transition-colors duration-300">
+                <h3 className="text-white font-semibold text-lg mb-5">Actions rapides</h3>
+                <div className="space-y-3">
+                  {[
+                    { label: 'Voir les offres',       icon: Briefcase, action: () => setOnglet('offres'),       color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
+                    { label: 'Nouvelle candidature',  icon: Upload,    action: () => setOnglet('postuler'),     color: 'text-teal-400',   bg: 'bg-teal-500/10'   },
+                    { label: 'Mes candidatures',      icon: FileText,  action: () => setOnglet('candidatures'), color: 'text-amber-400',  bg: 'bg-amber-500/10'  },
+                  ].map((a, i) => {
+                    const Icon = a.icon
+                    return (
+                      <button
+                        key={i}
+                        onClick={a.action}
+                        className="w-full flex items-center gap-3 p-3 rounded-2xl text-sm text-gray-300 bg-gray-950/50 border border-gray-800 hover:border-gray-600 hover:bg-gray-800/80 transition-all group"
+                      >
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${a.bg}`}>
+                          <Icon className={`w-4 h-4 ${a.color}`} />
+                        </div>
+                        <span className="font-medium group-hover:text-white transition-colors">{a.label}</span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* Offres récentes */}
+              <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-3xl p-6 hover:border-gray-700 transition-colors duration-300">
+                <h3 className="text-white font-semibold text-lg mb-5">Ajouté récemment</h3>
+                <div className="space-y-3">
+                  {offres.slice(0, 3).map((o, i) => (
+                    <div
+                      key={i}
+                      onClick={() => { setUploadForm({...uploadForm, offreId: o._id}); setOnglet('postuler') }}
+                      className="flex items-center gap-3 cursor-pointer group"
+                    >
+                      <div className="w-2 h-2 rounded-full bg-indigo-500 group-hover:scale-150 transition-transform" />
+                      <p className="text-gray-400 text-sm truncate font-medium group-hover:text-white transition-colors">{o.titre}</p>
+                    </div>
+                  ))}
+                  {offres.length === 0 && (
+                    <p className="text-gray-600 text-sm">Aucune offre disponible</p>
+                  )}
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
-      </div>
-
-    </div>
-  </div>
-)}
+      )}
 
       {/* ── OFFRES ── */}
       {onglet === 'offres' && (
