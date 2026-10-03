@@ -103,18 +103,21 @@ export default function Admin() {
       </div>
 
       {/* Onglets */}
-      <div className="flex gap-1 bg-gray-900 border border-gray-800 p-1 rounded-xl w-fit mb-6">
+      <div className="flex overflow-x-auto no-scrollbar gap-2 bg-gray-900/50 backdrop-blur-md border border-gray-800 p-1.5 rounded-2xl w-fit mb-8 shadow-sm">
         {onglets.map(o => {
           const Icon = o.icon
+          const isActive = onglet === o.key
           return (
             <button
               key={o.key}
               onClick={() => setOnglet(o.key)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                onglet === o.key ? 'bg-purple-700 text-white' : 'text-gray-400 hover:text-white'
+              className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+                isActive 
+                  ? 'bg-gray-800 text-white shadow-sm ring-1 ring-gray-700/50' 
+                  : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/50'
               }`}
             >
-              <Icon className="w-4 h-4" />
+              <Icon className={`w-4 h-4 ${isActive ? 'text-indigo-400' : ''}`} />
               {o.label}
             </button>
           )
@@ -123,77 +126,91 @@ export default function Admin() {
 
       {/* ── STATS ── */}
       {onglet === 'stats' && (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
           {/* Répartition utilisateurs */}
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <h3 className="text-white font-semibold mb-4">Répartition des utilisateurs</h3>
-            {[
-              { role: 'candidat',  color: 'bg-indigo-500', label: 'Candidats'   },
-              { role: 'recruteur', color: 'bg-teal-500',   label: 'Recruteurs'  },
-              { role: 'admin',     color: 'bg-purple-500', label: 'Admins'      },
-            ].map(r => {
-              const count = users.filter(u => u.role === r.role).length
-              const pct   = users.length > 0 ? Math.round((count / users.length) * 100) : 0
-              return (
-                <div key={r.role} className="mb-4">
-                  <div className="flex justify-between text-sm mb-1.5">
-                    <span className="text-gray-400">{r.label}</span>
-                    <span className="text-white font-medium">{count} ({pct}%)</span>
+          <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-6 hover:border-gray-700 transition-colors duration-300">
+            <h3 className="text-white font-semibold text-lg mb-6 flex items-center gap-2">
+              <Users className="w-5 h-5 text-indigo-400" />
+              Répartition des utilisateurs
+            </h3>
+            <div className="space-y-5">
+              {[
+                { role: 'candidat',  color: 'bg-indigo-500', label: 'Candidats'   },
+                { role: 'recruteur', color: 'bg-teal-500',   label: 'Recruteurs'  },
+                { role: 'admin',     color: 'bg-purple-500', label: 'Admins'      },
+              ].map(r => {
+                const count = users.filter(u => u.role === r.role).length
+                const pct   = users.length > 0 ? Math.round((count / users.length) * 100) : 0
+                return (
+                  <div key={r.role}>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span className="text-gray-400 font-medium">{r.label}</span>
+                      <span className="text-white font-bold">{count} <span className="text-gray-500 font-normal">({pct}%)</span></span>
+                    </div>
+                    <div className="h-2.5 bg-gray-950 rounded-full overflow-hidden border border-gray-800">
+                      <div className={`h-full rounded-full ${r.color} transition-all duration-1000 ease-out relative`} style={{ width: `${pct}%` }}>
+                        <div className="absolute inset-0 bg-white/20 w-full h-full animate-[shimmer_2s_infinite]" />
+                      </div>
+                    </div>
                   </div>
-                  <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
-                    <div className={`h-full rounded-full ${r.color} transition-all`} style={{ width: `${pct}%` }} />
-                  </div>
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
           </div>
 
           {/* Offres par type */}
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <h3 className="text-white font-semibold mb-4">Offres par type de contrat</h3>
-            {['Stage', 'CDI', 'CDD', 'Freelance'].map(type => {
-              const count = offres.filter(o => o.typeContrat === type).length
-              const pct   = offres.length > 0 ? Math.round((count / offres.length) * 100) : 0
-              return (
-                <div key={type} className="mb-4">
-                  <div className="flex justify-between text-sm mb-1.5">
-                    <span className="text-gray-400">{type}</span>
-                    <span className="text-white font-medium">{count} ({pct}%)</span>
+          <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-6 hover:border-gray-700 transition-colors duration-300">
+            <h3 className="text-white font-semibold text-lg mb-6 flex items-center gap-2">
+              <Briefcase className="w-5 h-5 text-teal-400" />
+              Offres par type de contrat
+            </h3>
+            <div className="space-y-5">
+              {['Stage', 'CDI', 'CDD', 'Freelance'].map(type => {
+                const count = offres.filter(o => o.typeContrat === type).length
+                const pct   = offres.length > 0 ? Math.round((count / offres.length) * 100) : 0
+                return (
+                  <div key={type}>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span className="text-gray-400 font-medium">{type}</span>
+                      <span className="text-white font-bold">{count} <span className="text-gray-500 font-normal">({pct}%)</span></span>
+                    </div>
+                    <div className="h-2.5 bg-gray-950 rounded-full overflow-hidden border border-gray-800">
+                      <div className="h-full rounded-full bg-teal-500 transition-all duration-1000 ease-out relative" style={{ width: `${pct}%` }}>
+                        <div className="absolute inset-0 bg-white/20 w-full h-full animate-[shimmer_2s_infinite]" />
+                      </div>
+                    </div>
                   </div>
-                  <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
-                    <div className="h-full rounded-full bg-teal-500 transition-all" style={{ width: `${pct}%` }} />
-                  </div>
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
           </div>
 
           {/* Derniers utilisateurs */}
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-white font-semibold">Derniers inscrits</h3>
+          <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-6 hover:border-gray-700 transition-colors duration-300">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-white font-semibold text-lg">Derniers inscrits</h3>
               <button
                 onClick={() => setOnglet('utilisateurs')}
-                className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1"
+                className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-medium bg-indigo-500/10 px-3 py-1.5 rounded-lg transition-colors"
               >
                 Voir tout <ChevronRight className="w-3 h-3" />
               </button>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-1">
               {users.slice(0, 4).map(u => (
-                <div key={u._id} className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                <div key={u._id} className="flex items-center gap-4 p-3 hover:bg-gray-800/40 rounded-xl transition-colors">
+                  <div className="w-10 h-10 bg-gradient-to-br from-gray-800 to-gray-700 border border-gray-600 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 shadow-inner">
                     {u.prenom?.[0]}{u.nom?.[0]}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-white text-sm truncate">{u.prenom} {u.nom}</p>
-                    <p className="text-gray-500 text-xs truncate">{u.email}</p>
+                    <p className="text-white text-sm font-medium truncate">{u.prenom} {u.nom}</p>
+                    <p className="text-gray-500 text-xs truncate mt-0.5">{u.email}</p>
                   </div>
-                  <span className={`text-xs px-2 py-0.5 rounded-full border flex-shrink-0 ${
-                    u.role === 'admin'     ? 'bg-purple-900/30 text-purple-400 border-purple-700' :
-                    u.role === 'recruteur' ? 'bg-teal-900/30 text-teal-400 border-teal-700' :
-                                             'bg-indigo-900/30 text-indigo-400 border-indigo-700'
+                  <span className={`text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-md border flex-shrink-0 ${
+                    u.role === 'admin'     ? 'bg-purple-900/20 text-purple-400 border-purple-700/50' :
+                    u.role === 'recruteur' ? 'bg-teal-900/20 text-teal-400 border-teal-700/50' :
+                                             'bg-indigo-900/20 text-indigo-400 border-indigo-700/50'
                   }`}>
                     {u.role}
                   </span>
@@ -203,25 +220,27 @@ export default function Admin() {
           </div>
 
           {/* Dernières offres */}
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-white font-semibold">Dernières offres</h3>
+          <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-6 hover:border-gray-700 transition-colors duration-300">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-white font-semibold text-lg">Dernières offres</h3>
               <button
                 onClick={() => setOnglet('offres')}
-                className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1"
+                className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-medium bg-indigo-500/10 px-3 py-1.5 rounded-lg transition-colors"
               >
                 Voir tout <ChevronRight className="w-3 h-3" />
               </button>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-1">
               {offres.slice(0, 4).map(o => (
-                <div key={o._id} className="flex items-center gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-teal-500 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-white text-sm truncate">{o.titre}</p>
-                    <p className="text-gray-500 text-xs">{o.recruteurId?.prenom} {o.recruteurId?.nom}</p>
+                <div key={o._id} className="flex items-center gap-4 p-3 hover:bg-gray-800/40 rounded-xl transition-colors">
+                  <div className="w-10 h-10 bg-gray-950 border border-gray-800 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Briefcase className="w-4 h-4 text-gray-400" />
                   </div>
-                  <span className={`text-xs px-2 py-0.5 rounded-full border flex-shrink-0 ${typeColors[o.typeContrat] || ''}`}>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white text-sm font-medium truncate">{o.titre}</p>
+                    <p className="text-gray-500 text-xs mt-0.5">Par {o.recruteurId?.prenom} {o.recruteurId?.nom}</p>
+                  </div>
+                  <span className={`text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-md border flex-shrink-0 ${typeColors[o.typeContrat] || ''}`}>
                     {o.typeContrat}
                   </span>
                 </div>
