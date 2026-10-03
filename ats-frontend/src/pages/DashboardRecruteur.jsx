@@ -5,13 +5,6 @@ import Layout from '../components/layout/Layout'
 import api from '../services/api'
 import OffreCardRecruteur from '../components/OffreCardRecruteur'
 
-const typeColors = {
-  'Stage':     'bg-blue-900/30 text-blue-400 border-blue-700',
-  'CDI':       'bg-green-900/30 text-green-400 border-green-700',
-  'CDD':       'bg-amber-900/30 text-amber-400 border-amber-700',
-  'Freelance': 'bg-purple-900/30 text-purple-400 border-purple-700',
-}
-
 // ── Formulaire en dehors du composant ──
 function FormulaireOffre({ form, setForm, handleSubmit }) {
   return (
