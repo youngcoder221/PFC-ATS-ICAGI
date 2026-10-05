@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, MapPin, Briefcase, ChevronRight, Users, FileText, Shield } from 'lucide-react'
+import { Search, MapPin, Briefcase, ChevronRight } from 'lucide-react'
 import logo from '../assets/logo-icon-small.png'
 import api from '../services/api'
 
