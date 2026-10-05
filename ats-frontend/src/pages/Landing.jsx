@@ -112,177 +112,112 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── FEATURES ── */}
-      <section className="px-8 py-16 bg-[#0a0c12] border-t border-gray-800/50">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-white text-center mb-2">
-            Tout ce dont vous avez besoin
-          </h2>
-          <p className="text-gray-500 text-sm text-center mb-10">
-            Une plateforme complète pour gérer vos recrutements de A à Z
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[
-              {
-                icon: '🤖',
-                color: 'bg-indigo-900/20 border-indigo-800/50',
-                iconBg: 'bg-indigo-900/40',
-                title: 'Analyse IA des CV',
-                desc: 'Extraction automatique des compétences et calcul du score de correspondance avec le poste.',
-              },
-              {
-                icon: '🏆',
-                color: 'bg-teal-900/20 border-teal-800/50',
-                iconBg: 'bg-teal-900/40',
-                title: 'Ranking automatique',
-                desc: 'Les candidats sont classés du plus pertinent au moins pertinent en temps réel.',
-              },
-              {
-                icon: '📊',
-                color: 'bg-purple-900/20 border-purple-800/50',
-                iconBg: 'bg-purple-900/40',
-                title: 'Score expliqué',
-                desc: 'Chaque candidat reçoit un score détaillé avec les raisons de son positionnement.',
-              },
-              {
-                icon: '🔒',
-                color: 'bg-amber-900/20 border-amber-800/50',
-                iconBg: 'bg-amber-900/40',
-                title: 'Accès sécurisé',
-                desc: 'Trois niveaux d\'accès distincts : candidat, recruteur et administrateur.',
-              },
-              {
-                icon: '📄',
-                color: 'bg-green-900/20 border-green-800/50',
-                iconBg: 'bg-green-900/40',
-                title: 'Upload de CV',
-                desc: 'Déposez votre CV en PDF et recevez immédiatement votre score de correspondance.',
-              },
-              {
-                icon: '🏢',
-                color: 'bg-rose-900/20 border-rose-800/50',
-                iconBg: 'bg-rose-900/40',
-                title: 'Pour les PME',
-                desc: 'Interface simple et accessible, conçue pour les entreprises sans équipe RH dédiée.',
-              },
-            ].map((f, i) => (
-              <div key={i} className={`border rounded-xl p-5 ${f.color}`}>
-                <div className={`w-9 h-9 ${f.iconBg} rounded-lg flex items-center justify-center text-lg mb-3`}>
-                  {f.icon}
-                </div>
-                <h3 className="text-white font-medium text-sm mb-2">{f.title}</h3>
-                <p className="text-gray-500 text-xs leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
+      {/* ── LISTE DES OFFRES (Style Jobboard) ── */}
+      <main className="flex-1 max-w-6xl w-full mx-auto px-6 py-12">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">Dernières offres d'emploi</h2>
+            <p className="text-gray-500 text-sm mt-1">
+              {offres.length} opportunité(s) disponible(s) en ce moment
+            </p>
           </div>
         </div>
-      </section>
 
-      {/* ── COMMENT ÇA MARCHE ── */}
-      <section className="px-8 py-16 bg-[#080a0f]">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold text-white text-center mb-2">
-            Comment ça marche ?
-          </h2>
-          <p className="text-gray-500 text-sm text-center mb-10">
-            Simple, rapide et efficace
-          </p>
-
-          <div className="grid grid-cols-2 gap-8">
-            {/* Candidat */}
-            <div>
-              <div className="flex items-center gap-2 mb-6">
-                <div className="w-7 h-7 bg-indigo-900/40 border border-indigo-700 rounded-lg flex items-center justify-center">
-                  <Users className="w-3.5 h-3.5 text-indigo-400" />
-                </div>
-                <h3 className="text-white font-medium text-sm">Pour les candidats</h3>
-              </div>
-              {[
-                { num: '01', text: 'Créez votre compte gratuitement'      },
-                { num: '02', text: 'Parcourez les offres disponibles'      },
-                { num: '03', text: 'Déposez votre CV en PDF'              },
-                { num: '04', text: 'Recevez votre score et suivez votre candidature' },
-              ].map((s, i) => (
-                <div key={i} className="flex gap-3 mb-4">
-                  <span className="text-indigo-600 font-bold text-xs mt-0.5 flex-shrink-0">{s.num}</span>
-                  <p className="text-gray-400 text-sm">{s.text}</p>
-                </div>
-              ))}
-              <button
-                onClick={() => navigate('/register')}
-                className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-xs font-medium transition-all mt-2"
-              >
-                Créer mon compte <ChevronRight className="w-3 h-3" />
-              </button>
-            </div>
-
-            {/* Recruteur */}
-            <div>
-              <div className="flex items-center gap-2 mb-6">
-                <div className="w-7 h-7 bg-teal-900/40 border border-teal-700 rounded-lg flex items-center justify-center">
-                  <Briefcase className="w-3.5 h-3.5 text-teal-400" />
-                </div>
-                <h3 className="text-white font-medium text-sm">Pour les recruteurs</h3>
-              </div>
-              {[
-                { num: '01', text: 'Créez votre compte recruteur'         },
-                { num: '02', text: 'Publiez vos offres d\'emploi'         },
-                { num: '03', text: 'Définissez les critères du poste'     },
-                { num: '04', text: 'Consultez le ranking IA des candidats' },
-              ].map((s, i) => (
-                <div key={i} className="flex gap-3 mb-4">
-                  <span className="text-teal-600 font-bold text-xs mt-0.5 flex-shrink-0">{s.num}</span>
-                  <p className="text-gray-400 text-sm">{s.text}</p>
-                </div>
-              ))}
-              <button
-                onClick={() => navigate('/login')}
-                className="flex items-center gap-2 bg-teal-700 hover:bg-teal-600 text-white px-4 py-2 rounded-lg text-xs font-medium transition-all mt-2"
-              >
-                Accéder à l'espace recruteur <ChevronRight className="w-3 h-3" />
-              </button>
-            </div>
+        {offres.length === 0 ? (
+          <div className="text-center py-20 bg-white rounded-2xl border border-gray-200 shadow-sm">
+            <Briefcase className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+            <h3 className="text-gray-900 font-medium text-lg">Aucune offre pour le moment</h3>
+            <p className="text-gray-500 text-sm mt-1">Revenez un peu plus tard pour découvrir de nouvelles opportunités.</p>
           </div>
-        </div>
-      </section>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {offres
+              .filter(o => 
+                searchQuery === '' || 
+                o.titre.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                o.competences.some(c => c.toLowerCase().includes(searchQuery.toLowerCase()))
+              )
+              .map((offre) => {
+              // Couleurs des badges de contrat (Thème clair)
+              const typeColors = {
+                'Stage': 'bg-blue-50 text-blue-700 border-blue-200',
+                'CDI': 'bg-green-50 text-green-700 border-green-200',
+                'CDD': 'bg-amber-50 text-amber-700 border-amber-200',
+                'Freelance': 'bg-purple-50 text-purple-700 border-purple-200',
+              }
 
-      {/* ── CTA FINAL ── */}
-      <section className="px-8 py-14 bg-[#0a0c12] border-t border-gray-800/50">
-        <div className="max-w-xl mx-auto text-center">
-          <div className="w-12 h-12 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <Trophy className="w-6 h-6 text-white" />
+              return (
+                <div key={offre._id} className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-lg hover:border-indigo-300 transition-all duration-300 flex flex-col">
+                  {/* Entreprise & Badge contrat */}
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-gray-50 border border-gray-100 rounded-xl flex items-center justify-center">
+                        <Briefcase className="w-6 h-6 text-indigo-400" />
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-semibold text-gray-900">
+                          {offre.recruteurId?.entreprise || 'Entreprise Partenaire'}
+                        </h4>
+                        <p className="text-xs text-gray-500">{new Date(offre.createdAt).toLocaleDateString('fr-FR')}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Titre du poste */}
+                  <h3 className="text-lg font-bold text-gray-900 mb-3 line-clamp-2">
+                    {offre.titre}
+                  </h3>
+
+                  {/* Infos (Localisation & Contrat) */}
+                  <div className="flex flex-wrap gap-2 mb-5">
+                    <span className="flex items-center gap-1.5 text-xs font-medium bg-gray-50 border border-gray-200 text-gray-700 px-2.5 py-1 rounded-md">
+                      <MapPin className="w-3.5 h-3.5 text-gray-400" /> 
+                      {offre.localisation || 'Dakar, Sénégal'}
+                    </span>
+                    <span className={`flex items-center gap-1.5 text-xs font-medium border px-2.5 py-1 rounded-md ${typeColors[offre.typeContrat] || 'bg-gray-50 text-gray-700 border-gray-200'}`}>
+                      {offre.typeContrat}
+                    </span>
+                  </div>
+
+                  {/* Compétences limitées à 3 */}
+                  <div className="flex gap-2 flex-wrap mb-6 mt-auto">
+                    {offre.competences?.slice(0, 3).map((c, i) => (
+                      <span key={i} className="text-[11px] font-medium bg-indigo-50 text-indigo-700 px-2 py-1 rounded">
+                        {c}
+                      </span>
+                    ))}
+                    {offre.competences?.length > 3 && (
+                      <span className="text-[11px] font-medium text-gray-500 py-1">
+                        +{offre.competences.length - 3}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Action */}
+                  <button
+                    onClick={() => navigate('/login')}
+                    className="w-full flex items-center justify-center gap-2 bg-gray-50 hover:bg-indigo-600 text-gray-700 hover:text-white border border-gray-200 hover:border-indigo-600 py-2.5 rounded-xl text-sm font-semibold transition-all"
+                  >
+                    Voir l'offre <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              )
+            })}
           </div>
-          <h2 className="text-2xl font-bold text-white mb-3">
-            Prêt à optimiser votre recrutement ?
-          </h2>
-          <p className="text-gray-400 text-sm mb-6">
-            Rejoignez les entreprises qui recrutent intelligemment avec ATS Platform.
-          </p>
-          <div className="flex justify-center">
-            <button
-                onClick={() => navigate('/login')}
-                className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:opacity-90 transition-all shadow-lg"
-            >
-                Commencer gratuitement
-            </button>
-        </div>
-        </div>
-      </section>
+        )}
+      </main>
 
-      {/* ── FOOTER ── */}
-      <footer className="px-8 py-5 border-t border-gray-800/50 bg-[#080a0f]">
-        <div className="flex items-center justify-between max-w-4xl mx-auto">
+      {/* ── FOOTER CLAIR ── */}
+      <footer className="bg-white border-t border-gray-200 mt-auto">
+        <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-md flex items-center justify-center">
-              <Users className="w-3 h-3 text-white" />
-            </div>
-            <span className="text-gray-500 text-xs">ATS Platform © 2026</span>
+            <img src={logo} alt="Logo" className="w-6 h-6 grayscale opacity-60" />
+            <span className="text-gray-500 text-sm font-medium">ATS Sénégal © 2026. Tous droits réservés.</span>
           </div>
-          <div className="flex items-center gap-4">
-            <Shield className="w-3.5 h-3.5 text-gray-600" />
-            <FileText className="w-3.5 h-3.5 text-gray-600" />
-            <span className="text-gray-600 text-xs">Système de gestion des candidatures</span>
+          <div className="flex items-center gap-6">
+            <span className="text-gray-500 text-sm hover:text-indigo-600 cursor-pointer transition-colors">Mentions légales</span>
+            <span className="text-gray-500 text-sm hover:text-indigo-600 cursor-pointer transition-colors">Politique de confidentialité</span>
+            <span className="text-gray-500 text-sm hover:text-indigo-600 cursor-pointer transition-colors">Contact</span>
           </div>
         </div>
       </footer>
