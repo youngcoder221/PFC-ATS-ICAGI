@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, MapPin, Briefcase, ChevronRight } from 'lucide-react'
+import { Search, MapPin, Briefcase, ChevronRight, ArrowUpRight, Bot, Phone, Mail } from 'lucide-react'
 import logo from '../assets/logo-icon-small.png'
 import api from '../services/api'
 
@@ -110,6 +110,24 @@ export default function Landing() {
             <span className="cursor-pointer hover:text-white underline decoration-gray-500 underline-offset-4">Ressources Humaines</span>
           </div>
         </div>
+
+        {/* Compteurs statistiques (Fond sombre transparent en bas du Hero) */}
+        <div className="absolute bottom-0 left-0 w-full bg-gray-950/80 backdrop-blur-md border-t border-gray-800 py-5">
+          <div className="max-w-6xl mx-auto flex flex-wrap justify-center gap-12 md:gap-24 px-6">
+            <div className="text-center">
+              <p className="text-2xl md:text-3xl font-black text-white">654</p>
+              <p className="text-[11px] md:text-xs text-gray-400 font-semibold uppercase tracking-wider mt-1">opportunités actives</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl md:text-3xl font-black text-white">358</p>
+              <p className="text-[11px] md:text-xs text-gray-400 font-semibold uppercase tracking-wider mt-1">organisations</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl md:text-3xl font-black text-white">43</p>
+              <p className="text-[11px] md:text-xs text-gray-400 font-semibold uppercase tracking-wider mt-1">stages disponibles</p>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* ── LISTE DES OFFRES (Style Jobboard) ── */}
@@ -196,16 +214,69 @@ export default function Landing() {
                   {/* Action */}
                   <button
                     onClick={() => navigate('/login')}
-                    className="w-full flex items-center justify-center gap-2 bg-gray-50 hover:bg-indigo-600 text-gray-700 hover:text-white border border-gray-200 hover:border-indigo-600 py-2.5 rounded-xl text-sm font-semibold transition-all"
+                    className="w-full mt-auto flex items-center justify-between bg-white hover:bg-indigo-600 text-gray-900 hover:text-white border border-gray-200 hover:border-indigo-600 px-4 py-2.5 rounded-xl text-sm font-bold transition-all group"
                   >
-                    Voir l'offre <ChevronRight className="w-4 h-4" />
+                    {/* On simule la logique d'un email de contact présent ou non */}
+                    <span>{offre.emailContact ? 'Écrire' : 'Postuler'}</span>
+                    {offre.emailContact ? (
+                      <Mail className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />
+                    ) : (
+                      <ArrowUpRight className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />
+                    )}
                   </button>
                 </div>
               )
             })}
           </div>
+          
+            {/* Bouton Afficher plus d'offres */}
+          <div className="flex justify-center mt-12">
+            <button className="bg-white border border-gray-300 text-gray-900 font-bold px-8 py-3.5 rounded-full hover:bg-gray-50 transition-all shadow-sm">
+              Afficher plus d'offres
+            </button>
+          </div>
+
         )}
       </main>
+
+      {/* ── SECTION : VOTRE CARRIÈRE (Assistants & Partenariats) ── */}
+      <section className="bg-[#0b1021] py-20 px-6 border-t border-gray-800 mt-10">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-10 tracking-tight text-center">
+            Votre carrière, mieux préparée.
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Carte IA */}
+            <div className="bg-[#131b31] border border-gray-800 rounded-3xl p-8 flex flex-col items-start hover:border-indigo-500/50 transition-colors">
+              <div className="w-12 h-12 bg-indigo-500/20 rounded-2xl flex items-center justify-center mb-6">
+                <Bot className="w-6 h-6 text-indigo-400" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-3">Assistant recherche d'emploi</h3>
+              <p className="text-gray-400 text-sm mb-8 leading-relaxed">
+                Optimisez votre CV, préparez vos entretiens et trouvez les meilleures opportunités grâce à notre intelligence artificielle embarquée.
+              </p>
+              <button className="mt-auto flex items-center gap-2 text-white font-bold bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-xl transition-all">
+                Lancer mon assistant emploi <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Carte Partenariats */}
+            <div className="bg-[#131b31] border border-gray-800 rounded-3xl p-8 flex flex-col items-start hover:border-green-500/50 transition-colors">
+              <div className="w-12 h-12 bg-green-500/20 rounded-2xl flex items-center justify-center mb-6">
+                <Briefcase className="w-6 h-6 text-green-400" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-3">Partenariats entreprises</h3>
+              <p className="text-gray-400 text-sm mb-8 leading-relaxed">
+                Vous recrutez ? Diffusez vos offres à notre vivier de talents qualifiés et bénéficiez d'un accompagnement sur mesure par notre équipe.
+              </p>
+              <button className="mt-auto flex items-center gap-2 text-white font-bold bg-[#10b981] hover:bg-[#059669] px-6 py-3 rounded-xl transition-all shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+                <Phone className="w-4 h-4" /> Contacter le +221 78 436 36 64
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ── FOOTER CLAIR ── */}
       <footer className="bg-white border-t border-gray-200 mt-auto">
