@@ -1,46 +1,67 @@
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Users, Briefcase, FileText, ChevronRight, Zap, Trophy, Shield } from 'lucide-react'
+import { Search, MapPin, Briefcase, ChevronRight, Users, FileText, Shield } from 'lucide-react'
 import logo from '../assets/logo-icon-small.png'
-
+import api from '../services/api'
 
 export default function Landing() {
   const navigate = useNavigate()
+  const [searchQuery, setSearchQuery] = useState('')
+  const [offres, setOffres] = useState([])
+
+  // Chargement des offres au montage de la page
+  useEffect(() => {
+    const fetchOffres = async () => {
+      try {
+        const res = await api.get('/offres')
+        // On ne garde que les offres ouvertes
+        setOffres(res.data.filter(o => o.statut === 'ouverte'))
+      } catch (err) {
+        console.error("Erreur chargement offres:", err)
+      }
+    }
+    fetchOffres()
+  }, [])
 
   return (
-    <div className="min-h-screen bg-[#080a0f] flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
 
       {/* ── TOPBAR ── */}
-      <nav className="flex items-center justify-between px-8 py-4 border-b border-gray-800/50 bg-[#0a0c12] sticky top-0 z-50 backdrop-blur-md">
+      <nav className="flex items-center justify-between px-6 py-4 bg-white shadow-sm sticky top-0 z-50">
+        {/* Logo */}
         <button
           onClick={() => navigate('/')}
-          className="flex items-center gap-3 cursor-pointer group"
+          className="flex items-center gap-2 cursor-pointer"
         >
           <img
             src={logo}
             alt="ATS Platform"
-            className="w-8 h-8 object-contain group-hover:opacity-90 transition-opacity"
+            className="w-8 h-8 object-contain"
           />
-          <span className="text-white font-semibold text-sm">ATS Platform</span>
+          <span className="text-gray-900 font-bold text-lg tracking-tight">ATS <span className="text-indigo-600">Sénégal</span></span>
         </button>
 
+        {/* Liens Centraux */}
         <div className="hidden md:flex items-center gap-8">
-          {['Fonctionnalités', 'Comment ça marche', 'À propos'].map(item => (
-            <span key={item} className="text-gray-400 text-sm hover:text-white transition-colors cursor-pointer">
-              {item}
-            </span>
-          ))}
+          <span className="text-gray-600 font-medium hover:text-indigo-600 transition-colors cursor-pointer">
+            Offres d'emploi
+          </span>
+          <span onClick={() => navigate('/candidat')} className="text-gray-600 font-medium hover:text-indigo-600 transition-colors cursor-pointer">
+            Suivre ma candidature
+          </span>
         </div>
 
+        {/* Boutons d'action */}
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/login')}
-            className="text-gray-300 text-sm px-4 py-2 rounded-lg border border-gray-700 hover:border-gray-500 hover:text-white transition-all"
+            className="text-indigo-600 font-medium text-sm px-4 py-2 rounded-lg border border-indigo-100 hover:bg-indigo-50 transition-all"
           >
             Connexion
           </button>
           <button
             onClick={() => navigate('/register')}
-            className="text-white text-sm px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-600 to-violet-600 hover:opacity-90 transition-all shadow-lg"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-all shadow-md"
           >
             S'inscrire
           </button>
@@ -48,54 +69,46 @@ export default function Landing() {
       </nav>
 
       {/* ── HERO ── */}
-      <section className="flex-1 flex flex-col items-center justify-center text-center px-6 py-20 relative overflow-hidden">
+      <section 
+        className="relative flex flex-col items-center justify-center px-6 py-24 md:py-32"
+        style={{
+          // Image de fond libre de droits (bureau/professionnel) avec un overlay noir
+          backgroundImage: `linear-gradient(rgba(17, 24, 39, 0.7), rgba(17, 24, 39, 0.8)), url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="relative z-10 w-full max-w-4xl text-center">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 tracking-tight">
+            Trouvez l'emploi idéal au <span className="text-indigo-400">Sénégal</span>
+          </h1>
+          <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto font-light">
+            Découvrez les meilleures offres d'emploi, de stages et de CDD/CDI. Postulez en un clic et laissez notre IA valoriser votre CV auprès des recruteurs.
+          </p>
 
-        {/* Glows */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-indigo-900/15 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-1/4 w-[300px] h-[300px] bg-violet-900/10 rounded-full blur-3xl pointer-events-none" />
-
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 bg-indigo-900/30 border border-indigo-700/50 rounded-full px-4 py-1.5 text-indigo-300 text-xs mb-6">
-          <Zap className="w-3 h-3" />
-          Propulsé par l'Intelligence Artificielle
-        </div>
-
-        {/* Titre */}
-        <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-5 max-w-2xl">
-          Recrutez plus vite,{' '}
-          <span className="bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">
-            recrutez intelligemment
-          </span>
-        </h1>
-
-        <p className="text-gray-400 text-base leading-relaxed mb-8 max-w-xl">
-          Analysez les CV automatiquement, classez vos candidats par score de pertinence et prenez les meilleures décisions de recrutement en quelques secondes.
-        </p>
-
-        {/* CTA */}
-        <div className="flex justify-center">
-            <button
-                onClick={() => navigate('/login')}
-                className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-6 py-3 rounded-xl text-sm font-medium hover:opacity-90 transition-all shadow-lg"
-            >
-                Postuler à une offre
-                <ChevronRight className="w-4 h-4" />
-            </button>
-        </div>
-
-        {/* Stats */}
-        <div className="flex items-center gap-8 mt-12 pt-8 border-t border-gray-800/50">
-          {[
-            { value: '100%', label: 'Analyse automatique' },
-            { value: '0–100', label: 'Score de pertinence' },
-            { value: '3 rôles', label: 'Candidat · Recruteur · Admin' },
-            { value: 'IA', label: 'Powered by Gemini' },
-          ].map((s, i) => (
-            <div key={i} className="text-center">
-              <p className="text-white font-bold text-lg">{s.value}</p>
-              <p className="text-gray-500 text-xs mt-0.5">{s.label}</p>
+          {/* Barre de Recherche intégrée au Hero */}
+          <div className="bg-white p-2 rounded-2xl shadow-2xl flex flex-col md:flex-row gap-2 max-w-3xl mx-auto">
+            <div className="flex-1 flex items-center bg-gray-50 rounded-xl px-4 py-3 md:py-0 border border-transparent focus-within:border-indigo-500 focus-within:bg-white transition-colors">
+              <Search className="w-5 h-5 text-gray-400 mr-3" />
+              <input
+                type="text"
+                placeholder="Quel poste recherchez-vous ? (ex: Développeur, Comptable...)"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-transparent border-none outline-none text-gray-700 placeholder-gray-400"
+              />
             </div>
-          ))}
+            <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3.5 rounded-xl font-medium transition-all shadow-md flex items-center justify-center gap-2">
+              Rechercher
+            </button>
+          </div>
+          
+          <div className="mt-6 flex flex-wrap justify-center gap-2 text-sm text-gray-300">
+            <span>Recherches populaires :</span>
+            <span className="cursor-pointer hover:text-white underline decoration-gray-500 underline-offset-4">Développeur Web</span>
+            <span className="cursor-pointer hover:text-white underline decoration-gray-500 underline-offset-4">Marketing</span>
+            <span className="cursor-pointer hover:text-white underline decoration-gray-500 underline-offset-4">Ressources Humaines</span>
+          </div>
         </div>
       </section>
 
