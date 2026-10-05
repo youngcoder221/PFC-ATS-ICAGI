@@ -148,7 +148,8 @@ export default function Landing() {
             <p className="text-gray-500 text-sm mt-1">Revenez un peu plus tard pour découvrir de nouvelles opportunités.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {offres
               .filter(o => 
                 searchQuery === '' || 
@@ -235,7 +236,7 @@ export default function Landing() {
               Afficher plus d'offres
             </button>
           </div>
-
+          </>
         )}
       </main>
 
