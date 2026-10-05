@@ -120,16 +120,16 @@ export default function Landing() {
       </section>
 
       {/* ── LISTE DES OFFRES ── */}
-      <main className="flex-1 w-full bg-[#041619] pt-16 pb-20 relative">
+      <main className="flex-1 w-full bg-white pt-16 pb-20 relative">
         <div className="max-w-7xl mx-auto px-6">
           
           <div className="mb-10">
-            <p className="text-[#00f098] font-bold text-xs tracking-widest uppercase mb-3">Sélection du jour</p>
+            <p className="text-[#041619] font-black text-xs tracking-widest uppercase mb-3">Sélection du jour</p>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-              <h2 className="text-4xl font-extrabold text-white max-w-2xl leading-tight">
+              <h2 className="text-4xl font-extrabold text-[#041619] max-w-2xl leading-tight">
                 Des opportunités sérieuses, prêtes à consulter
               </h2>
-              <p className="text-gray-400 max-w-md text-sm">
+              <p className="text-gray-500 max-w-md text-sm">
                 Utilisez la recherche et les filtres pour trouver rapidement les opportunités qui correspondent à votre profil et à vos ambitions.
               </p>
             </div>
@@ -139,15 +139,15 @@ export default function Landing() {
             <button className="bg-[#08282d] border border-[#00f098]/30 text-white px-6 py-3.5 rounded-2xl flex items-center gap-3 shadow-[0_0_15px_rgba(0,240,152,0.1)]">
               Emplois vérifiés <span className="bg-[#00f098] text-[#041619] px-2 py-0.5 rounded-full text-xs">584</span>
             </button>
-            <button className="bg-transparent border border-white/10 text-gray-400 hover:text-white hover:bg-white/5 px-4 py-3 rounded-2xl flex items-center gap-3 transition-colors">
-              Sources LinkedIn <span className="bg-white/10 text-gray-300 px-2 py-0.5 rounded-full text-xs">515</span>
+            <button className="bg-white border border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-gray-50 px-4 py-3 rounded-2xl flex items-center gap-3 transition-colors">
+              Sources LinkedIn <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs">515</span>
             </button>
-            <button className="bg-transparent border border-white/10 text-gray-400 hover:text-white hover:bg-white/5 px-4 py-3 rounded-2xl flex items-center gap-3 transition-colors">
-              Stages <span className="bg-white/10 text-gray-300 px-2 py-0.5 rounded-full text-xs">43</span>
+            <button className="bg-white border border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-gray-50 px-4 py-3 rounded-2xl flex items-center gap-3 transition-colors">
+              Stages <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs">43</span>
             </button>
           </div>
 
-          <div className="bg-[#08282d] border border-white/10 rounded-2xl p-3 mb-12 shadow-lg flex flex-col md:flex-row gap-3 items-center">
+          <div className="bg-[#08282d] border border-[#041619] rounded-2xl p-3 mb-12 shadow-xl flex flex-col md:flex-row gap-3 items-center">
             <div className="flex-1 w-full flex items-center gap-3 bg-[#041619] px-4 py-3.5 rounded-xl border border-white/5 focus-within:border-[#00f098]/50 transition-colors">
               <Search className="w-5 h-5 text-gray-400" />
               <input
@@ -332,15 +332,8 @@ export default function Landing() {
           </div>
         </div>
       </footer>
-      
-      {/* Flottant WhatsApp */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <button className="bg-[#00f098] hover:bg-[#00d084] text-[#041619] font-black py-3 px-5 rounded-full flex items-center gap-3 shadow-[0_8px_30px_rgba(0,240,152,0.3)] transition-transform hover:scale-105 border border-[#00f098]">
-          <div className="w-6 h-6 border-2 border-[#041619] rounded-full flex items-center justify-center text-[10px]">W</div>
-          Partenariat entreprise
-        </button>
-      </div>
 
+      
     </div>
   )
 }
