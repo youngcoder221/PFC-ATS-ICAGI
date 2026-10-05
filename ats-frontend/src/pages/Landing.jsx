@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, MapPin, Briefcase, ChevronRight, Check, Bookmark, ArrowUpRight, ArrowRight,  Bot, Phone, Mail } from 'lucide-react'
+import { Search, Briefcase, Check, Bookmark, ArrowUpRight, ArrowRight } from 'lucide-react'
 import logo from '../assets/logo-icon-small.png'
 import api from '../services/api'
 
@@ -193,14 +193,6 @@ export default function Landing() {
                 o.competences.some(c => c.toLowerCase().includes(searchQuery.toLowerCase()))
               )
               .map((offre) => {
-              // Couleurs des badges de contrat (Thème clair)
-              const typeColors = {
-                'Stage': 'bg-blue-50 text-blue-700 border-blue-200',
-                'CDI': 'bg-green-50 text-green-700 border-green-200',
-                'CDD': 'bg-amber-50 text-amber-700 border-amber-200',
-                'Freelance': 'bg-purple-50 text-purple-700 border-purple-200',
-              }
-
               return (
                 <div key={offre._id} className="bg-white border border-gray-200 rounded-3xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col group">
                   
