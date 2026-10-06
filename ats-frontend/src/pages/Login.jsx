@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { Eye, EyeOff, Mail, Lock, CheckCircle } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock, CheckCircle, ArrowLeft } from 'lucide-react'
 import api from '../services/api'
 import logoSmall from '../assets/logo-icon-small.png'
 
@@ -85,7 +85,15 @@ export default function Login() {
       </div>
 
       {/* Colonne Droite : Interaction */}
-      <div className="flex-1 flex flex-col justify-center items-center p-8 bg-[#041619]">
+      <div className="flex-1 flex flex-col relative justify-center items-center p-8 bg-[#041619]">
+        
+        {/* Bouton retour absolu */}
+        <div className="absolute top-8 right-8">
+          <button onClick={() => navigate('/')} className="flex items-center gap-2 text-gray-500 hover:text-[#00f098] transition-colors text-sm font-bold">
+            <ArrowLeft className="w-4 h-4" /> Retour à l'accueil
+          </button>
+        </div>
+
         <div className="w-full max-w-sm">
           
           {/* Sélecteur d'acteurs moderne */}
