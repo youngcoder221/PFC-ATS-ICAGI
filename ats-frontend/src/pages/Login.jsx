@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { Eye, EyeOff, Mail, Lock, ArrowLeft } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock } from 'lucide-react'
 import api from '../services/api'
 import logoSmall from '../assets/logo-icon-small.png'
-import logoFull from '../assets/logo-icon-full.png'
+
 
 export default function Login() {
   const [form, setForm]       = useState({ email: '', motDePasse: '' })
@@ -75,6 +75,12 @@ export default function Login() {
           </div>
 
           <h1 className="text-3xl font-black text-white mb-8">Connexion</h1>
+
+          {erreur && (
+            <div className="bg-red-900/20 border border-red-700/50 text-red-400 px-4 py-3 rounded-xl mb-6 text-sm">
+              {erreur}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
