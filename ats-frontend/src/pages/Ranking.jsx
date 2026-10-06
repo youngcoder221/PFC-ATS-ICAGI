@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/immutability */
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Trophy, Users, TrendingUp, CheckCircle, Clock, XCircle } from 'lucide-react'
+import { ArrowLeft, Trophy, Users, TrendingUp, CheckCircle, Clock, XCircle, Calendar } from 'lucide-react'
 import api from '../services/api'
 
 export default function Ranking() {
@@ -11,6 +11,11 @@ export default function Ranking() {
   const [ranking, setRanking] = useState([])
   const [offre, setOffre]     = useState(null)
   const [loading, setLoading] = useState(true)
+  const [raisonsOuvertes, setRaisonsOuvertes] = useState({})
+
+  const toggleRaison = (id) => {
+    setRaisonsOuvertes(prev => ({ ...prev, [id]: !prev[id] }))
+  }
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/immutability
@@ -41,6 +46,14 @@ export default function Ranking() {
   const scoreColor = (s) => s >= 75 ? 'text-green-400' : s >= 50 ? 'text-amber-400' : 'text-red-400'
   const scoreBar   = (s) => s >= 75 ? 'bg-green-500' : s >= 50 ? 'bg-amber-500' : 'bg-red-500'
   const scoreBg    = (s) => s >= 75 ? 'bg-green-900/20 border-green-700' : s >= 50 ? 'bg-amber-900/20 border-amber-700' : 'bg-red-900/20 border-red-700'
+
+  const formatDateCandidature = (dateStr) => {
+    if (!dateStr) return ''
+    const d = new Date(dateStr)
+    const date = d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })
+    const heure = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+    return `${date} à ${heure}`
+  }
 
   const rangBadge = (i) => {
     if (i === 0) return { bg: 'bg-yellow-500', text: '🥇' }
@@ -120,6 +133,7 @@ export default function Ranking() {
           <div className="divide-y divide-gray-800">
             {ranking.map((candidature, index) => {
               const badge = rangBadge(index)
+              const estOuvert = !!raisonsOuvertes[candidature._id]
               return (
                 <div key={candidature._id} className="px-6 py-4 flex items-center gap-4 hover:bg-gray-800/50 transition-all">
 
@@ -139,7 +153,21 @@ export default function Ranking() {
                       {candidature.candidatId?.prenom} {candidature.candidatId?.nom}
                     </p>
                     <p className="text-gray-500 text-xs">{candidature.candidatId?.email}</p>
-                    <p className="text-gray-400 text-xs mt-1 truncate">{candidature.raisons}</p>
+                    <p className="text-gray-600 text-[11px] mt-0.5 flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      Postulé le {formatDateCandidature(candidature.createdAt)}
+                    </p>
+                    <p className={`text-gray-400 text-xs mt-1 ${estOuvert ? '' : 'truncate'}`}>
+                      {candidature.raisons}
+                    </p>
+                    {candidature.raisons && candidature.raisons.length > 60 && (
+                      <button
+                        onClick={() => toggleRaison(candidature._id)}
+                        className="text-[11px] text-indigo-400 hover:text-indigo-300 font-medium"
+                      >
+                        {estOuvert ? 'Voir moins' : 'Voir plus'}
+                      </button>
+                    )}
                     <div className="mt-2 h-1.5 bg-gray-800 rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full ${scoreBar(candidature.score)}`}
@@ -158,7 +186,7 @@ export default function Ranking() {
                     value={candidature.statut}
                     onChange={async (e) => {
                       try {
-                        await api.put(`/candidatures/${candidature._id}/statut`, { statut: e.target.value })
+                        await api.put(`/cv/candidatures/${candidature._id}/statut`, { statut: e.target.value })
                         chargerRanking()
                       } catch (err) {
                         console.error(err)

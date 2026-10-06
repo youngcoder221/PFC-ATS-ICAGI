@@ -1,10 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import Login              from './pages/Login'
+import Landing from './pages/Landing'
 import Register           from './pages/Register'
 import DashboardRecruteur from './pages/DashboardRecruteur'
 import DashboardCandidat  from './pages/DashboardCandidat'
 import Ranking            from './pages/Ranking'
+import Admin              from './pages/Admin'  
 
 // Route protégée selon le rôle
 const PrivateRoute = ({ children, role }) => {
@@ -19,7 +21,7 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/"        element={<Navigate to="/login" />} />
+          <Route path="/" element={<Landing />} />
           <Route path="/login"   element={<Login />} />
           <Route path="/register" element={<Register />} />
 
@@ -40,6 +42,13 @@ export default function App() {
               <Ranking />
             </PrivateRoute>
           }/>
+
+          <Route path="/admin" element={
+            <PrivateRoute role="admin">
+              <Admin />
+            </PrivateRoute>
+          }/>
+          
         </Routes>
       </BrowserRouter>
     </AuthProvider>
