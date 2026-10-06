@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Briefcase, Check, Bookmark, ArrowUpRight, ArrowRight } from 'lucide-react'
+import { Search, Briefcase, Check, Bookmark, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles } from 'lucide-react'
 import logo from '../assets/logo-icon-small.png'
 import api from '../services/api'
 
@@ -72,33 +72,33 @@ export default function Landing() {
         <div className="relative z-10 w-full max-w-7xl mx-auto">
           <div className="flex items-center gap-4 mb-6">
             <div className="h-[2px] w-8 bg-[#00f098]"></div>
-            <span className="text-white font-bold text-xs tracking-widest uppercase">Carrières au Sénégal</span>
+            <span className="text-white font-bold text-xs tracking-widest uppercase">Recrutement 2.0</span>
           </div>
           
           <h1 className="text-5xl md:text-6xl lg:text-[5rem] font-extrabold text-white mb-6 tracking-tight leading-[1.1] max-w-4xl">
-            Votre prochaine <br className="hidden md:block"/> opportunité, <span className="text-[#00f098]">vérifiée à <br className="hidden md:block"/> la source.</span>
+            Le recrutement réinventé <br className="hidden md:block"/> par l'<span className="text-[#00f098]">Intelligence Artificielle.</span>
           </h1>
           
           <p className="text-lg md:text-xl text-gray-300 mb-12 max-w-2xl font-light">
-            Trouvez des emplois, stages, concours et bourses au Sénégal, en Afrique et à l'international.
+            Conçu pour les PME sénégalaises et d'Afrique de l'Ouest. Centralisez vos candidatures, automatisez le tri des CV et recrutez les meilleurs talents en quelques secondes grâce à notre moteur de scoring IA.
           </p>
 
           <div className="flex flex-wrap items-center gap-4 mb-8">
-            <button className="bg-[#00f098] hover:bg-[#00d084] text-[#041619] px-8 py-3.5 rounded-lg font-bold transition-all text-sm shadow-[0_0_15px_rgba(0,240,152,0.3)]">
-              Explorer les offres
+            <button onClick={() => navigate('/login')} className="bg-[#00f098] hover:bg-[#00d084] text-[#041619] px-8 py-3.5 rounded-lg font-bold transition-all text-sm shadow-[0_0_15px_rgba(0,240,152,0.3)]">
+              Espace Entreprise
             </button>
             <div className="text-sm border-l border-white/20 pl-4">
-              <p className="text-white font-bold">Vérifié le {new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric'})}</p>
-              <p className="text-[#00f098]">mise à jour quotidienne</p>
+              <p className="text-white font-bold">Propulsé par l'IA</p>
+              <p className="text-[#00f098]">Analyse sémantique Gemini</p>
             </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-4 mb-16">
-            <button className="bg-[#e8d5a5] hover:bg-[#d4c194] text-[#041619] px-6 py-3.5 rounded-lg font-bold transition-all text-sm shadow-[0_0_15px_rgba(232,213,165,0.2)]">
-              Améliorer mon CV avec l'IA
+            <button onClick={() => navigate('/login')} className="bg-[#e8d5a5] hover:bg-[#d4c194] text-[#041619] px-6 py-3.5 rounded-lg font-bold transition-all text-sm shadow-[0_0_15px_rgba(232,213,165,0.2)]">
+              Déposer mon CV
             </button>
             <button className="bg-transparent border border-white/30 text-white hover:bg-white/10 px-6 py-3.5 rounded-lg font-bold transition-all text-sm">
-              Assistant emploi IA
+              Découvrir la plateforme
             </button>
           </div>
 
@@ -124,23 +124,23 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-6">
           
           <div className="mb-10">
-            <p className="text-[#041619] font-black text-xs tracking-widest uppercase mb-3">Sélection du jour</p>
+            <p className="text-[#041619] font-black text-xs tracking-widest uppercase mb-3">Opportunités de carrière</p>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
               <h2 className="text-4xl font-extrabold text-[#041619] max-w-2xl leading-tight">
-                Des opportunités sérieuses, prêtes à consulter
+                Découvrez les postes ouverts et postulez en un clic
               </h2>
               <p className="text-gray-500 max-w-md text-sm">
-                Utilisez la recherche et les filtres pour trouver rapidement les opportunités qui correspondent à votre profil et à vos ambitions.
+                Consultez les offres publiées par nos entreprises partenaires et laissez notre algorithme analyser votre profil pour un matching parfait.
               </p>
             </div>
           </div>
 
           <div className="flex flex-wrap gap-4 mb-8 text-sm font-bold">
             <button className="bg-[#08282d] border border-[#00f098]/30 text-white px-6 py-3.5 rounded-2xl flex items-center gap-3 shadow-[0_0_15px_rgba(0,240,152,0.1)]">
-              Emplois vérifiés <span className="bg-[#00f098] text-[#041619] px-2 py-0.5 rounded-full text-xs">584</span>
+              Postes ouverts <span className="bg-[#00f098] text-[#041619] px-2 py-0.5 rounded-full text-xs">584</span>
             </button>
             <button className="bg-white border border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-gray-50 px-4 py-3 rounded-2xl flex items-center gap-3 transition-colors">
-              Sources LinkedIn <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs">515</span>
+              CDI & CDD <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs">515</span>
             </button>
             <button className="bg-white border border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-gray-50 px-4 py-3 rounded-2xl flex items-center gap-3 transition-colors">
               Stages <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs">43</span>
@@ -226,7 +226,8 @@ export default function Landing() {
                   </p>
 
                   <p className="text-[#e8d5a5] text-xs font-bold mb-8">
-                    {offre.emailContact ? `E-mail publié : ${offre.emailContact}` : 'Aucun e-mail public · candidature via le lien'}
+                    <Sparkles className="w-3.5 h-3.5 inline mr-1" />
+                    Analyse IA disponible pour cette offre
                   </p>
 
                   <div className="mt-auto flex items-center gap-3">
@@ -234,16 +235,13 @@ export default function Landing() {
                       onClick={() => navigate('/login')}
                       className="flex-1 bg-[#041619] border border-white/10 text-white font-bold py-3 rounded-xl hover:border-[#00f098]/50 hover:text-[#00f098] transition-colors text-sm"
                     >
-                      Voir les détails
+                      Détails du poste
                     </button>
                     <button 
                       onClick={() => navigate('/login')}
                       className="flex-1 bg-[#00f098] text-[#041619] font-black py-3 rounded-xl hover:bg-[#00d084] transition-colors flex items-center justify-center gap-2 text-sm shadow-[0_0_15px_rgba(0,240,152,0.2)]"
                     >
-                      {offre.emailContact ? 'Écrire' : 'Postuler'} <ArrowUpRight className="w-4 h-4" />
-                    </button>
-                    <button className="w-11 h-11 flex items-center justify-center border border-white/10 bg-[#041619] rounded-xl text-gray-400 hover:text-[#00f098] hover:border-[#00f098]/50 transition-colors flex-shrink-0">
-                      <Bookmark className="w-5 h-5" />
+                      Postuler en ligne <ArrowUpRight className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
@@ -262,78 +260,81 @@ export default function Landing() {
         </div>
       </main>
 
-      {/* ── SECTION IA ── */}
+      {/* ── SECTION ÉCOSYSTÈME ATS ── */}
       <section className="bg-[#020e10] pt-24 pb-28 px-6 relative border-t border-white/5">
         <div className="max-w-7xl mx-auto relative z-10">
-          <p className="text-[#e8d5a5] font-bold text-xs tracking-widest uppercase mb-4">Votre carrière, mieux préparée</p>
+          <p className="text-[#e8d5a5] font-bold text-xs tracking-widest uppercase mb-4">L'écosystème ATS</p>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 tracking-tight max-w-3xl">
-            Des assistants IA pour passer à l'action
+            Une plateforme unifiée, trois espaces dédiés
           </h2>
           <p className="text-gray-400 text-lg mb-16 max-w-2xl font-light">
-            Préparez un CV plus convaincant, organisez votre recherche d'emploi ou échangez avec ATS Sénégal pour un partenariat.
+            Une solution complète qui connecte intelligemment les candidats aux recruteurs grâce à la puissance des grands modèles de langage.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Carte Candidat */}
             <div className="bg-[#08282d] border border-white/10 rounded-[2rem] p-8 flex flex-col hover:border-[#e8d5a5]/50 transition-colors">
               <div className="w-14 h-14 bg-[#e8d5a5] rounded-2xl flex items-center justify-center font-black text-[#041619] text-xl mb-8 shadow-[0_0_15px_rgba(232,213,165,0.2)]">
-                CV
+                <FileText className="w-6 h-6" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4 leading-tight">Rendre mon CV plus professionnel</h3>
+              <h3 className="text-2xl font-bold text-white mb-4 leading-tight">Espace Candidat</h3>
               <p className="text-gray-400 mb-12 font-light">
-                Améliorez la structure, les formulations et l'impact de votre CV avec l'assistance de l'IA.
+                Déposez votre CV au format PDF en quelques secondes. Suivez l'état d'avancement de vos candidatures en temps réel et postulez aux offres en un clic.
               </p>
-              <button className="mt-auto w-full bg-[#e8d5a5] text-[#041619] font-bold py-4 px-6 rounded-2xl flex justify-between items-center hover:bg-[#d4c194] transition-colors">
-                Améliorer mon CV avec l'IA <ArrowRight className="w-5 h-5" />
+              <button onClick={() => navigate('/login')} className="mt-auto w-full bg-[#e8d5a5] text-[#041619] font-bold py-4 px-6 rounded-2xl flex justify-between items-center hover:bg-[#d4c194] transition-colors">
+                Accéder à l'Espace Candidat <ArrowRight className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="bg-[#08282d] border border-white/10 rounded-[2rem] p-8 flex flex-col hover:border-[#e8d5a5]/50 transition-colors">
-              <div className="w-14 h-14 bg-[#e8d5a5] rounded-2xl flex items-center justify-center font-black text-[#041619] text-xl mb-8 shadow-[0_0_15px_rgba(232,213,165,0.2)]">
-                IA
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4 leading-tight">Assistant recherche d'emploi</h3>
-              <p className="text-gray-400 mb-12 font-light">
-                Clarifiez votre cible, organisez vos démarches et préparez des candidatures adaptées à votre profil.
-              </p>
-              <button className="mt-auto w-full bg-[#e8d5a5] text-[#041619] font-bold py-4 px-6 rounded-2xl flex justify-between items-center hover:bg-[#d4c194] transition-colors">
-                Lancer mon assistant emploi <ArrowRight className="w-5 h-5" />
-              </button>
-            </div>
-
+            {/* Carte Recruteur */}
             <div className="bg-[#08282d] border border-white/10 rounded-[2rem] p-8 flex flex-col hover:border-[#00f098]/50 transition-colors">
               <div className="w-14 h-14 bg-[#00f098] rounded-2xl flex items-center justify-center font-black text-[#041619] text-xl mb-8 shadow-[0_0_15px_rgba(0,240,152,0.2)]">
-                W
+                <Briefcase className="w-6 h-6" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4 leading-tight">Partenariats entreprises</h3>
+              <h3 className="text-2xl font-bold text-white mb-4 leading-tight">Espace Entreprise</h3>
               <p className="text-gray-400 mb-12 font-light">
-                Vous souhaitez diffuser des opportunités ou développer un partenariat avec ATS Sénégal ?
+                Publiez vos offres et laissez l'IA faire le reste. Accédez instantanément à un classement (ranking) automatisé et objectif des meilleurs profils.
               </p>
-              <button className="mt-auto w-full bg-[#00f098] text-[#041619] font-black py-4 px-6 rounded-2xl flex justify-between items-center hover:bg-[#00d084] transition-colors shadow-[0_0_20px_rgba(0,240,152,0.3)]">
-                Contacter le +221 78 436 36 64
+              <button onClick={() => navigate('/login')} className="mt-auto w-full bg-[#00f098] text-[#041619] font-black py-4 px-6 rounded-2xl flex justify-between items-center hover:bg-[#00d084] transition-colors shadow-[0_0_20px_rgba(0,240,152,0.3)]">
+                Accéder à l'Espace Entreprise <ArrowRight className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Carte Technologie/IA */}
+            <div className="bg-[#08282d] border border-white/10 rounded-[2rem] p-8 flex flex-col hover:border-indigo-500/50 transition-colors">
+              <div className="w-14 h-14 bg-indigo-500 rounded-2xl flex items-center justify-center font-black text-white text-xl mb-8 shadow-[0_0_15px_rgba(99,102,241,0.3)]">
+                <Bot className="w-6 h-6" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4 leading-tight">Moteur d'Analyse IA</h3>
+              <p className="text-gray-400 mb-12 font-light">
+                Intégration native de l'API Google Gemini. Extraction sémantique pointue, matching de compétences et scoring automatisé de 0 à 100 pour chaque CV.
+              </p>
+              <button className="mt-auto w-full bg-indigo-500 text-white font-bold py-4 px-6 rounded-2xl flex justify-between items-center hover:bg-indigo-600 transition-colors shadow-[0_0_20px_rgba(99,102,241,0.2)]">
+                Découvrir notre technologie <ArrowRight className="w-5 h-5" />
               </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── FOOTER ── */}
+      {/* ── FOOTER B2B ── */}
       <footer className="bg-[#041619] border-t border-white/10 pt-12 pb-8">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4">
             <img src={logo} alt="Logo ATS" className="w-14 h-14 brightness-200" />
-            <p className="text-gray-400 text-sm max-w-xs font-medium leading-relaxed">
-              Les opportunités qui font avancer votre carrière.
+            <p className="text-gray-400 text-sm max-w-sm font-medium leading-relaxed">
+              La plateforme de référence pour la modernisation et l'automatisation des Ressources Humaines au Sénégal.
             </p>
           </div>
+          
           <div className="text-center md:text-right">
             <p className="text-white font-bold text-sm hover:text-[#00f098] cursor-pointer transition-colors">
-              Suivre ATS Sénégal sur LinkedIn <span className="text-gray-600 font-normal mx-2">·</span> Confidentialité
+              Découvrir la documentation API <span className="text-gray-600 font-normal mx-2">·</span> Mentions légales
             </p>
           </div>
         </div>
       </footer>
 
-      
     </div>
   )
 }
