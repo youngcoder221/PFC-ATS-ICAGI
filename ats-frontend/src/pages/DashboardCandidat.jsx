@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 // eslint-disable-next-line no-unused-vars
-import { Briefcase, Upload, FileText, CheckCircle, Clock, XCircle, ChevronRight, Search, Trophy, LayoutDashboard } from 'lucide-react'
+import { Briefcase, Upload, FileText, CheckCircle, Clock, XCircle, ChevronRight, Search, Trophy, LayoutDashboard, Sparkles, UploadCloud } from 'lucide-react'
 import Layout from '../components/layout/Layout'
 import OffreCardCandidat from '../components/OffreCardCandidat'
 import api from '../services/api'
@@ -80,9 +80,9 @@ export default function DashboardCandidat() {
   }
 
   const statutConfig = {
-    'en_attente': { label: 'En attente',  icon: Clock,        color: 'text-amber-400',  bg: 'bg-amber-900/20 border-amber-700'  },
-    'retenu':     { label: 'Retenu ✓',    icon: CheckCircle,  color: 'text-green-400',  bg: 'bg-green-900/20 border-green-700'  },
-    'refusé':     { label: 'Refusé',      icon: XCircle,      color: 'text-red-400',    bg: 'bg-red-900/20 border-red-700'      },
+    'en_attente': { label: 'En attente',  icon: Clock,        color: 'text-amber-400',  bg: 'bg-amber-400/10 border-amber-400/20'  },
+    'retenu':     { label: 'Retenu ✓',    icon: CheckCircle,  color: 'text-[#00f098]',  bg: 'bg-[#00f098]/10 border-[#00f098]/20'  },
+    'refusé':     { label: 'Refusé',      icon: XCircle,      color: 'text-red-400',    bg: 'bg-red-400/10 border-red-400/20'      },
   }
 
   // Note : le score et l'explication détaillée de l'IA sont des outils internes
@@ -114,35 +114,34 @@ export default function DashboardCandidat() {
       {/* Header & Stats rapides */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Espace Candidat</h1>
+          <h1 className="text-3xl font-black text-white tracking-tight">Espace Candidat</h1>
           <p className="text-gray-400 text-sm mt-1">Gérez vos candidatures et trouvez votre prochaine opportunité.</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
         {[
-          { label: 'Offres disponibles', value: offres.length, icon: Briefcase, color: 'text-indigo-400' },
-          { label: 'Mes candidatures',   value: candidatures.length, icon: FileText, color: 'text-teal-400'   },
-          { label: 'Profil retenu',      value: candidatures.filter(c => c.statut === 'retenu').length, icon: Trophy, color: 'text-green-400'  },
+          { label: 'Offres disponibles', value: offres.length, icon: Briefcase, color: 'text-white' },
+          { label: 'Mes candidatures',   value: candidatures.length, icon: FileText, color: 'text-white'   },
+          { label: 'Profil retenu',      value: candidatures.filter(c => c.statut === 'retenu').length, icon: Trophy, color: 'text-[#00f098]'  },
         ].map((s, i) => {
           const Icon = s.icon
           return (
-            <div key={i} className="relative overflow-hidden bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-5 hover:border-gray-700 hover:-translate-y-1 transition-all duration-300 group">
-              <div className="absolute -inset-2 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] transition-all duration-500 pointer-events-none" />
+            <div key={i} className="relative overflow-hidden bg-[#0b1a19] border border-white/5 rounded-[2rem] p-6 hover:border-white/10 hover:-translate-y-1 transition-all duration-300 group">
               <div className="flex items-center justify-between mb-4">
                 <p className="text-gray-400 text-sm font-medium">{s.label}</p>
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-950 border border-gray-800 group-hover:scale-110 transition-transform duration-300">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#041619] border border-white/5 group-hover:scale-110 transition-transform duration-300">
                   <Icon className={`w-5 h-5 ${s.color}`} />
                 </div>
               </div>
-              <p className={`text-3xl font-bold text-white tracking-tight`}>{s.value}</p>
+              <p className={`text-4xl font-black ${s.color} tracking-tight`}>{s.value}</p>
             </div>
           )
         })}
       </div>
 
       {/* Onglets */}
-      <div className="flex overflow-x-auto no-scrollbar gap-2 bg-gray-900/50 backdrop-blur-md border border-gray-800 p-1.5 rounded-2xl w-fit mb-8 shadow-sm">
+      <div className="flex overflow-x-auto no-scrollbar gap-2 bg-[#0b1a19] border border-white/5 p-1.5 rounded-2xl w-fit mb-8 shadow-sm">
         {onglets.map(o => {
           const Icon = o.icon
           const isActive = onglet === o.key
@@ -150,17 +149,17 @@ export default function DashboardCandidat() {
             <button
               key={o.key}
               onClick={() => setOnglet(o.key)}
-              className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+              className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 ${
                 isActive 
-                  ? 'bg-gray-800 text-white shadow-sm ring-1 ring-gray-700/50' 
-                  : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/50'
+                  ? 'bg-[#00f098] text-[#0b1a19] shadow-[0_0_15px_rgba(0,240,152,0.2)]' 
+                  : 'text-gray-400 hover:text-white hover:bg-white/5'
               }`}
             >
-              <Icon className={`w-4 h-4 ${isActive ? 'text-indigo-400' : ''}`} />
+              <Icon className={`w-4 h-4 ${isActive ? 'text-[#0b1a19]' : ''}`} />
               {o.label}
               {o.count !== null && (
                 <span className={`text-xs px-2 py-0.5 rounded-full ${
-                  isActive ? 'bg-gray-700 text-white' : 'bg-gray-800 text-gray-400'
+                  isActive ? 'bg-[#0b1a19]/20 text-[#0b1a19]' : 'bg-[#041619] text-gray-400'
                 }`}>
                   {o.count}
                 </span>
@@ -174,74 +173,88 @@ export default function DashboardCandidat() {
       {onglet === '' && (
         <div className="space-y-6">
           
-          {/* Bienvenue */}
-          <div className="relative overflow-hidden bg-gradient-to-br from-indigo-900/40 via-purple-900/20 to-gray-900 border border-indigo-700/30 rounded-3xl p-8 md:p-10">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
-            <div className="relative z-10 max-w-2xl">
-              <h2 className="text-3xl font-bold text-white mb-3 tracking-tight">
-                Trouvez votre prochaine opportunité 🚀
-              </h2>
-              <p className="text-gray-400 text-base leading-relaxed mb-6">
-                Votre espace est prêt. Découvrez les offres correspondant à vos compétences, soumettez votre CV et suivez l'évolution de vos candidatures grâce à notre système d'analyse.
-              </p>
-              <button
-                onClick={() => setOnglet('offres')}
-                className="flex items-center gap-2 bg-white text-gray-950 hover:bg-indigo-500 hover:text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_20px_rgba(79,70,229,0.3)] w-fit"
-              >
-                <Briefcase className="w-4 h-4" />
-                Explorer les offres
-              </button>
+          {/* Module Premium : Analyse Intelligente Drag & Drop */}
+          <div className="relative overflow-hidden bg-[#0b1a19] border border-[#00f098]/20 rounded-[2rem] p-8 md:p-10">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-[#00f098]/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+            
+            <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
+              <div className="flex-1">
+                <div className="inline-flex items-center gap-2 bg-[#00f098]/10 border border-[#00f098]/20 rounded-lg px-3 py-1.5 text-[#00f098] text-[10px] font-black uppercase tracking-widest mb-4">
+                  <Sparkles className="w-3 h-3" /> Propulsé par Gemini AI
+                </div>
+                <h2 className="text-3xl font-black text-white mb-3 tracking-tight">
+                  Analyse intelligente de profil
+                </h2>
+                <p className="text-gray-400 text-sm leading-relaxed mb-8">
+                  Déposez votre CV. Notre intelligence artificielle s'occupe d'extraire vos compétences, de structurer votre profil et de vous positionner sur les meilleures opportunités.
+                </p>
+                <button
+                  onClick={() => setOnglet('postuler')}
+                  className="flex items-center gap-2 bg-[#00f098] text-[#0b1a19] hover:bg-[#00d084] px-6 py-3.5 rounded-xl text-sm font-black uppercase tracking-wider transition-all duration-300 shadow-[0_0_20px_rgba(0,240,152,0.2)] w-fit"
+                >
+                  Soumettre mon CV à l'IA <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Zone Stylisée Drag & Drop */}
+              <div className="flex-1 w-full">
+                <div 
+                  onClick={() => setOnglet('postuler')}
+                  className="border-2 border-dashed border-white/10 bg-[#041619] rounded-3xl p-10 flex flex-col items-center justify-center text-center hover:border-[#00f098]/50 hover:bg-[#00f098]/5 transition-all cursor-pointer group"
+                >
+                  <div className="w-16 h-16 bg-[#0b1a19] border border-white/5 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                    {/* On utilise Briefcase ou FileText importé de lucide-react (Assure-toi d'avoir FileText dans tes imports) */}
+                    <FileText className="w-8 h-8 text-[#00f098]" />
+                  </div>
+                  <p className="text-white font-bold text-base mb-2">Glissez-déposez votre CV ici</p>
+                  <p className="text-gray-500 text-xs">Format PDF uniquement (Max 5MB)</p>
+                </div>
+              </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            {/* Dernières candidatures */}
-            <div className="lg:col-span-2 bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-3xl p-6 hover:border-gray-700 transition-colors duration-300">
+            {/* Timeline / Mes dernières candidatures */}
+            <div className="lg:col-span-2 bg-[#0b1a19] border border-white/5 rounded-[2rem] p-6 hover:border-white/10 transition-colors duration-300">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-white font-semibold text-lg flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-indigo-400" />
+                <h3 className="text-white font-bold text-lg flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-gray-400" />
                   Mes dernières candidatures
                 </h3>
                 <button
                   onClick={() => setOnglet('candidatures')}
-                  className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-medium bg-indigo-500/10 px-3 py-1.5 rounded-lg transition-colors"
+                  className="text-xs text-gray-400 hover:text-white flex items-center gap-1 font-bold bg-[#041619] border border-white/5 px-3 py-1.5 rounded-lg transition-colors"
                 >
                   Voir tout <ChevronRight className="w-3 h-3" />
                 </button>
               </div>
 
               {candidatures.length === 0 ? (
-                <div className="text-center py-10 bg-gray-950/50 rounded-2xl border border-gray-800/50">
+                <div className="text-center py-10 bg-[#041619] rounded-2xl border border-white/5">
                   <FileText className="w-10 h-10 text-gray-700 mx-auto mb-3" />
                   <p className="text-gray-500 text-sm">Vous n'avez postulé à aucune offre pour le moment.</p>
-                  <button
-                    onClick={() => setOnglet('offres')}
-                    className="mt-4 text-xs text-indigo-400 hover:text-indigo-300 font-medium bg-indigo-500/10 px-4 py-2 rounded-lg transition-colors"
-                  >
-                    Parcourir les offres
-                  </button>
                 </div>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {candidatures.slice(0, 4).map(c => {
                     const statut = statutConfig[c.statut] || statutConfig['en_attente']
                     const SIcon  = statut.icon
                     return (
-                      <div key={c._id} className="p-4 bg-gray-950/50 border border-gray-800/80 rounded-2xl flex items-center justify-between hover:bg-gray-800/50 transition-all group">
+                      <div key={c._id} className="p-4 bg-[#041619] border border-white/5 rounded-2xl flex items-center justify-between hover:border-white/10 transition-all group">
                         <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-xl bg-gray-900 border border-gray-700 flex items-center justify-center flex-shrink-0 group-hover:border-indigo-500/50 transition-colors">
-                            <Briefcase className="w-4 h-4 text-gray-400 group-hover:text-indigo-400" />
+                          <div className="w-12 h-12 rounded-xl bg-[#0b1a19] border border-white/5 flex items-center justify-center flex-shrink-0 group-hover:border-[#00f098]/30 transition-colors">
+                            <Briefcase className="w-5 h-5 text-gray-500 group-hover:text-[#00f098]" />
                           </div>
                           <div>
-                            <p className="text-white text-sm font-medium">{c.offreId?.titre || 'Offre supprimée'}</p>
-                            <p className="text-gray-500 text-xs mt-1 flex items-center gap-1">
-                              <Clock className="w-3 h-3" />
+                            <p className="text-white text-sm font-bold">{c.offreId?.titre || 'Offre supprimée'}</p>
+                            <p className="text-gray-500 text-xs mt-1 flex items-center gap-1.5 font-medium">
+                              <Clock className="w-3.5 h-3.5" />
                               {new Date(c.createdAt).toLocaleDateString('fr-FR')}
                             </p>
                           </div>
                         </div>
-                        <div className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-xl border ${statut.bg} ${statut.color}`}>
+                        <div className={`flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider px-3 py-1.5 rounded-lg border ${statut.bg} ${statut.color}`}>
                           <SIcon className="w-3.5 h-3.5" />
                           {statut.label}
                         </div>
@@ -256,48 +269,28 @@ export default function DashboardCandidat() {
             <div className="space-y-6">
               
               {/* Actions rapides */}
-              <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-3xl p-6 hover:border-gray-700 transition-colors duration-300">
-                <h3 className="text-white font-semibold text-lg mb-5">Actions rapides</h3>
+              <div className="bg-[#0b1a19] border border-white/5 rounded-[2rem] p-6 hover:border-white/10 transition-colors duration-300">
+                <h3 className="text-white font-bold text-lg mb-5">Actions rapides</h3>
                 <div className="space-y-3">
                   {[
-                    { label: 'Voir les offres',       icon: Briefcase, action: () => setOnglet('offres'),       color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
-                    { label: 'Nouvelle candidature',  icon: Upload,    action: () => setOnglet('postuler'),     color: 'text-teal-400',   bg: 'bg-teal-500/10'   },
-                    { label: 'Mes candidatures',      icon: FileText,  action: () => setOnglet('candidatures'), color: 'text-amber-400',  bg: 'bg-amber-500/10'  },
+                    { label: 'Voir les offres',       icon: Briefcase, action: () => setOnglet('offres') },
+                    { label: 'Nouvelle candidature',  icon: UploadCloud, action: () => setOnglet('postuler') },
+                    { label: 'Mes candidatures',      icon: FileText,  action: () => setOnglet('candidatures') },
                   ].map((a, i) => {
                     const Icon = a.icon
                     return (
                       <button
                         key={i}
                         onClick={a.action}
-                        className="w-full flex items-center gap-3 p-3 rounded-2xl text-sm text-gray-300 bg-gray-950/50 border border-gray-800 hover:border-gray-600 hover:bg-gray-800/80 transition-all group"
+                        className="w-full flex items-center gap-4 p-3 rounded-2xl text-sm text-gray-300 bg-[#041619] border border-white/5 hover:border-[#00f098]/30 hover:text-[#00f098] transition-all group"
                       >
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${a.bg}`}>
-                          <Icon className={`w-4 h-4 ${a.color}`} />
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center bg-[#0b1a19] border border-white/5 group-hover:border-[#00f098]/30`}>
+                          <Icon className={`w-4 h-4 text-gray-500 group-hover:text-[#00f098]`} />
                         </div>
-                        <span className="font-medium group-hover:text-white transition-colors">{a.label}</span>
+                        <span className="font-bold">{a.label}</span>
                       </button>
                     )
                   })}
-                </div>
-              </div>
-
-              {/* Offres récentes */}
-              <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-3xl p-6 hover:border-gray-700 transition-colors duration-300">
-                <h3 className="text-white font-semibold text-lg mb-5">Ajouté récemment</h3>
-                <div className="space-y-3">
-                  {offres.slice(0, 3).map((o, i) => (
-                    <div
-                      key={i}
-                      onClick={() => { setUploadForm({...uploadForm, offreId: o._id}); setOnglet('postuler') }}
-                      className="flex items-center gap-3 cursor-pointer group"
-                    >
-                      <div className="w-2 h-2 rounded-full bg-indigo-500 group-hover:scale-150 transition-transform" />
-                      <p className="text-gray-400 text-sm truncate font-medium group-hover:text-white transition-colors">{o.titre}</p>
-                    </div>
-                  ))}
-                  {offres.length === 0 && (
-                    <p className="text-gray-600 text-sm">Aucune offre disponible</p>
-                  )}
                 </div>
               </div>
 

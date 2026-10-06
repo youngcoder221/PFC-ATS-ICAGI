@@ -56,7 +56,7 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="w-64 min-h-screen bg-gray-900 border-r border-gray-800 flex flex-col">
+    <aside className="w-64 min-h-screen bg-[#0b1a19] border-r border-white/5 flex flex-col">
 
       {/* Logo */}
       <div className="p-6 border-b border-gray-800">
@@ -84,7 +84,7 @@ export default function Sidebar() {
               onClick={() => handleClick(item)}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
                 active
-                  ? 'bg-indigo-600 text-white'
+                  ? 'bg-[#00f098] text-[#0b1a19] shadow-[0_0_15px_rgba(0,240,152,0.2)]'
                   : 'text-gray-400 hover:bg-gray-800 hover:text-white'
               }`}
             >
@@ -99,7 +99,7 @@ export default function Sidebar() {
       {/* Profil + Déconnexion */}
       <div className="p-4 border-t border-gray-800">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-700 rounded-full flex items-center justify-center text-white text-xs font-bold">
+          <div className="w-8 h-8 bg-[#00f098] rounded-full flex items-center justify-center text-[#0b1a19] text-xs font-black">
             {user?.prenom?.[0]}{user?.nom?.[0]}
           </div>
           <div className="flex-1 min-w-0">

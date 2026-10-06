@@ -81,18 +81,18 @@ export default function Topbar() {
   }
 
   return (
-    <header className="sticky top-0 z-40 h-16 flex items-center gap-4 px-6 bg-gray-900/95 backdrop-blur-md border-b border-gray-800 shadow-sm">
+    <header className="sticky top-0 z-40 h-16 flex items-center gap-4 px-6 bg-[#0b1a19]/95 backdrop-blur-md border-b border-white/5 shadow-sm">
 
       {/* Titre de page */}
       <div>
         <h1 className="text-[16px] font-semibold text-white">{page.title}</h1>
         <p className="text-[11px] text-gray-500 mt-0.5">
-          ATS / <span className="text-indigo-400">{page.sub}</span>
+          ATS / <span className="text-[#00f098]">{page.sub}</span>
         </p>
       </div>
 
       {/* Recherche */}
-      <div className="ml-8 hidden md:flex items-center gap-2 bg-gray-800 border border-gray-700 rounded-xl px-3.5 py-2 min-w-[220px] focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 transition-all">
+      <div className="ml-8 hidden md:flex items-center gap-2 bg-gray-800 border border-gray-700 rounded-xl px-3.5 py-2 min-w-[220px] focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-[#00f098] transition-all">
         <Search className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" />
         <input
           type="text"
@@ -115,7 +115,7 @@ export default function Topbar() {
         <div className="relative" ref={notifRef}>
           <button
             onClick={() => { setOpenNotif(v => !v); setOpenProfil(false) }}
-            className="relative w-9 h-9 rounded-xl border border-gray-700 bg-gray-800 flex items-center justify-center text-gray-400 hover:border-indigo-500 hover:text-indigo-400 hover:bg-gray-700 transition-all"
+            className="relative w-9 h-9 rounded-xl border border-gray-700 bg-gray-800 flex items-center justify-center text-gray-400 hover:border-indigo-500 hover:text-[#00f098] hover:bg-gray-700 transition-all"
           >
             <Bell className="w-4 h-4" />
             {notifs.length > 0 && (
@@ -127,7 +127,7 @@ export default function Topbar() {
             <div className="absolute right-0 mt-2 w-80 bg-gray-900 border border-gray-700 rounded-2xl shadow-xl overflow-hidden z-50">
               <div className="px-4 py-3 border-b border-gray-800 flex items-center justify-between">
                 <p className="text-sm font-semibold text-white">Notifications</p>
-                <span className="text-xs bg-indigo-900/50 text-indigo-400 px-2 py-0.5 rounded-full font-medium">
+                <span className="text-xs bg-indigo-900/50 text-[#00f098] px-2 py-0.5 rounded-full font-medium">
                   {notifs.length}
                 </span>
               </div>
@@ -152,7 +152,7 @@ export default function Topbar() {
         <div className="relative" ref={profilRef}>
           <button
             onClick={() => { setOpenProfil(v => !v); setOpenNotif(false) }}
-            className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-700 flex items-center justify-center text-white text-xs font-bold hover:opacity-90 transition-all shadow-lg"
+            className="w-9 h-9 rounded-xl bg-[#00f098] flex items-center justify-center text-[#0b1a19] text-xs font-black hover:bg-[#00d084] transition-all shadow-lg"
           >
             {user ? initialesDe(user.prenom, user.nom) : <User className="w-4 h-4" />}
           </button>
