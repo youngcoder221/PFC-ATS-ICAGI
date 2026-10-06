@@ -114,14 +114,7 @@ export default function Login() {
               </div>
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-[#00f098] hover:bg-[#00d084] text-[#041619] py-4 rounded-xl font-black text-sm transition-all disabled:opacity-50 shadow-[0_0_15px_rgba(0,240,152,0.2)]"
-            >
-              {loading ? 'Connexion...' : 'Se connecter'}
-            </button>
-          <div className="flex items-center justify-between text-xs text-gray-400">
+            <div className="flex items-center justify-between text-xs text-gray-400">
               <label className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">
                 <input type="checkbox" className="accent-[#00f098] bg-[#08282d] border-white/10 rounded" />
                 Se souvenir de moi
