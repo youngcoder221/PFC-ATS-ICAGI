@@ -76,8 +76,52 @@ export default function Login() {
 
           <h1 className="text-3xl font-black text-white mb-8">Connexion</h1>
 
-          {/* Formulaire à implémenter dans l'étape suivante */}
-          {/* <LoginForm isRecruteur={isRecruteur} /> */}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Adresse email</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#00f098]" />
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={e => setForm({...form, email: e.target.value})}
+                  placeholder="exemple@email.com"
+                  required
+                  className="w-full bg-[#08282d] border border-white/10 text-white rounded-xl pl-10 pr-4 py-3.5 text-sm focus:outline-none focus:border-[#00f098] transition-all"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Mot de passe</label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#00f098]" />
+                <input
+                  type={showPwd ? 'text' : 'password'}
+                  value={form.motDePasse}
+                  onChange={e => setForm({...form, motDePasse: e.target.value})}
+                  placeholder="••••••••"
+                  required
+                  className="w-full bg-[#08282d] border border-white/10 text-white rounded-xl pl-10 pr-10 py-3.5 text-sm focus:outline-none focus:border-[#00f098] transition-all"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPwd(!showPwd)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                >
+                  {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-[#00f098] hover:bg-[#00d084] text-[#041619] py-4 rounded-xl font-black text-sm transition-all disabled:opacity-50 shadow-[0_0_15px_rgba(0,240,152,0.2)]"
+            >
+              {loading ? 'Connexion...' : 'Se connecter'}
+            </button>
+          </form>
           
         </div>
       </div>
