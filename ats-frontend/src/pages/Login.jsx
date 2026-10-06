@@ -121,7 +121,37 @@ export default function Login() {
             >
               {loading ? 'Connexion...' : 'Se connecter'}
             </button>
+          <div className="flex items-center justify-between text-xs text-gray-400">
+              <label className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">
+                <input type="checkbox" className="accent-[#00f098] bg-[#08282d] border-white/10 rounded" />
+                Se souvenir de moi
+              </label>
+              <button type="button" className="hover:text-[#00f098] transition-colors">Mot de passe oublié ?</button>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-[#00f098] hover:bg-[#00d084] text-[#041619] py-4 rounded-xl font-black text-sm transition-all disabled:opacity-50 shadow-[0_0_15px_rgba(0,240,152,0.2)]"
+            >
+              {loading ? 'Connexion...' : 'Se connecter'}
+            </button>
           </form>
+
+          {/* Footer de redirection conditionnelle */}
+          <div className="mt-8 text-center text-xs">
+            {!isRecruteur ? (
+              <p className="text-gray-500">
+                Nouveau sur la plateforme ?{' '}
+                <Link to="/register" className="text-[#00f098] font-bold hover:underline">Créer un compte candidat</Link>
+              </p>
+            ) : (
+              <p className="text-gray-500">
+                Votre entreprise n'a pas de compte ?{' '}
+                <span className="text-gray-300 font-bold">Contactez l'administrateur</span>
+              </p>
+            )}
+          </div>
           
         </div>
       </div>
