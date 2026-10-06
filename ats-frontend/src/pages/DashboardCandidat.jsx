@@ -7,7 +7,6 @@ import OffreCardCandidat from '../components/OffreCardCandidat'
 import api from '../services/api'
 
 export default function DashboardCandidat() {
-  // eslint-disable-next-line no-unused-vars
   const navigate                        = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const onglet                          = searchParams.get('tab') || ''
@@ -16,7 +15,15 @@ export default function DashboardCandidat() {
   const [offres, setOffres]             = useState([])
   const [candidatures, setCandidatures] = useState([])
   const [loading, setLoading]           = useState(true)
-  // États spécifiques pour l'Onboarding / Parsing du profil
+  
+  // --- ÉTATS RESTAURÉS ---
+  const [uploadForm, setUploadForm]     = useState({ offreId: '', diplome: '', experience: 0 })
+  const [fichier, setFichier]           = useState(null)
+  const [uploading, setUploading]       = useState(false)
+  const [message, setMessage]           = useState(null)
+  const [search, setSearch]             = useState('')
+  
+  // --- ÉTATS POUR LE PARSING PROFIL (ONBOARDING) ---
   const [fichierProfil, setFichierProfil] = useState(null)
   const [parsingProfil, setParsingProfil] = useState(false)
 
