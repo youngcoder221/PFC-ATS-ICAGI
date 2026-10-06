@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 // eslint-disable-next-line no-unused-vars
 import { Briefcase, Upload, FileText, CheckCircle, Clock, XCircle, ChevronRight, Search, Trophy, LayoutDashboard, Sparkles, UploadCloud } from 'lucide-react'
 import Layout from '../components/layout/Layout'
@@ -7,7 +7,6 @@ import OffreCardCandidat from '../components/OffreCardCandidat'
 import api from '../services/api'
 
 export default function DashboardCandidat() {
-  const navigate                        = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const onglet                          = searchParams.get('tab') || ''
   const setOnglet                       = (tab) => setSearchParams({ tab })
