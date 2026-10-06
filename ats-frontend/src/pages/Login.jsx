@@ -11,7 +11,6 @@ export default function Login() {
   const [showPwd, setShowPwd] = useState(false)
   const [erreur, setErreur]   = useState('')
   const [loading, setLoading] = useState(false)
-  const [isRecruteur, setIsRecruteur] = useState(false)
   const { login }             = useAuth()
   const navigate              = useNavigate()
 
@@ -95,22 +94,7 @@ export default function Login() {
         </div>
 
         <div className="w-full max-w-sm">
-          
-          {/* Sélecteur d'acteurs moderne */}
-          <div className="flex bg-[#08282d] p-1 rounded-2xl mb-8 border border-white/5">
-            <button 
-              className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all ${!isRecruteur ? 'bg-[#00f098] text-[#041619] shadow-lg' : 'text-gray-400 hover:text-white'}`}
-              onClick={() => setIsRecruteur(false)}
-            >
-              Candidat
-            </button>
-            <button 
-              className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all ${isRecruteur ? 'bg-[#00f098] text-[#041619] shadow-lg' : 'text-gray-400 hover:text-white'}`}
-              onClick={() => setIsRecruteur(true)}
-            >
-              Recruteur
-            </button>
-          </div>
+
 
           <h1 className="text-3xl font-black text-white mb-8">Connexion</h1>
 
@@ -175,19 +159,14 @@ export default function Login() {
             </button>
           </form>
 
-          {/* Footer de redirection conditionnelle */}
-          <div className="mt-8 text-center text-xs">
-            {!isRecruteur ? (
-              <p className="text-gray-500">
-                Nouveau sur la plateforme ?{' '}
-                <Link to="/register" className="text-[#00f098] font-bold hover:underline">Créer un compte candidat</Link>
-              </p>
-            ) : (
-              <p className="text-gray-500">
-                Votre entreprise n'a pas de compte ?{' '}
-                <span className="text-gray-300 font-bold">Contactez l'administrateur</span>
-              </p>
-            )}
+          {/* Footer de redirection */}
+          <div className="mt-8 text-center text-sm">
+            <p className="text-gray-500 font-medium">
+              Nouveau sur la plateforme ?{' '}
+              <Link to="/register" className="text-[#00f098] font-bold hover:text-[#00d084] transition-colors">
+                Créer un compte
+              </Link>
+            </p>
           </div>
           
         </div>
