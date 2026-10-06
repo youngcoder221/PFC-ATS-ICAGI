@@ -92,7 +92,7 @@ export default function Topbar() {
       </div>
 
       {/* Recherche */}
-      <div className="ml-8 hidden md:flex items-center gap-2 bg-gray-800 border border-gray-700 rounded-xl px-3.5 py-2 min-w-[220px] focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-[#00f098] transition-all">
+      <div className="ml-8 hidden md:flex items-center gap-2 bg-gray-800 border border-gray-700 rounded-xl px-3.5 py-2 min-w-[220px] focus-within:border-[#00f098] focus-within:ring-1 focus-within:ring-[#00f098] transition-all">
         <Search className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" />
         <input
           type="text"
@@ -115,7 +115,7 @@ export default function Topbar() {
         <div className="relative" ref={notifRef}>
           <button
             onClick={() => { setOpenNotif(v => !v); setOpenProfil(false) }}
-            className="relative w-9 h-9 rounded-xl border border-gray-700 bg-gray-800 flex items-center justify-center text-gray-400 hover:border-indigo-500 hover:text-[#00f098] hover:bg-gray-700 transition-all"
+            className="relative w-9 h-9 rounded-xl border border-gray-700 bg-gray-800 flex items-center justify-center text-gray-400 hover:border-[#00f098] hover:text-[#00f098] hover:bg-gray-700 transition-all"
           >
             <Bell className="w-4 h-4" />
             {notifs.length > 0 && (
@@ -127,7 +127,7 @@ export default function Topbar() {
             <div className="absolute right-0 mt-2 w-80 bg-gray-900 border border-gray-700 rounded-2xl shadow-xl overflow-hidden z-50">
               <div className="px-4 py-3 border-b border-gray-800 flex items-center justify-between">
                 <p className="text-sm font-semibold text-white">Notifications</p>
-                <span className="text-xs bg-indigo-900/50 text-[#00f098] px-2 py-0.5 rounded-full font-medium">
+                <span className="text-xs bg-[#00f098]/10 text-[#00f098] px-2 py-0.5 rounded-full font-medium">
                   {notifs.length}
                 </span>
               </div>
@@ -160,7 +160,7 @@ export default function Topbar() {
           {openProfil && (
             <div className="absolute right-0 mt-2 w-60 bg-gray-900 border border-gray-700 rounded-2xl shadow-xl overflow-hidden z-50">
               <div className="px-4 py-4 border-b border-gray-800 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-600 to-purple-700 flex items-center justify-center text-white text-sm font-bold">
+                <div className="w-10 h-10 rounded-full bg-[#00f098] text-[#0b1a19] flex items-center justify-center text-white text-sm font-bold">
                   {initialesDe(user?.prenom, user?.nom)}
                 </div>
                 <div className="min-w-0">
