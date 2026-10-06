@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { Eye, EyeOff, Mail, Lock } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock, CheckCircle } from 'lucide-react'
 import api from '../services/api'
 import logoSmall from '../assets/logo-icon-small.png'
 
@@ -38,20 +38,50 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-[#041619] flex">
-      {/* Colonne Gauche : Marketing & Branding */}
-      <div className="hidden lg:flex flex-col justify-between w-1/2 p-12 bg-gradient-to-b from-[#08282d] to-[#041619] border-r border-[#00f098]/10">
-        <div>
-          <img src={logoSmall} alt="ATS Platform" className="w-12 h-12 mb-8" />
-          <h2 className="text-4xl font-black text-white leading-tight mb-6">
-            Recrutez les meilleurs <br/> 
-            <span className="text-[#00f098]">en un temps record.</span>
+      {/* ── COLONNE GAUCHE : Visuel & Marketing ── */}
+      <div className="hidden lg:flex w-1/2 bg-[#08282d] border-r border-white/5 p-12 flex-col justify-between relative overflow-hidden">
+        {/* Glow de fond */}
+        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#00f098]/10 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+
+        {/* Logo (cliquable pour retour accueil) */}
+        <button onClick={() => navigate('/')} className="relative z-10 flex items-center gap-3 cursor-pointer w-fit">
+          <img src={logoSmall} alt="ATS Platform" className="w-8 h-8 object-contain" />
+          <span className="text-white font-bold text-xl tracking-tight">ATS <span className="text-[#00f098]">Sénégal</span></span>
+        </button>
+
+        {/* Arguments B2B */}
+        <div className="relative z-10 my-auto max-w-md">
+          <div className="inline-flex items-center gap-2 bg-[#00f098]/10 border border-[#00f098]/20 rounded-lg px-3 py-1.5 text-[#00f098] text-[10px] font-black uppercase tracking-widest mb-6">
+            Ressources Humaines 2.0
+          </div>
+          <h2 className="text-4xl xl:text-5xl font-black text-white leading-[1.1] mb-8">
+            Recrutez les meilleurs, <br />
+            <span className="text-gray-500 font-light">sans effort.</span>
           </h2>
-          <p className="text-gray-400 text-lg">
-            La plateforme ATS dédiée aux PME africaines. Analyse sémantique IA, 
-            scoring automatisé et gestion simplifiée de vos candidats.
-          </p>
+          
+          <div className="space-y-6">
+            {[
+              { title: 'Scoring sémantique des CV', desc: 'Une analyse contextuelle avancée qui va bien au-delà de la simple recherche de mots-clés.' },
+              { title: 'Classement automatisé par l\'API Gemini', desc: 'Chaque candidat est évalué et classé instantanément selon les critères exacts de votre offre.' },
+              { title: 'Gagnez 80% de temps sur vos recrutements', desc: 'Concentrez-vous uniquement sur les entretiens avec les profils les plus pertinents.' },
+            ].map((f, i) => (
+              <div key={i} className="flex items-start gap-4">
+                <div className="w-7 h-7 rounded-lg bg-[#041619] border border-[#00f098]/30 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-[0_0_10px_rgba(0,240,152,0.1)]">
+                  <CheckCircle className="w-4 h-4 text-[#00f098]" />
+                </div>
+                <div>
+                  <h3 className="text-white font-bold text-sm mb-1">{f.title}</h3>
+                  <p className="text-gray-400 text-xs leading-relaxed">{f.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="text-[#00f098] font-bold text-sm">ATS Sénégal v1.0</div>
+
+        {/* Footer Colonne Gauche */}
+        <div className="relative z-10 text-gray-500 text-xs font-medium">
+          © {new Date().getFullYear()} ATS Sénégal. Plateforme logicielle B2B.
+        </div>
       </div>
 
       {/* Colonne Droite : Interaction */}
