@@ -23,10 +23,7 @@ export default function DashboardCandidat() {
   const [message, setMessage]           = useState(null)
   const [search, setSearch]             = useState('')
   
-  // --- ÉTATS POUR LE PARSING PROFIL (ONBOARDING) ---
-  const [fichierProfil, setFichierProfil] = useState(null)
-  const [parsingProfil, setParsingProfil] = useState(false)
-
+  
   // --- CHARGEMENT DES DONNÉES ---
   useEffect(() => {
     chargerOffres()
@@ -185,43 +182,31 @@ export default function DashboardCandidat() {
             })}
           </div>
           
-          {/* Module Onboarding : Parsing du profil */}
+          {/* Module Bienvenue : Espace Candidat */}
           <div className="relative overflow-hidden bg-[#0b1a19] border border-[#00f098]/20 rounded-[2rem] p-8 md:p-10">
             <div className="absolute top-0 right-0 w-96 h-96 bg-[#00f098]/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
             
             <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
               <div className="flex-1">
                 <div className="inline-flex items-center gap-2 bg-[#00f098]/10 border border-[#00f098]/20 rounded-lg px-3 py-1.5 text-[#00f098] text-[10px] font-black uppercase tracking-widest mb-4">
-                  <Sparkles className="w-3 h-3" /> Parsing API Gemini
+                  <Sparkles className="w-3 h-3" /> Espace Sécurisé
                 </div>
                 <h2 className="text-3xl font-black text-white mb-3 tracking-tight">
-                  Compléter mon profil d'inscription
+                  Bienvenue sur votre espace candidat intelligent
                 </h2>
-                <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                  Ne perdez plus de temps à tout saisir manuellement ! Téléversez votre CV : notre Intelligence Artificielle extraira instantanément vos compétences clés et vos expériences pour pré-remplir votre dossier candidat.
+                <p className="text-gray-400 text-sm leading-relaxed mb-8">
+                  Suivez vos dossiers en temps réel et postulez aux opportunités actives. Notre Intelligence Artificielle analyse votre profil pour vous positionner sur les meilleures offres du marché.
                 </p>
                 
-                <div className="flex flex-col sm:flex-row items-center gap-3">
-                  <label className="w-full flex-1 flex items-center justify-between bg-[#041619] border border-white/10 hover:border-[#00f098]/50 px-4 py-3 rounded-xl cursor-pointer transition-all group">
-                    <span className={`text-sm font-bold truncate ${fichierProfil ? 'text-[#00f098]' : 'text-gray-400 group-hover:text-white'}`}>
-                      {fichierProfil ? fichierProfil.name : 'Sélectionner mon CV (PDF)...'}
-                    </span>
-                    <FileText className={`w-5 h-5 ${fichierProfil ? 'text-[#00f098]' : 'text-gray-600 group-hover:text-[#00f098]'}`} />
-                    <input type="file" accept=".pdf" className="hidden" onChange={(e) => setFichierProfil(e.target.files[0])} />
-                  </label>
-                  <button 
-                    disabled={!fichierProfil || parsingProfil}
-                    onClick={() => {
-                      setParsingProfil(true)
-                      setTimeout(() => { setParsingProfil(false); setFichierProfil(null); alert('Profil mis à jour avec succès par l\'IA !') }, 2000)
-                    }}
-                    className="w-full sm:w-auto bg-[#00f098] text-[#0b1a19] hover:bg-[#00d084] px-6 py-3.5 rounded-xl text-sm font-black uppercase tracking-wider transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(0,240,152,0.2)]"
-                  >
-                    {parsingProfil ? 'Analyse...' : 'Extraire'}
-                  </button>
-                </div>
+                <button
+                  onClick={() => setOnglet('offres')}
+                  className="bg-[#00f098] text-[#0b1a19] hover:bg-[#00d084] px-8 py-3.5 rounded-xl text-sm font-black uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,240,152,0.2)]"
+                >
+                  Découvrir les opportunités
+                </button>
               </div>
 
+              {/* Visuel d'illustration (Scanneur IA conservé) */}
               <div className="hidden md:flex flex-1 items-center justify-center">
                 <div className="relative w-48 h-56 bg-[#041619] border border-white/10 rounded-2xl p-4 shadow-2xl transform rotate-3">
                   <div className="w-full h-4 bg-gray-800 rounded mb-4" />
@@ -294,8 +279,7 @@ export default function DashboardCandidat() {
                 <h3 className="text-white font-bold text-lg mb-5">Actions rapides</h3>
                 <div className="space-y-3">
                   {[
-                    { label: 'Voir les offres',       icon: Briefcase, action: () => setOnglet('offres') },
-                    { label: 'Nouvelle candidature',  icon: UploadCloud, action: () => handlePostuler() },
+                    { label: 'Explorer les offres',   icon: Briefcase, action: () => setOnglet('offres') },
                     { label: 'Mes candidatures',      icon: FileText,  action: () => setOnglet('candidatures') },
                   ].map((a, i) => {
                     const Icon = a.icon

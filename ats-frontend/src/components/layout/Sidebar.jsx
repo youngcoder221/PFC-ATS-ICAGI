@@ -22,7 +22,6 @@ const menuRecruteur = [
 const menuCandidat = [
   { label: 'Dashboard',        icon: LayoutDashboard, path: '/candidat', tab: ''             },
   { label: 'Offres',           icon: Briefcase,        path: '/candidat', tab: 'offres'       },
-  { label: 'Postuler',         icon: Trophy,           path: '/candidat', tab: 'postuler'     },
   { label: 'Mes candidatures', icon: FileText,         path: '/candidat', tab: 'candidatures' },
 ]
 
