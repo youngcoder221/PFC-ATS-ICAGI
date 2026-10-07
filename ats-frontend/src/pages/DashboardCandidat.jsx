@@ -2,14 +2,15 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { Briefcase, FileText, CheckCircle, Clock, XCircle, ChevronRight, Search, Trophy, Sparkles, X } from 'lucide-react'
+import { Briefcase, FileText, CheckCircle, Clock, XCircle, Search, Trophy, Sparkles, X } from 'lucide-react'
 import Layout from '../components/layout/Layout'
 import OffreCardCandidat from '../components/OffreCardCandidat'
 import api from '../services/api'
 
 export default function DashboardCandidat() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const onglet                          = searchParams.get('tab') || 'offres'
+  // Correction de l'aiguillage par défaut vers 'dashboard'
+  const onglet                          = searchParams.get('tab') || 'dashboard'
   const setOnglet                       = (tab) => setSearchParams({ tab })
 
   const [offres, setOffres]             = useState([])
@@ -23,7 +24,6 @@ export default function DashboardCandidat() {
   const [message, setMessage]           = useState(null)
   const [search, setSearch]             = useState('')
 
-  // --- CHARGEMENT DES DONNÉES ---
   const chargerOffres = async () => {
     try {
       const res = await api.get('/offres')
@@ -91,7 +91,7 @@ export default function DashboardCandidat() {
     }
   }
 
-  // --- CONFIGURATION VISUELLE ---
+  // --- CONFIGURATION STATUTS ---
   const statutConfig = {
     'en_attente': { label: 'En attente',  icon: Clock,        color: 'text-amber-400',  bg: 'bg-amber-400/10 border-amber-400/20'  },
     'retenu':     { label: 'Retenu ✓',    icon: CheckCircle,  color: 'text-[#00f098]',  bg: 'bg-[#00f098]/10 border-[#00f098]/20'  },
@@ -105,33 +105,29 @@ export default function DashboardCandidat() {
   }
 
   const offresFiltrees = offres.filter(o =>
-    o.titre.toLowerCase().includes(search.toLowerCase()) ||
-    o.competences.some(c => c.toLowerCase().includes(search.toLowerCase()))
+    o.titre?.toLowerCase().includes(search.toLowerCase()) ||
+    o.competences?.some(c => c.toLowerCase().includes(search.toLowerCase()))
   )
-
-  
 
   return (
     <Layout>
-
-      {/* ── VUE 1 : DASHBOARD (ACCUEIL STRICT) ── */}
-      {onglet === '' && (
-        <div className="space-y-8 animate-in fade-in duration-300">
-          
-          {/* Header du Dashboard */}
+      {/* ── VUE 1 : DASHBOARD (ACCUEIL) ── */}
+      {onglet === 'dashboard' && (
+        <div className="space-y-8">
+          {/* Header de bienvenue */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <h1 className="text-3xl font-black text-white tracking-tight">Espace Candidat</h1>
-              <p className="text-gray-400 text-sm mt-1">Bienvenue. Voici l'état actuel de vos recherches.</p>
+              <p className="text-gray-400 text-sm mt-1">Gérez vos candidatures et trouvez votre prochaine opportunité.</p>
             </div>
           </div>
 
-          {/* Cartes de statistiques (KPIs) - Visibles UNIQUEMENT ici */}
+          {/* 3 Cartes de statistiques (KPIs) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[
               { label: 'Offres disponibles', value: offres.length, icon: Briefcase, color: 'text-white' },
-              { label: 'Mes candidatures',   value: candidatures.length, icon: FileText, color: 'text-white'   },
-              { label: 'Profil retenu',      value: candidatures.filter(c => c.statut === 'retenu').length, icon: Trophy, color: 'text-[#00f098]'  },
+              { label: 'Mes candidatures',   value: candidatures.length, icon: FileText, color: 'text-white' },
+              { label: 'Profil retenu',      value: candidatures.filter(c => c.statut === 'retenu').length, icon: Trophy, color: 'text-[#00f098]' },
             ].map((s, i) => {
               const Icon = s.icon
               return (
@@ -148,7 +144,7 @@ export default function DashboardCandidat() {
             })}
           </div>
 
-          {/* Section Bienvenue + Animation CV (Conservée) */}
+          {/* Conteneur de présentation : "Votre carrière, gérée intelligemment" */}
           <div className="relative overflow-hidden bg-[#0b1a19] border border-[#00f098]/20 rounded-[2rem] p-8 md:p-10">
             <div className="absolute top-0 right-0 w-96 h-96 bg-[#00f098]/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
             
@@ -163,15 +159,16 @@ export default function DashboardCandidat() {
                 <p className="text-gray-400 text-sm leading-relaxed mb-8">
                   Suivez vos dossiers en temps réel et postulez aux opportunités actives. Notre Intelligence Artificielle analyse votre profil pour vous positionner sur les meilleures offres du marché.
                 </p>
+                
                 <button
                   onClick={() => setOnglet('offres')}
                   className="bg-[#00f098] text-[#0b1a19] hover:bg-[#00d084] px-8 py-3.5 rounded-xl text-sm font-black uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,240,152,0.2)]"
                 >
-                  Découvrir les offres
+                  Découvrir les opportunités
                 </button>
               </div>
 
-              {/* Visuel d'illustration (Scanneur IA conservé) */}
+              {/* Animation visuelle d'illustration du CV */}
               <div className="hidden md:flex flex-1 items-center justify-center">
                 <div className="relative w-48 h-56 bg-[#041619] border border-white/10 rounded-2xl p-4 shadow-2xl transform rotate-3">
                   <div className="w-full h-4 bg-gray-800 rounded mb-4" />
@@ -181,7 +178,6 @@ export default function DashboardCandidat() {
                     <div className="w-10 h-4 bg-[#00f098]/20 rounded" />
                     <div className="w-12 h-4 bg-[#00f098]/20 rounded" />
                   </div>
-                  {/* Faux scanner IA */}
                   <div className="absolute top-1/2 left-0 w-full h-0.5 bg-[#00f098] shadow-[0_0_10px_#00f098] animate-[ping_3s_ease-in-out_infinite]" />
                 </div>
               </div>
@@ -190,15 +186,16 @@ export default function DashboardCandidat() {
         </div>
       )}
 
-      {/* ── VUE 2 : GRILLE DES OFFRES STRICTE ── */}
+      {/* ── VUE 2 : LISTE DES OFFRES ── */}
       {onglet === 'offres' && (
-        <div className="animate-in fade-in duration-300">
-          <div className="mb-8">
-            <h1 className="text-3xl font-black text-white tracking-tight">Opportunités actives</h1>
-            <p className="text-gray-400 text-sm mt-1">Recherchez et postulez aux offres qui vous correspondent.</p>
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-3xl font-black text-white tracking-tight">Opportunités actives</h2>
+            <p className="text-gray-400 text-sm mt-1">Découvrez les opportunités correspondant à votre profil et postulez directement.</p>
           </div>
 
-          <div className="relative mb-6">
+          {/* Barre de recherche */}
+          <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
             <input
               type="text"
@@ -209,12 +206,13 @@ export default function DashboardCandidat() {
             />
           </div>
 
+          {/* Grille des offres */}
           {loading ? (
-            <p className="text-center text-gray-500 py-16">Chargement...</p>
+            <p className="text-center text-gray-500 py-16">Chargement des offres...</p>
           ) : offresFiltrees.length === 0 ? (
             <div className="text-center py-16 bg-[#0b1a19] rounded-[2rem] border border-white/5">
               <Briefcase className="w-12 h-12 text-gray-700 mx-auto mb-3" />
-              <p className="text-gray-500">Aucune offre trouvée</p>
+              <p className="text-gray-500 font-medium">Aucune offre trouvée</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -230,19 +228,19 @@ export default function DashboardCandidat() {
         </div>
       )}
 
-      {/* ── VUE 3 : MES CANDIDATURES STRICTE ── */}
+      {/* ── VUE 3 : MES CANDIDATURES ── */}
       {onglet === 'candidatures' && (
-        <div className="animate-in fade-in duration-300 space-y-6">
-          <div className="mb-4">
-            <h1 className="text-3xl font-black text-white tracking-tight">Mes Candidatures</h1>
-            <p className="text-gray-400 text-sm mt-1">Suivez l'état d'avancement de vos dossiers.</p>
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-3xl font-black text-white tracking-tight">Mes candidatures</h2>
+            <p className="text-gray-400 text-sm mt-1">Suivez en temps réel l'avancement et le statut de vos candidatures.</p>
           </div>
 
           <div className="space-y-4">
             {candidatures.length === 0 ? (
               <div className="text-center py-16 bg-[#0b1a19] rounded-[2rem] border border-white/5">
                 <FileText className="w-12 h-12 text-gray-700 mx-auto mb-3" />
-                <p className="text-gray-500 font-medium">Aucune candidature effectuée</p>
+                <p className="text-gray-500 font-medium">Aucune candidature effectuée pour le moment.</p>
               </div>
             ) : candidatures.map(c => {
               const statut = statutConfig[c.statut] || statutConfig['en_attente']
@@ -257,7 +255,7 @@ export default function DashboardCandidat() {
                       <div>
                         <h3 className="text-white font-bold text-lg">{c.offreId?.titre || 'Offre supprimée'}</h3>
                         <p className="text-gray-500 text-xs mt-1 font-medium">
-                          {c.offreId?.typeContrat} <span className="mx-1">•</span> {new Date(c.createdAt).toLocaleDateString('fr-FR')}
+                          {c.offreId?.typeContrat || 'Contrat'} <span className="mx-1">•</span> {new Date(c.createdAt).toLocaleDateString('fr-FR')}
                         </p>
                         <p className="text-gray-400 text-sm mt-2">
                           {statutMessage[c.statut] || statutMessage['en_attente']}
@@ -276,11 +274,10 @@ export default function DashboardCandidat() {
         </div>
       )}
 
-      {/* ── MODALE DE POSTULATION (Pop-up IA) ── */}
+      {/* ── MODALE DE POSTULATION (IA GEMINI) ── */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#041619]/80 backdrop-blur-sm">
           <div className="relative w-full max-w-4xl bg-[#0b1a19] border border-[#00f098]/30 rounded-[2rem] p-8 md:p-10 shadow-2xl animate-in fade-in zoom-in duration-300">
-            
             <button 
               onClick={() => setIsModalOpen(false)} 
               className="absolute top-6 right-6 text-gray-500 hover:text-[#00f098] transition-colors bg-[#041619] p-2 rounded-full border border-white/5"
@@ -361,7 +358,6 @@ export default function DashboardCandidat() {
           </div>
         </div>
       )}
-
     </Layout>
   )
 }
