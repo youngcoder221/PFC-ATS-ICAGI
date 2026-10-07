@@ -25,11 +25,6 @@ export default function DashboardCandidat() {
   
   
   // --- CHARGEMENT DES DONNÉES ---
-  useEffect(() => {
-    chargerOffres()
-    chargerCandidatures()
-  }, [])
-
   const chargerOffres = async () => {
     try {
       const res = await api.get('/offres')
@@ -49,6 +44,11 @@ export default function DashboardCandidat() {
       console.error(err)
     }
   }
+
+  useEffect(() => {
+    chargerOffres()
+    chargerCandidatures()
+  }, [])
 
   // --- GESTION DE LA MODALE ---
   const handlePostuler = (offreId) => {
@@ -127,34 +127,7 @@ export default function DashboardCandidat() {
 
       
 
-      {/* ── ONGLETS DE NAVIGATION ── */}
-      <div className="flex overflow-x-auto no-scrollbar gap-2 bg-[#0b1a19] border border-white/5 p-1.5 rounded-2xl w-fit mb-8 shadow-sm">
-        {onglets.map(o => {
-          const Icon = o.icon
-          const isActive = onglet === o.key
-          return (
-            <button
-              key={o.key}
-              onClick={() => setOnglet(o.key)}
-              className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 ${
-                isActive 
-                  ? 'bg-[#00f098] text-[#0b1a19] shadow-[0_0_15px_rgba(0,240,152,0.2)]' 
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              <Icon className={`w-4 h-4 ${isActive ? 'text-[#0b1a19]' : ''}`} />
-              {o.label}
-              {o.count !== null && (
-                <span className={`text-xs px-2 py-0.5 rounded-full ${
-                  isActive ? 'bg-[#0b1a19]/20 text-[#0b1a19]' : 'bg-[#041619] text-gray-400'
-                }`}>
-                  {o.count}
-                </span>
-              )}
-            </button>
-          )
-        })}
-      </div>
+      
 
       {/* ── VUE 1 : DASHBOARD (ACCUEIL) ── */}
       {onglet === '' && (
