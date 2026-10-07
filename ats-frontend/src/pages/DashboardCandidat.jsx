@@ -1,30 +1,28 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { Briefcase, FileText, CheckCircle, Clock, XCircle, ChevronRight, Search, Trophy, LayoutDashboard, Sparkles, UploadCloud, X } from 'lucide-react'
+import { Briefcase, FileText, CheckCircle, Clock, XCircle, ChevronRight, Search, Trophy, Sparkles, X } from 'lucide-react'
 import Layout from '../components/layout/Layout'
 import OffreCardCandidat from '../components/OffreCardCandidat'
 import api from '../services/api'
 
 export default function DashboardCandidat() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const onglet                          = searchParams.get('tab') || ''
+  const onglet                          = searchParams.get('tab') || 'offres'
   const setOnglet                       = (tab) => setSearchParams({ tab })
 
-  // --- ÉTATS DES DONNÉES ---
   const [offres, setOffres]             = useState([])
   const [candidatures, setCandidatures] = useState([])
   const [loading, setLoading]           = useState(true)
   
-  // --- ÉTATS DU FORMULAIRE ET MODALE DE CANDIDATURE ---
   const [isModalOpen, setIsModalOpen]   = useState(false)
   const [uploadForm, setUploadForm]     = useState({ offreId: '', diplome: '', experience: 0 })
   const [fichier, setFichier]           = useState(null)
   const [uploading, setUploading]       = useState(false)
   const [message, setMessage]           = useState(null)
   const [search, setSearch]             = useState('')
-  
-  
-  // --- CHARGEMENT DES DONNÉES ---
+
   const chargerOffres = async () => {
     try {
       const res = await api.get('/offres')
@@ -46,9 +44,9 @@ export default function DashboardCandidat() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     chargerOffres()
     chargerCandidatures()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // --- GESTION DE LA MODALE ---
