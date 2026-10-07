@@ -305,53 +305,57 @@ export default function DashboardCandidat() {
         </div>
       )}
 
-      {/* ── VUE 2 : LISTE DES OFFRES (HARMONISÉE FDE) ── */}
+      {/* ── VUE 2 : OPPORTUNITÉS ACTIVES (CANVAS BLANC & CARTES SOMBRES FDE) ── */}
       {onglet === 'offres' && (
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-3xl font-black text-white tracking-tight">Opportunités actives</h2>
-            <p className="text-gray-400 text-sm mt-1">Découvrez les opportunités correspondant à votre profil et postulez directement.</p>
+        <div className="bg-white rounded-[2rem] p-6 md:p-10 shadow-sm space-y-8">
+          
+          {/* En-tête typographique sombre sur fond blanc */}
+          <div className="border-b border-gray-100 pb-6">
+            <h2 className="text-3xl font-black text-gray-900 tracking-tight">Opportunités actives</h2>
+            <p className="text-gray-500 text-sm mt-1 font-medium">
+              Découvrez les offres disponibles et candidatez instantanément grâce à notre moteur IA.
+            </p>
           </div>
 
-          {/* Barre de recherche */}
+          {/* Barre de recherche optimisée pour le fond blanc */}
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Rechercher par titre ou compétence..."
+              placeholder="Rechercher par titre, compétences (ex: React, Python)..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full bg-[#0b1a19] border border-white/5 text-white rounded-2xl pl-12 pr-4 py-4 text-sm placeholder-gray-500 focus:outline-none focus:border-[#00f098] focus:ring-1 focus:ring-[#00f098] transition-all shadow-sm"
+              className="w-full bg-[#f8fafc] border border-gray-200 text-gray-900 rounded-2xl pl-12 pr-4 py-4 text-sm placeholder-gray-400 focus:outline-none focus:border-[#00f098] focus:ring-2 focus:ring-[#00f098]/20 transition-all shadow-inner"
             />
           </div>
 
-          {/* Grille des cartes d'offres FDE */}
+          {/* Grille de cartes sombres sur fond blanc */}
           {loading ? (
-            <p className="text-center text-gray-500 py-16">Chargement des offres...</p>
+            <p className="text-center text-gray-400 py-16 font-medium">Chargement des opportunités...</p>
           ) : offresFiltrees.length === 0 ? (
-            <div className="text-center py-16 bg-[#0b1a19] rounded-[2rem] border border-white/5">
-              <Briefcase className="w-12 h-12 text-gray-700 mx-auto mb-3" />
-              <p className="text-gray-500 font-medium">Aucune offre trouvée</p>
+            <div className="text-center py-16 bg-[#f8fafc] rounded-2xl border border-gray-100">
+              <Briefcase className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <p className="text-gray-500 font-medium">Aucune offre ne correspond à vos critères de recherche.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {offresFiltrees.map(offre => (
                 <div
                   key={offre._id}
-                  className="bg-[#0b1a19] border border-white/5 rounded-2xl p-6 flex flex-col justify-between hover:border-[#00f098]/30 transition-all duration-300 group shadow-lg"
+                  className="bg-[#0b1a19] border border-black/5 rounded-2xl p-6 flex flex-col justify-between hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group shadow-lg"
                 >
                   <div>
-                    {/* En-tête : Icône et Date */}
+                    {/* En-tête de carte : Icône et Date */}
                     <div className="flex items-start justify-between gap-3 mb-4">
-                      <div className="w-11 h-11 rounded-xl bg-[#041619] border border-white/5 flex items-center justify-center flex-shrink-0 text-gray-400 group-hover:text-[#00f098] group-hover:scale-105 transition-all">
+                      <div className="w-11 h-11 rounded-xl bg-[#041619] border border-white/5 flex items-center justify-center flex-shrink-0 text-[#00f098] group-hover:scale-105 transition-transform">
                         <Briefcase className="w-5 h-5" />
                       </div>
-                      <span className="text-[11px] text-gray-500 font-medium bg-[#041619] border border-white/5 px-2.5 py-1 rounded-lg">
+                      <span className="text-[11px] text-gray-400 font-medium bg-[#041619] border border-white/5 px-2.5 py-1 rounded-lg">
                         {offre.createdAt ? new Date(offre.createdAt).toLocaleDateString('fr-FR') : 'Récent'}
                       </span>
                     </div>
 
-                    {/* Titre et Entreprise */}
+                    {/* Titre du poste & Entreprise */}
                     <h3 className="text-white font-bold text-lg group-hover:text-[#00f098] transition-colors leading-snug mb-1">
                       {offre.titre}
                     </h3>
@@ -359,7 +363,7 @@ export default function DashboardCandidat() {
                       {offre.entreprise || offre.departement || 'Entreprise partenaire'}
                     </p>
 
-                    {/* Badges d'informations (Lieu, Type de contrat, Diplôme) */}
+                    {/* Badges d'informations internes (Fond sombre contrasté) */}
                     <div className="flex flex-wrap gap-2 mb-4">
                       {(offre.lieu || offre.localisation) && (
                         <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs px-2.5 py-1 rounded-lg font-medium">
@@ -395,10 +399,10 @@ export default function DashboardCandidat() {
                     )}
                   </div>
 
-                  {/* Bouton Postuler vert menthe fluo */}
+                  {/* Bouton Postuler en plein bloc vert menthe fluo */}
                   <button
                     onClick={() => handlePostuler(offre._id)}
-                    className="w-full bg-[#00f098] text-[#0b1a19] hover:bg-[#00d084] font-black text-xs uppercase tracking-wider py-3 px-4 rounded-xl transition-all shadow-[0_0_15px_rgba(0,240,152,0.15)] hover:shadow-[0_0_20px_rgba(0,240,152,0.3)] flex items-center justify-center gap-1.5"
+                    className="w-full bg-[#00f098] text-[#0b1a19] hover:bg-[#00d084] font-black text-xs uppercase tracking-wider py-3.5 px-4 rounded-xl transition-all shadow-[0_0_15px_rgba(0,240,152,0.25)] flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     Postuler &gt;
                   </button>
@@ -409,21 +413,25 @@ export default function DashboardCandidat() {
         </div>
       )}
 
-      {/* ── VUE 3 : MES CANDIDATURES (GRILLE DE CARTES FDE) ── */}
+      {/* ── VUE 3 : MES CANDIDATURES (CANVAS BLANC & GRILLE DE CARTES FDE) ── */}
       {onglet === 'candidatures' && (
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-3xl font-black text-white tracking-tight">Mes candidatures</h2>
-            <p className="text-gray-400 text-sm mt-1">Suivez en temps réel l'avancement et le statut de vos dossiers.</p>
+        <div className="bg-white rounded-[2rem] p-6 md:p-10 shadow-sm space-y-8">
+          
+          {/* En-tête typographique sombre sur fond blanc */}
+          <div className="border-b border-gray-100 pb-6">
+            <h2 className="text-3xl font-black text-gray-900 tracking-tight">Mes candidatures</h2>
+            <p className="text-gray-500 text-sm mt-1 font-medium">
+              Suivez l'état d'avancement et les retours des recruteurs sur vos dossiers.
+            </p>
           </div>
 
           {candidatures.length === 0 ? (
-            <div className="text-center py-16 bg-[#0b1a19] rounded-[2rem] border border-white/5">
-              <FileText className="w-12 h-12 text-gray-700 mx-auto mb-3" />
-              <p className="text-gray-500 font-medium">Aucune candidature effectuée pour le moment.</p>
+            <div className="text-center py-16 bg-[#f8fafc] rounded-2xl border border-gray-100">
+              <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <p className="text-gray-500 font-medium">Vous n'avez soumis aucune candidature pour le moment.</p>
             </div>
           ) : (
-            /* Grille moderne en 3 colonnes */
+            /* Grille de cartes verticales sombres */
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {candidatures.map(c => {
                 const statut = statutConfig[c.statut] || statutConfig['en_attente']
@@ -431,7 +439,7 @@ export default function DashboardCandidat() {
                 return (
                   <div
                     key={c._id}
-                    className="bg-[#0b1a19] border border-white/5 rounded-2xl p-6 flex flex-col justify-between hover:border-white/10 transition-all duration-300 shadow-lg group"
+                    className="bg-[#0b1a19] border border-black/5 rounded-2xl p-6 flex flex-col justify-between hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group shadow-lg"
                   >
                     <div>
                       {/* En-tête : Icône et Date */}
@@ -439,13 +447,13 @@ export default function DashboardCandidat() {
                         <div className="w-10 h-10 rounded-xl bg-[#041619] border border-white/5 flex items-center justify-center flex-shrink-0 text-gray-400 group-hover:text-[#00f098] transition-colors">
                           <Briefcase className="w-5 h-5" />
                         </div>
-                        <span className="text-gray-500 text-xs flex items-center gap-1.5 font-medium">
+                        <span className="text-gray-400 text-xs flex items-center gap-1.5 font-medium">
                           <Clock className="w-3.5 h-3.5" />
                           {new Date(c.createdAt).toLocaleDateString('fr-FR')}
                         </span>
                       </div>
 
-                      {/* Titre du poste et Entreprise */}
+                      {/* Titre du poste & Entreprise */}
                       <h3 className="text-white font-bold text-lg leading-snug mb-1 group-hover:text-[#00f098] transition-colors">
                         {c.offreId?.titre || 'Offre supprimée'}
                       </h3>
@@ -453,15 +461,15 @@ export default function DashboardCandidat() {
                         {c.offreId?.entreprise || c.offreId?.typeContrat || 'Entreprise partenaire'}
                       </p>
 
-                      {/* Description du statut en petit au centre */}
+                      {/* Message d'état contextuel */}
                       <div className="bg-[#041619] border border-white/5 p-3.5 rounded-xl mb-6">
-                        <p className="text-gray-400 text-xs leading-relaxed">
+                        <p className="text-gray-300 text-xs leading-relaxed font-normal">
                           {statutMessage[c.statut] || statutMessage['en_attente']}
                         </p>
                       </div>
                     </div>
 
-                    {/* Badge de couleur tout en bas pour fermer le design */}
+                    {/* Badge de statut épuré fermant le design au bas */}
                     <div className={`w-full flex items-center justify-center gap-2 text-xs font-semibold py-2.5 rounded-xl border ${statut.bg} ${statut.color}`}>
                       <SIcon className="w-4 h-4" />
                       <span>{statut.label}</span>
