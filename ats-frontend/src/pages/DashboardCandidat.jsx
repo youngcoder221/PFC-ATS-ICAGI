@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { Briefcase, FileText, CheckCircle, Clock, XCircle, Search, Trophy, Sparkles, X } from 'lucide-react'
+import { Briefcase, FileText, CheckCircle, Clock, XCircle, Search, Trophy, Sparkles, X, Upload } from 'lucide-react'
 import Layout from '../components/layout/Layout'
 import OffreCardCandidat from '../components/OffreCardCandidat'
 import api from '../services/api'
@@ -123,27 +123,6 @@ export default function DashboardCandidat() {
           </div>
 
           {/* 3 Cartes de statistiques (KPIs) */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {[
-              { label: 'Offres disponibles', value: offres.length, icon: Briefcase, color: 'text-white' },
-              { label: 'Mes candidatures',   value: candidatures.length, icon: FileText, color: 'text-white' },
-              { label: 'Profil retenu',      value: candidatures.filter(c => c.statut === 'retenu').length, icon: Trophy, color: 'text-[#00f098]' },
-            ].map((s, i) => {
-              const Icon = s.icon
-              return (
-                <div key={i} className="relative overflow-hidden bg-[#0b1a19] border border-white/5 rounded-[2rem] p-6 hover:border-white/10 hover:-translate-y-1 transition-all duration-300 group">
-                  <div className="flex items-center justify-between mb-4">
-                    <p className="text-gray-400 text-sm font-medium">{s.label}</p>
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#041619] border border-white/5 group-hover:scale-110 transition-transform duration-300">
-                      <Icon className={`w-5 h-5 ${s.color}`} />
-                    </div>
-                  </div>
-                  <p className={`text-4xl font-black ${s.color} tracking-tight`}>{s.value}</p>
-                </div>
-              )
-            })}
-          </div>
-
           {/* Conteneur de présentation : "Votre carrière, gérée intelligemment" */}
           <div className="relative overflow-hidden bg-[#0b1a19] border border-[#00f098]/20 rounded-[2rem] p-8 md:p-10">
             <div className="absolute top-0 right-0 w-96 h-96 bg-[#00f098]/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
@@ -183,6 +162,142 @@ export default function DashboardCandidat() {
               </div>
             </div>
           </div>
+          {/* ── SECTION EXACTE DE LA CAPTURE : 2 COLONNES (70% / 30%) ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            {/* ── COLONNE GAUCHE (70%) : MES DERNIÈRES CANDIDATURES ── */}
+            <div className="lg:col-span-2 bg-[#0c1220] border border-white/5 rounded-[2rem] p-7">
+              {/* En-tête du panneau */}
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <FileText className="w-5 h-5 text-indigo-400" />
+                  <h3 className="text-white font-bold text-lg">Mes dernières candidatures</h3>
+                </div>
+                <button
+                  onClick={() => setOnglet('candidatures')}
+                  className="text-xs text-indigo-300 hover:text-white font-medium bg-[#162035] hover:bg-[#1d2a47] px-4 py-1.5 rounded-full transition-colors flex items-center gap-1"
+                >
+                  Voir tout &gt;
+                </button>
+              </div>
+
+              {/* Liste des candidatures */}
+              {candidatures.length === 0 ? (
+                <div className="text-center py-14 bg-[#080d18] rounded-2xl border border-white/5">
+                  <FileText className="w-10 h-10 text-gray-700 mx-auto mb-3" />
+                  <p className="text-gray-500 text-sm">Vous n'avez postulé à aucune offre pour le moment.</p>
+                </div>
+              ) : (
+                <div className="space-y-3.5">
+                  {candidatures.slice(0, 4).map(c => {
+                    const statut = statutConfig[c.statut] || statutConfig['en_attente']
+                    const SIcon  = statut.icon
+                    return (
+                      <div
+                        key={c._id}
+                        className="p-4 bg-[#080d18] border border-white/5 rounded-2xl flex items-center justify-between hover:border-white/10 transition-all"
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-xl bg-[#0c1220] border border-white/10 flex items-center justify-center flex-shrink-0 text-gray-400">
+                            <Briefcase className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <p className="text-white text-sm font-bold tracking-wide">
+                              {c.offreId?.titre || 'Offre supprimée'}
+                            </p>
+                            <p className="text-gray-500 text-xs mt-1 flex items-center gap-1.5 font-medium">
+                              <Clock className="w-3.5 h-3.5" />
+                              {new Date(c.createdAt).toLocaleDateString('fr-FR')}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Badge de statut conforme à la capture */}
+                        <div className={`flex items-center gap-1.5 text-xs font-semibold px-3.5 py-1.5 rounded-full border ${
+                          c.statut === 'retenu'
+                            ? 'border-emerald-500/40 text-emerald-400 bg-emerald-500/10'
+                            : c.statut === 'refusé'
+                            ? 'border-red-500/40 text-red-400 bg-red-500/10'
+                            : 'border-amber-500/40 text-amber-400 bg-amber-500/10'
+                        }`}>
+                          <SIcon className="w-3.5 h-3.5" />
+                          <span>{statut.label}</span>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* ── COLONNE DROITE (30%) : ACTIONS RAPIDES & AJOUTÉ RÉCEMMENT ── */}
+            <div className="space-y-6">
+
+              {/* Bloc 1 : Actions rapides */}
+              <div className="bg-[#0c1220] border border-white/5 rounded-[2rem] p-7">
+                <h3 className="text-white font-bold text-lg mb-5">Actions rapides</h3>
+                <div className="space-y-3">
+                  {/* Action 1 : Voir les offres */}
+                  <button
+                    onClick={() => setOnglet('offres')}
+                    className="w-full flex items-center gap-3.5 p-3.5 rounded-2xl bg-[#080d18] border border-white/5 hover:border-indigo-500/30 transition-all text-left group"
+                  >
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 group-hover:scale-105 transition-transform flex-shrink-0">
+                      <Briefcase className="w-4 h-4" />
+                    </div>
+                    <span className="text-white font-semibold text-sm">Voir les offres</span>
+                  </button>
+
+                  {/* Action 2 : Nouvelle candidature */}
+                  <button
+                    onClick={() => handlePostuler('')}
+                    className="w-full flex items-center gap-3.5 p-3.5 rounded-2xl bg-[#080d18] border border-white/5 hover:border-emerald-500/30 transition-all text-left group"
+                  >
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 group-hover:scale-105 transition-transform flex-shrink-0">
+                      <Upload className="w-4 h-4" />
+                    </div>
+                    <span className="text-white font-semibold text-sm">Nouvelle candidature</span>
+                  </button>
+
+                  {/* Action 3 : Mes candidatures */}
+                  <button
+                    onClick={() => setOnglet('candidatures')}
+                    className="w-full flex items-center gap-3.5 p-3.5 rounded-2xl bg-[#080d18] border border-white/5 hover:border-amber-500/30 transition-all text-left group"
+                  >
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-amber-500/10 border border-amber-500/20 text-amber-400 group-hover:scale-105 transition-transform flex-shrink-0">
+                      <FileText className="w-4 h-4" />
+                    </div>
+                    <span className="text-white font-semibold text-sm">Mes candidatures</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Bloc 2 : Ajouté récemment */}
+              <div className="bg-[#0c1220] border border-white/5 rounded-[2rem] p-7">
+                <h3 className="text-white font-bold text-lg mb-5">Ajouté récemment</h3>
+                {offres.length === 0 ? (
+                  <p className="text-gray-500 text-xs">Aucune offre récente.</p>
+                ) : (
+                  <div className="space-y-4">
+                    {offres.slice(0, 3).map(offre => (
+                      <div
+                        key={offre._id}
+                        onClick={() => setOnglet('offres')}
+                        className="flex items-center gap-3 cursor-pointer group"
+                      >
+                        <span className="w-2 h-2 rounded-full bg-indigo-500 flex-shrink-0 group-hover:scale-125 transition-transform" />
+                        <span className="text-gray-300 text-sm font-medium group-hover:text-white transition-colors truncate">
+                          {offre.titre} {offre.typeContrat ? `(${offre.typeContrat})` : ''}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+            </div>
+          </div>
+
         </div>
       )}
 
