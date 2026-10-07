@@ -7,7 +7,7 @@ import api from '../services/api'
 
 export default function DashboardCandidat() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const onglet                          = searchParams.get('tab') || 'offres'
+  const onglet                          = searchParams.get('tab') || ''
   const setOnglet                       = (tab) => setSearchParams({ tab })
 
   // --- ÉTATS DES DONNÉES ---
@@ -128,26 +128,7 @@ export default function DashboardCandidat() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-        {[
-          { label: 'Offres disponibles', value: offres.length, icon: Briefcase, color: 'text-white' },
-          { label: 'Mes candidatures',   value: candidatures.length, icon: FileText, color: 'text-white'   },
-          { label: 'Profil retenu',      value: candidatures.filter(c => c.statut === 'retenu').length, icon: Trophy, color: 'text-[#00f098]'  },
-        ].map((s, i) => {
-          const Icon = s.icon
-          return (
-            <div key={i} className="relative overflow-hidden bg-[#0b1a19] border border-white/5 rounded-[2rem] p-6 hover:border-white/10 hover:-translate-y-1 transition-all duration-300 group">
-              <div className="flex items-center justify-between mb-4">
-                <p className="text-gray-400 text-sm font-medium">{s.label}</p>
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#041619] border border-white/5 group-hover:scale-110 transition-transform duration-300">
-                  <Icon className={`w-5 h-5 ${s.color}`} />
-                </div>
-              </div>
-              <p className={`text-4xl font-black ${s.color} tracking-tight`}>{s.value}</p>
-            </div>
-          )
-        })}
-      </div>
+      
 
       {/* ── ONGLETS DE NAVIGATION ── */}
       <div className="flex overflow-x-auto no-scrollbar gap-2 bg-[#0b1a19] border border-white/5 p-1.5 rounded-2xl w-fit mb-8 shadow-sm">
@@ -181,6 +162,28 @@ export default function DashboardCandidat() {
       {/* ── VUE 1 : DASHBOARD (ACCUEIL) ── */}
       {onglet === '' && (
         <div className="space-y-6">
+
+          {/* Cartes de statistiques exclusives au Dashboard */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+            {[
+              { label: 'Offres disponibles', value: offres.length, icon: Briefcase, color: 'text-white' },
+              { label: 'Mes candidatures',   value: candidatures.length, icon: FileText, color: 'text-white'   },
+              { label: 'Profil retenu',      value: candidatures.filter(c => c.statut === 'retenu').length, icon: Trophy, color: 'text-[#00f098]'  },
+            ].map((s, i) => {
+              const Icon = s.icon
+              return (
+                <div key={i} className="relative overflow-hidden bg-[#0b1a19] border border-white/5 rounded-[2rem] p-6 hover:border-white/10 hover:-translate-y-1 transition-all duration-300 group">
+                  <div className="flex items-center justify-between mb-4">
+                    <p className="text-gray-400 text-sm font-medium">{s.label}</p>
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#041619] border border-white/5 group-hover:scale-110 transition-transform duration-300">
+                      <Icon className={`w-5 h-5 ${s.color}`} />
+                    </div>
+                  </div>
+                  <p className={`text-4xl font-black ${s.color} tracking-tight`}>{s.value}</p>
+                </div>
+              )
+            })}
+          </div>
           
           {/* Module Onboarding : Parsing du profil */}
           <div className="relative overflow-hidden bg-[#0b1a19] border border-[#00f098]/20 rounded-[2rem] p-8 md:p-10">
