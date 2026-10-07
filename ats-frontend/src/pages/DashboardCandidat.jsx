@@ -162,20 +162,23 @@ export default function DashboardCandidat() {
               </div>
             </div>
           </div>
-          {/* ── SECTION EXACTE DE LA CAPTURE : 2 COLONNES (70% / 30%) ── */}
+          {/* ═════════════════════════════════════════════════════════════════════ */}
+          {/* ── SECTION DOUBLE COLONNE : CHARTE FDE HARMONISÉE (70% / 30%) ────── */}
+          {/* ═════════════════════════════════════════════════════════════════════ */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-            {/* ── COLONNE GAUCHE (70%) : MES DERNIÈRES CANDIDATURES ── */}
-            <div className="lg:col-span-2 bg-[#0c1220] border border-white/5 rounded-[2rem] p-7">
-              {/* En-tête du panneau */}
+            {/* ── 1. COLONNE GAUCHE (70%) : MES DERNIÈRES CANDIDATURES ── */}
+            <div className="lg:col-span-2 bg-[#0b1a19] border border-white/5 rounded-[2rem] p-7">
+              {/* En-tête de la section */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <FileText className="w-5 h-5 text-indigo-400" />
+                  <FileText className="w-5 h-5 text-[#00f098]" />
                   <h3 className="text-white font-bold text-lg">Mes dernières candidatures</h3>
                 </div>
+                {/* Bouton pilule FDE */}
                 <button
                   onClick={() => setOnglet('candidatures')}
-                  className="text-xs text-indigo-300 hover:text-white font-medium bg-[#162035] hover:bg-[#1d2a47] px-4 py-1.5 rounded-full transition-colors flex items-center gap-1"
+                  className="text-xs text-gray-300 hover:text-[#00f098] font-medium bg-[#041619] hover:bg-[#072421] border border-white/5 hover:border-[#00f098]/30 px-4 py-1.5 rounded-full transition-all flex items-center gap-1"
                 >
                   Voir tout &gt;
                 </button>
@@ -183,7 +186,7 @@ export default function DashboardCandidat() {
 
               {/* Liste des candidatures */}
               {candidatures.length === 0 ? (
-                <div className="text-center py-14 bg-[#080d18] rounded-2xl border border-white/5">
+                <div className="text-center py-14 bg-[#041619] rounded-2xl border border-white/5">
                   <FileText className="w-10 h-10 text-gray-700 mx-auto mb-3" />
                   <p className="text-gray-500 text-sm">Vous n'avez postulé à aucune offre pour le moment.</p>
                 </div>
@@ -195,10 +198,10 @@ export default function DashboardCandidat() {
                     return (
                       <div
                         key={c._id}
-                        className="p-4 bg-[#080d18] border border-white/5 rounded-2xl flex items-center justify-between hover:border-white/10 transition-all"
+                        className="p-4 bg-[#041619] border border-white/5 rounded-2xl flex items-center justify-between hover:border-white/10 transition-all group"
                       >
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-xl bg-[#0c1220] border border-white/10 flex items-center justify-center flex-shrink-0 text-gray-400">
+                          <div className="w-12 h-12 rounded-xl bg-[#0b1a19] border border-white/5 flex items-center justify-center flex-shrink-0 text-gray-400 group-hover:text-[#00f098] group-hover:border-[#00f098]/30 transition-all">
                             <Briefcase className="w-5 h-5" />
                           </div>
                           <div>
@@ -212,13 +215,13 @@ export default function DashboardCandidat() {
                           </div>
                         </div>
 
-                        {/* Badge de statut conforme à la capture */}
+                        {/* Badges de statut harmonisés FDE */}
                         <div className={`flex items-center gap-1.5 text-xs font-semibold px-3.5 py-1.5 rounded-full border ${
                           c.statut === 'retenu'
-                            ? 'border-emerald-500/40 text-emerald-400 bg-emerald-500/10'
+                            ? 'border-[#00f098]/20 text-[#00f098] bg-[#00f098]/10'
                             : c.statut === 'refusé'
-                            ? 'border-red-500/40 text-red-400 bg-red-500/10'
-                            : 'border-amber-500/40 text-amber-400 bg-amber-500/10'
+                            ? 'border-red-400/20 text-red-400 bg-red-400/10'
+                            : 'border-amber-400/20 text-amber-400 bg-amber-400/10'
                         }`}>
                           <SIcon className="w-3.5 h-3.5" />
                           <span>{statut.label}</span>
@@ -230,50 +233,50 @@ export default function DashboardCandidat() {
               )}
             </div>
 
-            {/* ── COLONNE DROITE (30%) : ACTIONS RAPIDES & AJOUTÉ RÉCEMMENT ── */}
+            {/* ── 2. COLONNE DROITE (30%) : ACTIONS RAPIDES & AJOUTÉ RÉCEMMENT ── */}
             <div className="space-y-6">
 
-              {/* Bloc 1 : Actions rapides */}
-              <div className="bg-[#0c1220] border border-white/5 rounded-[2rem] p-7">
+              {/* Bloc A : Actions rapides */}
+              <div className="bg-[#0b1a19] border border-white/5 rounded-[2rem] p-7">
                 <h3 className="text-white font-bold text-lg mb-5">Actions rapides</h3>
                 <div className="space-y-3">
                   {/* Action 1 : Voir les offres */}
                   <button
                     onClick={() => setOnglet('offres')}
-                    className="w-full flex items-center gap-3.5 p-3.5 rounded-2xl bg-[#080d18] border border-white/5 hover:border-indigo-500/30 transition-all text-left group"
+                    className="w-full flex items-center gap-3.5 p-3.5 rounded-2xl bg-[#041619] border border-white/5 hover:border-[#00f098]/30 transition-all text-left group"
                   >
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 group-hover:scale-105 transition-transform flex-shrink-0">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#0b1a19] border border-white/5 group-hover:border-[#00f098]/30 text-gray-400 group-hover:text-[#00f098] transition-all flex-shrink-0">
                       <Briefcase className="w-4 h-4" />
                     </div>
-                    <span className="text-white font-semibold text-sm">Voir les offres</span>
+                    <span className="text-white font-semibold text-sm group-hover:text-[#00f098] transition-colors">Voir les offres</span>
                   </button>
 
-                  {/* Action 2 : Nouvelle candidature */}
+                  {/* Action 2 : Nouvelle candidature (Modal IA) */}
                   <button
                     onClick={() => handlePostuler('')}
-                    className="w-full flex items-center gap-3.5 p-3.5 rounded-2xl bg-[#080d18] border border-white/5 hover:border-emerald-500/30 transition-all text-left group"
+                    className="w-full flex items-center gap-3.5 p-3.5 rounded-2xl bg-[#041619] border border-white/5 hover:border-[#00f098]/30 transition-all text-left group"
                   >
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 group-hover:scale-105 transition-transform flex-shrink-0">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#00f098]/10 border border-[#00f098]/20 text-[#00f098] group-hover:scale-105 transition-all flex-shrink-0">
                       <Upload className="w-4 h-4" />
                     </div>
-                    <span className="text-white font-semibold text-sm">Nouvelle candidature</span>
+                    <span className="text-white font-semibold text-sm group-hover:text-[#00f098] transition-colors">Nouvelle candidature</span>
                   </button>
 
                   {/* Action 3 : Mes candidatures */}
                   <button
                     onClick={() => setOnglet('candidatures')}
-                    className="w-full flex items-center gap-3.5 p-3.5 rounded-2xl bg-[#080d18] border border-white/5 hover:border-amber-500/30 transition-all text-left group"
+                    className="w-full flex items-center gap-3.5 p-3.5 rounded-2xl bg-[#041619] border border-white/5 hover:border-[#00f098]/30 transition-all text-left group"
                   >
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-amber-500/10 border border-amber-500/20 text-amber-400 group-hover:scale-105 transition-transform flex-shrink-0">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-amber-400/10 border border-amber-400/20 text-amber-400 group-hover:scale-105 transition-all flex-shrink-0">
                       <FileText className="w-4 h-4" />
                     </div>
-                    <span className="text-white font-semibold text-sm">Mes candidatures</span>
+                    <span className="text-white font-semibold text-sm group-hover:text-[#00f098] transition-colors">Mes candidatures</span>
                   </button>
                 </div>
               </div>
 
-              {/* Bloc 2 : Ajouté récemment */}
-              <div className="bg-[#0c1220] border border-white/5 rounded-[2rem] p-7">
+              {/* Bloc B : Ajouté récemment */}
+              <div className="bg-[#0b1a19] border border-white/5 rounded-[2rem] p-7">
                 <h3 className="text-white font-bold text-lg mb-5">Ajouté récemment</h3>
                 {offres.length === 0 ? (
                   <p className="text-gray-500 text-xs">Aucune offre récente.</p>
@@ -285,8 +288,9 @@ export default function DashboardCandidat() {
                         onClick={() => setOnglet('offres')}
                         className="flex items-center gap-3 cursor-pointer group"
                       >
-                        <span className="w-2 h-2 rounded-full bg-indigo-500 flex-shrink-0 group-hover:scale-125 transition-transform" />
-                        <span className="text-gray-300 text-sm font-medium group-hover:text-white transition-colors truncate">
+                        {/* Puce vert menthe avec lueur FDE */}
+                        <span className="w-2 h-2 rounded-full bg-[#00f098] shadow-[0_0_8px_#00f098] flex-shrink-0 group-hover:scale-125 transition-transform" />
+                        <span className="text-gray-300 text-sm font-medium group-hover:text-[#00f098] transition-colors truncate">
                           {offre.titre} {offre.typeContrat ? `(${offre.typeContrat})` : ''}
                         </span>
                       </div>
