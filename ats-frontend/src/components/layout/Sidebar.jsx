@@ -3,7 +3,7 @@ import { useAuth } from '../../context/AuthContext'
 import logo from '../../assets/logo-icon-small.png'
 import {
   LayoutDashboard, Briefcase, FileText,
-  Users, LogOut, ChevronRight, Shield
+  Users, LogOut, ChevronRight, Award, Shield
 } from 'lucide-react'
 
 const menuAdmin = [
