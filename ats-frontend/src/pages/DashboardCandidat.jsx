@@ -48,6 +48,7 @@ export default function DashboardCandidat() {
   useEffect(() => {
     chargerOffres()
     chargerCandidatures()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // --- GESTION DE LA MODALE ---
@@ -109,11 +110,7 @@ export default function DashboardCandidat() {
     o.competences.some(c => c.toLowerCase().includes(search.toLowerCase()))
   )
 
-  const onglets = [
-    { key: '',             label: 'Dashboard',        icon: LayoutDashboard, count: null              },
-    { key: 'offres',       label: 'Offres',           icon: Briefcase, count: offres.length       },
-    { key: 'candidatures', label: 'Mes candidatures',  icon: FileText,  count: candidatures.length },
-  ]
+  
 
   return (
     <Layout>
