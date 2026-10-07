@@ -305,7 +305,7 @@ export default function DashboardCandidat() {
         </div>
       )}
 
-      {/* ── VUE 2 : LISTE DES OFFRES ── */}
+      {/* ── VUE 2 : LISTE DES OFFRES (HARMONISÉE FDE) ── */}
       {onglet === 'offres' && (
         <div className="space-y-6">
           <div>
@@ -325,7 +325,7 @@ export default function DashboardCandidat() {
             />
           </div>
 
-          {/* Grille des offres */}
+          {/* Grille des cartes d'offres FDE */}
           {loading ? (
             <p className="text-center text-gray-500 py-16">Chargement des offres...</p>
           ) : offresFiltrees.length === 0 ? (
@@ -336,60 +336,141 @@ export default function DashboardCandidat() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {offresFiltrees.map(offre => (
-                <OffreCardCandidat 
-                  key={offre._id} 
-                  offre={offre} 
-                  onPostuler={handlePostuler} 
-                />
+                <div
+                  key={offre._id}
+                  className="bg-[#0b1a19] border border-white/5 rounded-2xl p-6 flex flex-col justify-between hover:border-[#00f098]/30 transition-all duration-300 group shadow-lg"
+                >
+                  <div>
+                    {/* En-tête : Icône et Date */}
+                    <div className="flex items-start justify-between gap-3 mb-4">
+                      <div className="w-11 h-11 rounded-xl bg-[#041619] border border-white/5 flex items-center justify-center flex-shrink-0 text-gray-400 group-hover:text-[#00f098] group-hover:scale-105 transition-all">
+                        <Briefcase className="w-5 h-5" />
+                      </div>
+                      <span className="text-[11px] text-gray-500 font-medium bg-[#041619] border border-white/5 px-2.5 py-1 rounded-lg">
+                        {offre.createdAt ? new Date(offre.createdAt).toLocaleDateString('fr-FR') : 'Récent'}
+                      </span>
+                    </div>
+
+                    {/* Titre et Entreprise */}
+                    <h3 className="text-white font-bold text-lg group-hover:text-[#00f098] transition-colors leading-snug mb-1">
+                      {offre.titre}
+                    </h3>
+                    <p className="text-gray-400 text-xs font-medium mb-4">
+                      {offre.entreprise || offre.departement || 'Entreprise partenaire'}
+                    </p>
+
+                    {/* Badges d'informations (Lieu, Type de contrat, Diplôme) */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {(offre.lieu || offre.localisation) && (
+                        <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs px-2.5 py-1 rounded-lg font-medium">
+                          {offre.lieu || offre.localisation}
+                        </span>
+                      )}
+                      {offre.typeContrat && (
+                        <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs px-2.5 py-1 rounded-lg font-medium">
+                          {offre.typeContrat}
+                        </span>
+                      )}
+                      {(offre.diplome || offre.niveauEtude) && (
+                        <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs px-2.5 py-1 rounded-lg font-medium">
+                          {offre.diplome || offre.niveauEtude}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Puces de compétences */}
+                    {offre.competences && offre.competences.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mb-6">
+                        {offre.competences.slice(0, 3).map((comp, idx) => (
+                          <span key={idx} className="bg-white/5 text-gray-400 text-[11px] px-2 py-0.5 rounded-md">
+                            {comp}
+                          </span>
+                        ))}
+                        {offre.competences.length > 3 && (
+                          <span className="text-gray-500 text-[10px] self-center">
+                            +{offre.competences.length - 3}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Bouton Postuler vert menthe fluo */}
+                  <button
+                    onClick={() => handlePostuler(offre._id)}
+                    className="w-full bg-[#00f098] text-[#0b1a19] hover:bg-[#00d084] font-black text-xs uppercase tracking-wider py-3 px-4 rounded-xl transition-all shadow-[0_0_15px_rgba(0,240,152,0.15)] hover:shadow-[0_0_20px_rgba(0,240,152,0.3)] flex items-center justify-center gap-1.5"
+                  >
+                    Postuler &gt;
+                  </button>
+                </div>
               ))}
             </div>
           )}
         </div>
       )}
 
-      {/* ── VUE 3 : MES CANDIDATURES ── */}
+      {/* ── VUE 3 : MES CANDIDATURES (GRILLE DE CARTES FDE) ── */}
       {onglet === 'candidatures' && (
         <div className="space-y-6">
           <div>
             <h2 className="text-3xl font-black text-white tracking-tight">Mes candidatures</h2>
-            <p className="text-gray-400 text-sm mt-1">Suivez en temps réel l'avancement et le statut de vos candidatures.</p>
+            <p className="text-gray-400 text-sm mt-1">Suivez en temps réel l'avancement et le statut de vos dossiers.</p>
           </div>
 
-          <div className="space-y-4">
-            {candidatures.length === 0 ? (
-              <div className="text-center py-16 bg-[#0b1a19] rounded-[2rem] border border-white/5">
-                <FileText className="w-12 h-12 text-gray-700 mx-auto mb-3" />
-                <p className="text-gray-500 font-medium">Aucune candidature effectuée pour le moment.</p>
-              </div>
-            ) : candidatures.map(c => {
-              const statut = statutConfig[c.statut] || statutConfig['en_attente']
-              const SIcon  = statut.icon
-              return (
-                <div key={c._id} className="bg-[#0b1a19] border border-white/5 rounded-2xl p-6 hover:border-white/10 transition-colors">
-                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-[#041619] border border-white/5 flex items-center justify-center flex-shrink-0">
-                        <Briefcase className="w-5 h-5 text-gray-500" />
+          {candidatures.length === 0 ? (
+            <div className="text-center py-16 bg-[#0b1a19] rounded-[2rem] border border-white/5">
+              <FileText className="w-12 h-12 text-gray-700 mx-auto mb-3" />
+              <p className="text-gray-500 font-medium">Aucune candidature effectuée pour le moment.</p>
+            </div>
+          ) : (
+            /* Grille moderne en 3 colonnes */
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {candidatures.map(c => {
+                const statut = statutConfig[c.statut] || statutConfig['en_attente']
+                const SIcon  = statut.icon
+                return (
+                  <div
+                    key={c._id}
+                    className="bg-[#0b1a19] border border-white/5 rounded-2xl p-6 flex flex-col justify-between hover:border-white/10 transition-all duration-300 shadow-lg group"
+                  >
+                    <div>
+                      {/* En-tête : Icône et Date */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="w-10 h-10 rounded-xl bg-[#041619] border border-white/5 flex items-center justify-center flex-shrink-0 text-gray-400 group-hover:text-[#00f098] transition-colors">
+                          <Briefcase className="w-5 h-5" />
+                        </div>
+                        <span className="text-gray-500 text-xs flex items-center gap-1.5 font-medium">
+                          <Clock className="w-3.5 h-3.5" />
+                          {new Date(c.createdAt).toLocaleDateString('fr-FR')}
+                        </span>
                       </div>
-                      <div>
-                        <h3 className="text-white font-bold text-lg">{c.offreId?.titre || 'Offre supprimée'}</h3>
-                        <p className="text-gray-500 text-xs mt-1 font-medium">
-                          {c.offreId?.typeContrat || 'Contrat'} <span className="mx-1">•</span> {new Date(c.createdAt).toLocaleDateString('fr-FR')}
-                        </p>
-                        <p className="text-gray-400 text-sm mt-2">
+
+                      {/* Titre du poste et Entreprise */}
+                      <h3 className="text-white font-bold text-lg leading-snug mb-1 group-hover:text-[#00f098] transition-colors">
+                        {c.offreId?.titre || 'Offre supprimée'}
+                      </h3>
+                      <p className="text-gray-400 text-xs font-medium mb-4">
+                        {c.offreId?.entreprise || c.offreId?.typeContrat || 'Entreprise partenaire'}
+                      </p>
+
+                      {/* Description du statut en petit au centre */}
+                      <div className="bg-[#041619] border border-white/5 p-3.5 rounded-xl mb-6">
+                        <p className="text-gray-400 text-xs leading-relaxed">
                           {statutMessage[c.statut] || statutMessage['en_attente']}
                         </p>
                       </div>
                     </div>
-                    <div className={`flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider px-3 py-1.5 rounded-lg border ${statut.bg} ${statut.color} flex-shrink-0`}>
-                      <SIcon className="w-3.5 h-3.5" />
-                      {statut.label}
+
+                    {/* Badge de couleur tout en bas pour fermer le design */}
+                    <div className={`w-full flex items-center justify-center gap-2 text-xs font-semibold py-2.5 rounded-xl border ${statut.bg} ${statut.color}`}>
+                      <SIcon className="w-4 h-4" />
+                      <span>{statut.label}</span>
                     </div>
                   </div>
-                </div>
-              )
-            })}
-          </div>
+                )
+              })}
+            </div>
+          )}
         </div>
       )}
 
