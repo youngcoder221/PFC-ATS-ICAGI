@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Briefcase, Check, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles } from 'lucide-react'
+import { Search, Briefcase, Check, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles, MapPin, Bell } from 'lucide-react'
 import logo from '../assets/logo-icon-small.png'
 import api from '../services/api'
 
@@ -25,38 +25,78 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-[#041619] flex flex-col font-sans">
-      {/* ── TOPBAR (Vert Pétrole) ── */}
+      {/* ── TOPBAR (Architecture SaaS B2B) ── */}
       <nav className="flex items-center justify-between px-6 py-4 bg-[#08282d] border-b border-white/5 shadow-sm sticky top-0 z-50">
-        {/* Logo */}
-        <button onClick={() => navigate('/')} className="flex items-center gap-2 cursor-pointer">
+        
+        {/* 1. Logo */}
+        <button onClick={() => navigate('/')} className="flex items-center gap-2 cursor-pointer flex-shrink-0">
           <img src={logo} alt="ATS Platform" className="w-8 h-8 object-contain" />
           <span className="text-white font-bold text-lg tracking-tight">ATS <span className="text-[#00f098]">Sénégal</span></span>
         </button>
 
-        {/* Liens Centraux */}
-        <div className="hidden md:flex items-center gap-8">
-          <span className="text-gray-300 font-medium hover:text-[#00f098] transition-colors cursor-pointer">
-            Offres d'emploi
-          </span>
-          <span onClick={() => navigate('/candidat')} className="text-gray-300 font-medium hover:text-[#00f098] transition-colors cursor-pointer">
-            Suivre ma candidature
-          </span>
+        {/* 2. Navigation Centrale Enrichie (Masquée sur petit écran pour éviter le chevauchement) */}
+        <div className="hidden lg:flex items-center gap-8">
+          <div className="flex items-center gap-6">
+            <span className="text-gray-300 text-sm font-medium hover:text-[#00f098] transition-colors duration-300 cursor-pointer">
+              Offres d'emploi
+            </span>
+            <span className="text-gray-300 text-sm font-medium hover:text-[#00f098] transition-colors duration-300 cursor-pointer">
+              Comment ça marche ?
+            </span>
+            <span onClick={() => navigate('/candidat')} className="text-gray-300 text-sm font-medium hover:text-[#00f098] transition-colors duration-300 cursor-pointer">
+              Suivre ma candidature
+            </span>
+          </div>
+          
+          {/* Séparateur vertical discret */}
+          <div className="h-4 w-px bg-white/10"></div>
+          
+          {/* Micro-sélecteur de zone */}
+          <button className="flex items-center gap-1.5 text-gray-400 hover:text-[#00f098] transition-colors duration-300 group">
+            <MapPin className="w-4 h-4 text-gray-500 group-hover:text-[#00f098] transition-colors duration-300" />
+            <span className="text-sm font-medium">Sénégal (Toutes régions)</span>
+          </button>
         </div>
 
-        {/* Boutons d'action */}
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate('/login')}
-            className="text-white font-medium text-sm px-4 py-2 rounded-lg border border-white/20 hover:border-[#00f098] hover:text-[#00f098] transition-all"
+        {/* 3. Séparation des acteurs & Boutons d'action */}
+        <div className="flex items-center gap-5">
+          
+          {/* Point d'entrée B2B : Espace Recruteurs */}
+          <button 
+            onClick={() => navigate('/login')} 
+            className="hidden md:flex items-center gap-2 text-gray-300 hover:text-[#00f098] transition-colors duration-300 text-sm font-bold"
           >
-            Connexion
+            <Briefcase className="w-4 h-4" />
+            Espace Recruteurs / Publier
           </button>
-          <button
-            onClick={() => navigate('/register')}
-            className="bg-[#00f098] hover:bg-[#00d084] text-[#041619] text-sm font-bold px-5 py-2.5 rounded-lg transition-all shadow-[0_0_15px_rgba(0,240,152,0.2)]"
-          >
-            S'inscrire
+
+          {/* Centre de notifications */}
+          <button className="relative text-gray-400 hover:text-[#00f098] transition-colors duration-300 hidden sm:block">
+            <Bell className="w-5 h-5" />
+            <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00f098] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00f098]"></span>
+            </span>
           </button>
+
+          {/* Séparateur avant Auth */}
+          <div className="hidden md:block h-4 w-px bg-white/10 ml-2 mr-1"></div>
+
+          {/* Authentification */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate('/login')}
+              className="text-white font-medium text-sm px-4 py-2 rounded-lg border border-white/20 hover:border-[#00f098] hover:text-[#00f098] transition-all"
+            >
+              Connexion
+            </button>
+            <button
+              onClick={() => navigate('/register')}
+              className="bg-[#00f098] hover:bg-[#00d084] text-[#041619] text-sm font-bold px-5 py-2.5 rounded-lg transition-all shadow-[0_0_15px_rgba(0,240,152,0.2)]"
+            >
+              S'inscrire
+            </button>
+          </div>
         </div>
       </nav>
 
