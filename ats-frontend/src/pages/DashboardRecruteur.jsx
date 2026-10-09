@@ -179,20 +179,20 @@ export default function DashboardRecruteur() {
 
       {/* ══ VUE : DASHBOARD (défaut) ══ */}
       {tabActif === '' && (
-        <div className="space-y-8">
+        <div className="space-y-8 bg-[#0b1a19] p-6 md:p-8 rounded-[2rem] border border-white/5">
           
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-white tracking-tight">Tableau de bord Recruteur</h1>
+              <h1 className="text-2xl font-black text-white tracking-tight">Tableau de bord Recruteur</h1>
               <p className="text-gray-400 text-sm mt-1">Gérez vos offres et découvrez vos futurs talents grâce à l'IA.</p>
             </div>
             <button
               onClick={() => setShowForm(!showForm)}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg ${
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-black transition-all duration-300 ${
                 showForm 
-                  ? 'bg-gray-800 text-white hover:bg-gray-700' 
-                  : 'bg-white text-gray-950 hover:bg-indigo-500 hover:text-white hover:shadow-[0_0_20px_rgba(79,70,229,0.3)]'
+                  ? 'bg-[#041619] text-white border border-white/10 hover:bg-white/5' 
+                  : 'bg-[#00f098] text-[#0b1a19] hover:bg-[#00d084] shadow-[0_0_15px_rgba(0,240,152,0.2)]'
               }`}
             >
               {showForm ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
@@ -208,29 +208,33 @@ export default function DashboardRecruteur() {
             />
           )}
 
-          {/* Stats */}
+          {/* Stats KPIs (Cartes relief #041619 et icônes vert menthe / blanc) */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
             {[
-              { label: 'Total offres',      value: offres.length,                                        icon: Briefcase,  color: 'text-indigo-400' },
-              { label: 'Offres actives',    value: offresOuvertes,                                       icon: TrendingUp, color: 'text-green-400'  },
-              { label: 'Offres fermées',    value: offresFermees,                                        icon: XCircle,    color: 'text-red-400'    },
-              { label: 'Types contrats',    value: [...new Set(offres.map(o => o.typeContrat))].length,  icon: Clock,      color: 'text-amber-400'  },
+              { label: 'Total offres',      value: offres.length,                                        icon: Briefcase,  color: 'text-white'     },
+              { label: 'Offres actives',    value: offresOuvertes,                                       icon: TrendingUp, color: 'text-[#00f098]' },
+              { label: 'Offres fermées',    value: offresFermees,                                        icon: XCircle,    color: 'text-white'     },
+              { label: 'Types contrats',    value: [...new Set(offres.map(o => o.typeContrat))].length,  icon: Clock,      color: 'text-[#00f098]' },
             ].map((s, i) => {
               const Icon = s.icon
               return (
-                <div key={i} className="relative overflow-hidden bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-5 hover:border-gray-700 hover:-translate-y-1 transition-all duration-300 group">
-                  <div className="absolute -inset-2 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] transition-all duration-500 pointer-events-none" />
+                <div 
+                  key={i} 
+                  className="relative overflow-hidden bg-[#041619] border border-white/5 rounded-2xl p-5 hover:border-[#00f098]/30 hover:-translate-y-1 transition-all duration-300 group"
+                >
                   <div className="flex items-center justify-between mb-4">
                     <p className="text-gray-400 text-sm font-medium">{s.label}</p>
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-950 border border-gray-800 group-hover:scale-110 transition-transform duration-300">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#0b1a19] border border-white/5 group-hover:scale-110 transition-transform duration-300">
                       <Icon className={`w-5 h-5 ${s.color}`} />
                     </div>
                   </div>
-                  <p className={`text-3xl font-bold text-white tracking-tight`}>{s.value}</p>
+                  <p className="text-3xl font-black text-white tracking-tight">{s.value}</p>
                 </div>
               )
             })}
           </div>
+
+          {/* [SUITE INCHANGÉE : La grille en double colonne "Dernières offres" et "Actions rapides" continue ici] */}
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
