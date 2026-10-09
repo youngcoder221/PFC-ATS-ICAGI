@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Briefcase, Check, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles, MapPin, Bell } from 'lucide-react'
+import { Search, Briefcase, Check, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles, MapPin } from 'lucide-react'
 import logo from '../assets/logo-icon-small.png'
 import api from '../services/api'
 
@@ -14,7 +14,6 @@ export default function Landing() {
     const fetchOffres = async () => {
       try {
         const res = await api.get('/offres')
-        // On ne garde que les offres ouvertes
         setOffres(res.data.filter(o => o.statut === 'ouverte'))
       } catch (err) {
         console.error("Erreur chargement offres:", err)
@@ -24,80 +23,42 @@ export default function Landing() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#041619] flex flex-col font-sans">
-      {/* ── TOPBAR (Architecture SaaS B2B) ── */}
-      <nav className="flex items-center justify-between px-6 py-4 bg-[#08282d] border-b border-white/5 shadow-sm sticky top-0 z-50">
+    <div className="min-h-screen flex flex-col font-sans bg-[#041619]">
+      
+      {/* ── TOPBAR (Style FDE - Ultra épuré) ── */}
+      <nav className="flex items-center justify-between px-6 py-4 bg-[#0b1a19] border-b border-white/5 sticky top-0 z-50">
         
-        {/* 1. Logo */}
-        <button onClick={() => navigate('/')} className="flex items-center gap-2 cursor-pointer flex-shrink-0">
-          <img src={logo} alt="ATS Platform" className="w-8 h-8 object-contain" />
-          <span className="text-white font-bold text-lg tracking-tight">ATS <span className="text-[#00f098]">Sénégal</span></span>
-        </button>
-
-        {/* 2. Navigation Centrale Enrichie (Masquée sur petit écran pour éviter le chevauchement) */}
-        <div className="hidden lg:flex items-center gap-8">
-          <div className="flex items-center gap-6">
-            <span className="text-gray-300 text-sm font-medium hover:text-[#00f098] transition-colors duration-300 cursor-pointer">
-              Offres d'emploi
-            </span>
-            <span className="text-gray-300 text-sm font-medium hover:text-[#00f098] transition-colors duration-300 cursor-pointer">
-              Comment ça marche ?
-            </span>
-            <span onClick={() => navigate('/candidat')} className="text-gray-300 text-sm font-medium hover:text-[#00f098] transition-colors duration-300 cursor-pointer">
-              Suivre ma candidature
-            </span>
-          </div>
-          
-          {/* Séparateur vertical discret */}
-          <div className="h-4 w-px bg-white/10"></div>
-          
-          {/* Micro-sélecteur de zone */}
-          <button className="flex items-center gap-1.5 text-gray-400 hover:text-[#00f098] transition-colors duration-300 group">
-            <MapPin className="w-4 h-4 text-gray-500 group-hover:text-[#00f098] transition-colors duration-300" />
-            <span className="text-sm font-medium">Sénégal (Toutes régions)</span>
+        {/* 1. SECTION GAUCHE (Branding) */}
+        <div className="flex-1">
+          <button onClick={() => navigate('/')} className="flex items-center gap-2 cursor-pointer w-fit">
+            <img src={logo} alt="ATS Platform" className="w-8 h-8 object-contain" />
+            <span className="text-white font-bold text-lg tracking-tight">ATS <span className="text-[#00f098]">Sénégal</span></span>
           </button>
         </div>
 
-        {/* 3. Séparation des acteurs & Boutons d'action */}
-        <div className="flex items-center gap-5">
-          
-          {/* Point d'entrée B2B : Espace Recruteurs */}
-          <button 
-            onClick={() => navigate('/login')} 
-            className="hidden md:flex items-center gap-2 text-gray-300 hover:text-[#00f098] transition-colors duration-300 text-sm font-bold"
+        {/* 2. SECTION CENTRALE (Navigation minimale) */}
+        <div className="hidden md:flex items-center justify-center">
+          <span className="text-gray-400 font-medium hover:text-white transition-colors duration-300 cursor-pointer text-sm">
+            Offres d'emploi
+          </span>
+        </div>
+
+        {/* 3. SECTION DROITE (Authentification) */}
+        <div className="flex-1 flex items-center justify-end gap-3">
+          <button
+            onClick={() => navigate('/register')}
+            className="bg-[#00f098] hover:bg-[#00d084] text-[#0b1a19] font-bold px-5 py-2.5 rounded-lg transition-all shadow-[0_0_15px_rgba(0,240,152,0.2)] text-sm"
           >
-            <Briefcase className="w-4 h-4" />
-            Espace Recruteurs / Publier
+            Créer un compte
           </button>
-
-          {/* Centre de notifications */}
-          <button className="relative text-gray-400 hover:text-[#00f098] transition-colors duration-300 hidden sm:block">
-            <Bell className="w-5 h-5" />
-            <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00f098] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00f098]"></span>
-            </span>
+          <button
+            onClick={() => navigate('/login')}
+            className="bg-transparent border border-white/20 hover:border-white/40 text-white font-medium px-5 py-2.5 rounded-lg transition-all text-sm"
+          >
+            Espace Recruteur
           </button>
-
-          {/* Séparateur avant Auth */}
-          <div className="hidden md:block h-4 w-px bg-white/10 ml-2 mr-1"></div>
-
-          {/* Authentification */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => navigate('/login')}
-              className="text-white font-medium text-sm px-4 py-2 rounded-lg border border-white/20 hover:border-[#00f098] hover:text-[#00f098] transition-all"
-            >
-              Connexion
-            </button>
-            <button
-              onClick={() => navigate('/register')}
-              className="bg-[#00f098] hover:bg-[#00d084] text-[#041619] text-sm font-bold px-5 py-2.5 rounded-lg transition-all shadow-[0_0_15px_rgba(0,240,152,0.2)]"
-            >
-              S'inscrire
-            </button>
-          </div>
         </div>
+
       </nav>
 
       {/* ── HERO (Dark Petrol & Neon Mint) ── */}
@@ -159,7 +120,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── LISTE DES OFFRES ── */}
+      {/* ── LISTE DES OFFRES (Contraste Fond Blanc / Cartes Sombres) ── */}
       <main className="flex-1 w-full bg-white pt-16 pb-20 relative">
         <div className="max-w-7xl mx-auto px-6">
           
@@ -210,93 +171,92 @@ export default function Landing() {
             </div>
           ) : (
             <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {offres
-              .filter(o => 
-                searchQuery === '' || 
-                o.titre.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                o.competences.some(c => c.toLowerCase().includes(searchQuery.toLowerCase()))
-              )
-              .map((offre) => {
-              return (
-                <div key={offre._id} className="bg-[#08282d] border border-white/10 rounded-3xl p-6 hover:shadow-2xl hover:border-[#00f098]/50 hover:-translate-y-1 transition-all duration-300 flex flex-col group">
-                  
-                  <div className="flex justify-between items-center mb-6">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-[#00f098]"></div>
-                      <span className="text-gray-400 font-bold text-xs tracking-widest uppercase">{offre.recruteurId?.entreprise || 'Confidentiel'}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 text-[#00f098] bg-[#00f098]/10 px-2.5 py-1 rounded text-xs font-bold border border-[#00f098]/20">
-                      <Check className="w-3.5 h-3.5" /> Vérifiée
-                    </div>
-                  </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {offres
+                  .filter(o => 
+                    searchQuery === '' || 
+                    o.titre.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    o.competences.some(c => c.toLowerCase().includes(searchQuery.toLowerCase()))
+                  )
+                  .map((offre) => {
+                  return (
+                    <div key={offre._id} className="bg-[#08282d] border border-white/10 rounded-3xl p-6 hover:shadow-2xl hover:border-[#00f098]/50 hover:-translate-y-1 transition-all duration-300 flex flex-col group">
+                      
+                      <div className="flex justify-between items-center mb-6">
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 rounded-full bg-[#00f098]"></div>
+                          <span className="text-gray-400 font-bold text-xs tracking-widest uppercase">{offre.recruteurId?.entreprise || 'Confidentiel'}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-[#00f098] bg-[#00f098]/10 px-2.5 py-1 rounded text-xs font-bold border border-[#00f098]/20">
+                          <Check className="w-3.5 h-3.5" /> Vérifiée
+                        </div>
+                      </div>
 
-                  <h3 className="text-xl font-black text-white mb-5 line-clamp-2 leading-tight group-hover:text-[#00f098] transition-colors">
-                    {offre.titre}
-                  </h3>
+                      <h3 className="text-xl font-black text-white mb-5 line-clamp-2 leading-tight group-hover:text-[#00f098] transition-colors">
+                        {offre.titre}
+                      </h3>
 
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs font-bold px-3.5 py-2 rounded-lg">
-                      {offre.secteur || 'Technologies'}
-                    </span>
-                    <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs font-bold px-3.5 py-2 rounded-lg">
-                      {offre.typeContrat}
-                    </span>
-                  </div>
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs font-bold px-3.5 py-2 rounded-lg">
+                          {offre.secteur || 'Technologies'}
+                        </span>
+                        <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs font-bold px-3.5 py-2 rounded-lg">
+                          {offre.typeContrat}
+                        </span>
+                      </div>
 
-                  <div className="grid grid-cols-3 gap-2 border-t border-b border-white/5 py-4 mb-5">
-                    <div>
-                      <p className="text-[10px] text-gray-500 font-bold uppercase mb-1">Localisation</p>
-                      <p className="text-xs text-white font-bold">{offre.localisation || 'Sénégal'}</p>
-                    </div>
-                    <div>
-                      <p className="text-[10px] text-gray-500 font-bold uppercase mb-1">Publication</p>
-                      <p className="text-xs text-white font-bold">
-                        {new Date(offre.createdAt).toLocaleDateString('fr-FR', {day: '2-digit', month:'short', year:'numeric'})}
+                      <div className="grid grid-cols-3 gap-2 border-t border-b border-white/5 py-4 mb-5">
+                        <div>
+                          <p className="text-[10px] text-gray-500 font-bold uppercase mb-1">Localisation</p>
+                          <p className="text-xs text-white font-bold">{offre.localisation || 'Sénégal'}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-gray-500 font-bold uppercase mb-1">Publication</p>
+                          <p className="text-xs text-white font-bold">
+                            {new Date(offre.createdAt).toLocaleDateString('fr-FR', {day: '2-digit', month:'short', year:'numeric'})}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-gray-500 font-bold uppercase mb-1">Date limite</p>
+                          <p className="text-xs text-white font-bold">Non précisée</p>
+                        </div>
+                      </div>
+
+                      <p className="text-gray-400 text-sm mb-4 line-clamp-3">
+                        {offre.description}
                       </p>
+
+                      <p className="text-[#e8d5a5] text-xs font-bold mb-8">
+                        <Sparkles className="w-3.5 h-3.5 inline mr-1" />
+                        Analyse IA disponible pour cette offre
+                      </p>
+
+                      <div className="mt-auto flex items-center gap-3">
+                        <button 
+                          onClick={() => navigate('/login')}
+                          className="flex-1 bg-[#041619] border border-white/10 text-white font-bold py-3 rounded-xl hover:border-[#00f098]/50 hover:text-[#00f098] transition-colors text-sm"
+                        >
+                          Détails du poste
+                        </button>
+                        <button 
+                          onClick={() => navigate('/login')}
+                          className="flex-1 bg-[#00f098] text-[#041619] font-black py-3 rounded-xl hover:bg-[#00d084] transition-colors flex items-center justify-center gap-2 text-sm shadow-[0_0_15px_rgba(0,240,152,0.2)]"
+                        >
+                          Postuler en ligne <ArrowUpRight className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-[10px] text-gray-500 font-bold uppercase mb-1">Date limite</p>
-                      <p className="text-xs text-white font-bold">Non précisée</p>
-                    </div>
-                  </div>
+                  )
+                })}
+              </div>
 
-                  <p className="text-gray-400 text-sm mb-4 line-clamp-3">
-                    {offre.description}
-                  </p>
-
-                  <p className="text-[#e8d5a5] text-xs font-bold mb-8">
-                    <Sparkles className="w-3.5 h-3.5 inline mr-1" />
-                    Analyse IA disponible pour cette offre
-                  </p>
-
-                  <div className="mt-auto flex items-center gap-3">
-                    <button 
-                      onClick={() => navigate('/login')}
-                      className="flex-1 bg-[#041619] border border-white/10 text-white font-bold py-3 rounded-xl hover:border-[#00f098]/50 hover:text-[#00f098] transition-colors text-sm"
-                    >
-                      Détails du poste
-                    </button>
-                    <button 
-                      onClick={() => navigate('/login')}
-                      className="flex-1 bg-[#00f098] text-[#041619] font-black py-3 rounded-xl hover:bg-[#00d084] transition-colors flex items-center justify-center gap-2 text-sm shadow-[0_0_15px_rgba(0,240,152,0.2)]"
-                    >
-                      Postuler en ligne <ArrowUpRight className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-
-          {/* Bouton Afficher plus d'offres */}
-          <div className="flex justify-center mt-14">
-            <button className="bg-[#08282d] border border-white/10 text-white font-bold px-12 py-4 rounded-2xl hover:border-[#00f098]/50 hover:text-[#00f098] transition-all shadow-xl text-lg flex items-center gap-3">
-              Afficher plus d'offres (575)
-            </button>
-          </div>
-          </>
-        )}
+              <div className="flex justify-center mt-14">
+                <button className="bg-[#08282d] border border-white/10 text-white font-bold px-12 py-4 rounded-2xl hover:border-[#00f098]/50 hover:text-[#00f098] transition-all shadow-xl text-lg flex items-center gap-3">
+                  Afficher plus d'offres (575)
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </main>
 
@@ -341,15 +301,15 @@ export default function Landing() {
             </div>
 
             {/* Carte Technologie/IA */}
-            <div className="bg-[#08282d] border border-white/10 rounded-[2rem] p-8 flex flex-col hover:border-indigo-500/50 transition-colors">
-              <div className="w-14 h-14 bg-indigo-500 rounded-2xl flex items-center justify-center font-black text-white text-xl mb-8 shadow-[0_0_15px_rgba(99,102,241,0.3)]">
-                <Bot className="w-6 h-6" />
+            <div className="bg-[#08282d] border border-white/10 rounded-[2rem] p-8 flex flex-col hover:border-[#00f098]/50 transition-colors">
+              <div className="w-14 h-14 bg-[#041619] border border-white/10 rounded-2xl flex items-center justify-center font-black text-white text-xl mb-8">
+                <Bot className="w-6 h-6 text-[#00f098]" />
               </div>
               <h3 className="text-2xl font-bold text-white mb-4 leading-tight">Moteur d'Analyse IA</h3>
               <p className="text-gray-400 mb-12 font-light">
                 Intégration native de l'API Google Gemini. Extraction sémantique pointue, matching de compétences et scoring automatisé de 0 à 100 pour chaque CV.
               </p>
-              <button className="mt-auto w-full bg-indigo-500 text-white font-bold py-4 px-6 rounded-2xl flex justify-between items-center hover:bg-indigo-600 transition-colors shadow-[0_0_20px_rgba(99,102,241,0.2)]">
+              <button className="mt-auto w-full bg-[#041619] border border-white/10 text-white font-bold py-4 px-6 rounded-2xl flex justify-between items-center hover:border-[#00f098]/50 hover:text-[#00f098] transition-colors">
                 Découvrir notre technologie <ArrowRight className="w-5 h-5" />
               </button>
             </div>
