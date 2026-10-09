@@ -25,37 +25,42 @@ export default function Landing() {
   return (
     <div className="min-h-screen flex flex-col font-sans bg-[#041619]">
       
-      {/* ── TOPBAR (Style FDE - Ultra épuré) ── */}
-      <nav className="flex items-center justify-between px-6 py-4 bg-[#0b1a19] border-b border-white/5 sticky top-0 z-50">
+      {/* ── TOPBAR (Charte FDE & Liens initiaux) ── */}
+      <nav className="flex items-center justify-between px-6 py-4 bg-[#0b1a19] border-b border-white/5 sticky top-0 z-50 backdrop-blur-sm">
         
         {/* 1. SECTION GAUCHE (Branding) */}
         <div className="flex-1">
-          <button onClick={() => navigate('/')} className="flex items-center gap-2 cursor-pointer w-fit">
-            <img src={logo} alt="ATS Platform" className="w-8 h-8 object-contain" />
+          <button onClick={() => navigate('/')} className="flex items-center gap-2 cursor-pointer w-fit group">
+            <img src={logo} alt="ATS Platform" className="w-8 h-8 object-contain group-hover:scale-105 transition-transform" />
             <span className="text-white font-bold text-lg tracking-tight">ATS <span className="text-[#00f098]">Sénégal</span></span>
           </button>
         </div>
 
-        {/* 2. SECTION CENTRALE (Navigation minimale) */}
-        <div className="hidden md:flex items-center justify-center">
-          <span className="text-gray-400 font-medium hover:text-white transition-colors duration-300 cursor-pointer text-sm">
-            Offres d'emploi
-          </span>
+        {/* 2. SECTION CENTRALE (Navigation structurelle) */}
+        <div className="hidden md:flex items-center justify-center gap-8">
+          {['Fonctionnalités', 'Comment ça marche ?', 'À propos'].map((item) => (
+            <span 
+              key={item} 
+              className="text-gray-400 text-sm font-medium hover:text-white transition-colors duration-300 cursor-pointer"
+            >
+              {item}
+            </span>
+          ))}
         </div>
 
         {/* 3. SECTION DROITE (Authentification) */}
-        <div className="flex-1 flex items-center justify-end gap-3">
-          <button
-            onClick={() => navigate('/register')}
-            className="bg-[#00f098] hover:bg-[#00d084] text-[#0b1a19] font-bold px-5 py-2.5 rounded-lg transition-all shadow-[0_0_15px_rgba(0,240,152,0.2)] text-sm"
-          >
-            Créer un compte
-          </button>
+        <div className="flex-1 flex items-center justify-end gap-4">
           <button
             onClick={() => navigate('/login')}
-            className="bg-transparent border border-white/20 hover:border-white/40 text-white font-medium px-5 py-2.5 rounded-lg transition-all text-sm"
+            className="bg-transparent text-white font-medium px-4 py-2 rounded-lg hover:text-[#00f098] transition-colors duration-300 text-sm"
           >
-            Espace Recruteur
+            Se connecter
+          </button>
+          <button
+            onClick={() => navigate('/register')}
+            className="bg-[#00f098] text-[#0b1a19] font-black px-5 py-2.5 rounded-xl transition-all hover:bg-[#00d084] shadow-[0_0_15px_rgba(0,240,152,0.2)] text-sm tracking-wide"
+          >
+            S'inscrire
           </button>
         </div>
 
