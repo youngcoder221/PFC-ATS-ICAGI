@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Plus, X, Briefcase, Users, ChevronRight, Clock, TrendingUp, XCircle } from 'lucide-react'
+import { Plus, X, Briefcase, Users, ChevronRight, Clock, TrendingUp, XCircle, MapPin, GraduationCap, Power } from 'lucide-react'
 import Layout from '../components/layout/Layout'
 import api from '../services/api'
 import OffreCardRecruteur from '../components/OffreCardRecruteur'
@@ -126,6 +126,8 @@ export default function DashboardRecruteur() {
       {/* ══ VUE : MES OFFRES (HARMONISÉE FDE) ══ */}
       {tabActif === 'offres' && (
         <div className="space-y-8 bg-[#0b1a19] p-6 md:p-8 rounded-[2rem] border border-white/5">
+          
+          {/* En-tête */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <h1 className="text-2xl font-black text-white tracking-tight">Mes offres</h1>
@@ -162,15 +164,84 @@ export default function DashboardRecruteur() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {offres.map(offre => (
-                <OffreCardRecruteur 
-                  key={offre._id} 
-                  offre={offre} 
-                  onToggleStatut={async (id) => {
-                    await api.patch(`/offres/${id}/statut`)
-                    chargerOffres()
-                  }}
-                  onVoirCandidats={(id) => navigate(`/ranking/${id}`)}
-                />
+                <div
+                  key={offre._id}
+                  className="bg-[#041619] border border-white/5 rounded-2xl p-6 hover:border-[#00f098]/30 hover:shadow-[0_0_15px_rgba(0,240,152,0.05)] transition-all flex flex-col justify-between group shadow-lg"
+                >
+                  <div>
+                    {/* Badge de statut */}
+                    <div className="flex justify-between items-start mb-4">
+                      <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border ${
+                        offre.statut === 'ouverte'
+                          ? 'bg-[#00f098]/10 text-[#00f098] border-[#00f098]/20'
+                          : 'bg-white/5 text-gray-500 border-white/5'
+                      }`}>
+                        {offre.statut}
+                      </span>
+                    </div>
+
+                    {/* Titre du poste */}
+                    <h3 className="text-lg font-bold text-white mb-4 group-hover:text-[#00f098] transition-colors line-clamp-2 leading-snug">
+                      {offre.titre}
+                    </h3>
+
+                    {/* Métadonnées (Lieu, Type de contrat, Diplôme) */}
+                    <div className="flex flex-wrap gap-2 mb-5">
+                      <span className="flex items-center gap-1.5 text-xs bg-[#0b1a19] border border-white/5 text-gray-300 px-2.5 py-1.5 rounded-lg font-medium">
+                        <MapPin className="w-3.5 h-3.5 text-gray-400" />
+                        {offre.localisation || 'Dakar, Sénégal'}
+                      </span>
+                      <span className="flex items-center gap-1.5 text-xs bg-[#0b1a19] border border-white/5 text-gray-300 px-2.5 py-1.5 rounded-lg font-medium">
+                        <Briefcase className="w-3.5 h-3.5 text-[#00f098]" />
+                        {offre.typeContrat}
+                      </span>
+                      <span className="flex items-center gap-1.5 text-xs bg-[#0b1a19] border border-white/5 text-gray-300 px-2.5 py-1.5 rounded-lg font-medium">
+                        <GraduationCap className="w-3.5 h-3.5 text-gray-400" />
+                        {offre.niveauRequis}
+                      </span>
+                    </div>
+
+                    {/* Badges de compétences */}
+                    <div className="flex gap-2 flex-wrap mb-6 mt-auto">
+                      {offre.competences?.slice(0, 3).map((c, i) => (
+                        <span key={i} className="text-[11px] font-medium bg-[#0b1a19] border border-white/5 text-gray-300 px-2 py-1 rounded-md">
+                          {c}
+                        </span>
+                      ))}
+                      {offre.competences?.length > 3 && (
+                        <span className="text-[11px] font-medium text-gray-500 py-1">
+                          +{offre.competences.length - 3} autres
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Actions en bas de carte */}
+                  <div className="pt-4 border-t border-white/5 flex justify-between items-center gap-3">
+                    <button
+                      onClick={async () => {
+                        await api.patch(`/offres/${offre._id}/statut`)
+                        chargerOffres()
+                      }}
+                      className={`flex items-center gap-1.5 text-xs px-3 py-2.5 rounded-xl border transition-all flex-1 justify-center font-medium ${
+                        offre.statut === 'ouverte'
+                          ? 'border-red-900/40 text-red-400 hover:bg-red-900/20'
+                          : 'border-[#00f098]/30 text-[#00f098] hover:bg-[#00f098]/10'
+                      }`}
+                    >
+                      <Power className="w-3.5 h-3.5" />
+                      {offre.statut === 'ouverte' ? 'Fermer' : 'Rouvrir'}
+                    </button>
+                    
+                    {/* Bouton "Candidats >" vert menthe fluo */}
+                    <button
+                      onClick={() => navigate(`/ranking/${offre._id}`)}
+                      className="flex items-center gap-1.5 bg-[#00f098] hover:bg-[#00d084] text-[#0b1a19] text-xs px-3 py-2.5 rounded-xl font-black transition-all flex-1 justify-center shadow-[0_0_15px_rgba(0,240,152,0.15)]"
+                    >
+                      Candidats <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
               ))}
             </div>
           )}
@@ -239,7 +310,7 @@ export default function DashboardRecruteur() {
           {/* ── DOUBLE COLONNE HARMONISÉE FDE ── */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            {/* Colonne gauche (70%) : Dernières offres */}
+            {/* Dernières offres (Harmonisées FDE) */}
             <div className="lg:col-span-2 bg-[#041619] border border-white/5 rounded-[2rem] p-7 hover:border-white/10 transition-colors duration-300">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-white font-bold text-lg flex items-center gap-2">
@@ -255,7 +326,7 @@ export default function DashboardRecruteur() {
               </div>
 
               {loading ? (
-                <p className="text-center text-gray-500 py-12">Chargement...</p>
+                <p className="text-center text-gray-500 py-12 font-medium">Chargement...</p>
               ) : dernieresOffres.length === 0 ? (
                 <div className="text-center py-12 bg-[#0b1a19] rounded-2xl border border-white/5">
                   <Briefcase className="w-10 h-10 text-gray-700 mx-auto mb-3" />
@@ -270,15 +341,71 @@ export default function DashboardRecruteur() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {dernieresOffres.map(offre => (
-                    <OffreCardRecruteur 
-                      key={offre._id} 
-                      offre={offre} 
-                      onToggleStatut={async (id) => {
-                        await api.patch(`/offres/${id}/statut`)
-                        chargerOffres()
-                      }}
-                      onVoirCandidats={(id) => navigate(`/ranking/${id}`)}
-                    />
+                    <div
+                      key={offre._id}
+                      className="bg-[#0b1a19] border border-white/5 rounded-2xl p-5 hover:border-[#00f098]/30 hover:shadow-[0_0_15px_rgba(0,240,152,0.05)] transition-all flex flex-col justify-between group"
+                    >
+                      <div>
+                        {/* Statut FDE */}
+                        <div className="flex justify-between items-start mb-3">
+                          <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border ${
+                            offre.statut === 'ouverte'
+                              ? 'bg-[#00f098]/10 text-[#00f098] border-[#00f098]/20'
+                              : 'bg-white/5 text-gray-500 border-white/5'
+                          }`}>
+                            {offre.statut}
+                          </span>
+                        </div>
+
+                        {/* Titre */}
+                        <h3 className="text-base font-bold text-white mb-3 group-hover:text-[#00f098] transition-colors line-clamp-1">
+                          {offre.titre}
+                        </h3>
+
+                        {/* Métadonnées */}
+                        <div className="flex flex-wrap gap-1.5 mb-4">
+                          <span className="text-[11px] bg-[#041619] border border-white/5 text-gray-300 px-2.5 py-1 rounded-lg font-medium">
+                            {offre.typeContrat}
+                          </span>
+                          <span className="text-[11px] bg-[#041619] border border-white/5 text-gray-300 px-2.5 py-1 rounded-lg font-medium">
+                            {offre.niveauRequis}
+                          </span>
+                        </div>
+
+                        {/* Badges de compétences */}
+                        <div className="flex gap-1.5 flex-wrap mb-5">
+                          {offre.competences?.slice(0, 3).map((c, i) => (
+                            <span key={i} className="text-[10px] bg-[#041619] border border-white/5 text-gray-400 px-2 py-0.5 rounded-md font-medium">
+                              {c}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Boutons d'action */}
+                      <div className="pt-3 border-t border-white/5 flex items-center gap-2">
+                        <button
+                          onClick={async () => {
+                            await api.patch(`/offres/${offre._id}/statut`)
+                            chargerOffres()
+                          }}
+                          className={`flex items-center gap-1 text-[11px] font-medium px-2.5 py-1.5 rounded-xl border transition-all flex-1 justify-center ${
+                            offre.statut === 'ouverte'
+                              ? 'border-red-900/40 text-red-400 hover:bg-red-900/20'
+                              : 'border-[#00f098]/30 text-[#00f098] hover:bg-[#00f098]/10'
+                          }`}
+                        >
+                          <Power className="w-3 h-3" />
+                          {offre.statut === 'ouverte' ? 'Fermer' : 'Rouvrir'}
+                        </button>
+                        <button
+                          onClick={() => navigate(`/ranking/${offre._id}`)}
+                          className="flex items-center gap-1 bg-[#00f098] hover:bg-[#00d084] text-[#0b1a19] text-[11px] px-3 py-1.5 rounded-xl font-black transition-all flex-1 justify-center"
+                        >
+                          Candidats <ChevronRight className="w-3 h-3" />
+                        </button>
+                      </div>
+                    </div>
                   ))}
                 </div>
               )}
