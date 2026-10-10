@@ -1,3 +1,4 @@
+const fs                  = require('fs')
 const CV                  = require('../models/CV')
 const Candidature         = require('../models/Candidature')
 const Offre               = require('../models/Offre')
@@ -22,6 +23,24 @@ const uploadCV = async (req, res) => {
     if (!offre) {
       return res.status(404).json({ message: '❌ Offre introuvable' })
     }
+
+    // 🛡️ VÉRIFICATION ANTI-DOUBLON (Candidat + Offre)
+    const candidatureExistante = await Candidature.findOne({
+      candidatId: req.user.id,
+      offreId: req.body.offreId
+    })
+
+    if (candidatureExistante) {
+      // Supprime le PDF temporaire uploadé pour ne pas encombrer le serveur
+      if (req.file && fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path)
+      }
+      return res.status(400).json({
+        message: "❌ Vous avez déjà postulé à cette offre d'emploi."
+      })
+    }
+
+    
 
     // 2. Extraire le texte du PDF
     console.log('📄 Extraction du texte PDF...')
