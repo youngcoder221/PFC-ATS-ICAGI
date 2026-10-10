@@ -67,25 +67,32 @@ export default function Ranking() {
     : 0
 
   return (
-    <div className="min-h-screen bg-gray-950 p-8">
+    <div className="min-h-screen bg-[#041619] p-6 md:p-10 text-white space-y-6">
 
-      {/* Bouton retour */}
+      {/* ── 1. BOUTON RETOUR ALLUMÉ VERT MENTHE ── */}
       <button
         onClick={() => navigate('/recruteur')}
-        className="flex items-center gap-2 text-gray-400 hover:text-white transition-all mb-6 text-sm"
+        className="inline-flex items-center gap-2 text-gray-400 hover:text-[#00f098] transition-colors text-sm font-bold group cursor-pointer"
       >
-        <ArrowLeft className="w-4 h-4" />
+        <ArrowLeft className="w-4 h-4 text-[#00f098] group-hover:-translate-x-1 transition-transform" />
         Retour aux offres
       </button>
 
-      {/* Header offre */}
+      {/* ── 2. BLOC DE L'OFFRE EN HAUT (Fond #0b1a19, Badges #041619) ── */}
       {offre && (
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 mb-6">
-          <h1 className="text-2xl font-bold text-white mb-1">{offre.titre}</h1>
-          <p className="text-gray-400 text-sm">{offre.typeContrat} · {offre.niveauRequis}</p>
-          <div className="flex gap-2 mt-3 flex-wrap">
+        <div className="bg-[#0b1a19] border border-white/5 rounded-[2rem] p-7 shadow-xl">
+          <h1 className="text-3xl font-black text-white tracking-tight mb-2">{offre.titre}</h1>
+          <p className="text-gray-400 text-sm font-medium">
+            {offre.typeContrat} <span className="mx-1.5 text-gray-600">•</span> {offre.niveauRequis}
+          </p>
+          
+          {/* Badges de compétences épurés (sans bleu ni violet) */}
+          <div className="flex gap-2 mt-4 flex-wrap">
             {offre.competences.map((c, i) => (
-              <span key={i} className="text-xs bg-indigo-900/30 border border-indigo-700 text-indigo-400 px-2.5 py-1 rounded-lg">
+              <span
+                key={i}
+                className="text-xs bg-[#041619] border border-white/5 text-gray-300 px-3 py-1.5 rounded-lg font-medium"
+              >
                 {c}
               </span>
             ))}
@@ -93,95 +100,121 @@ export default function Ranking() {
         </div>
       )}
 
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      {/* ── 3. LES 3 CARTES KPIS (Fond #0b1a19, Icônes allumées) ── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {[
-          { label: 'Candidatures',  value: ranking.length,                                    icon: Users,      color: 'text-indigo-400' },
-          { label: 'Score ≥ 75%',   value: ranking.filter(c => c.score >= 75).length,         icon: TrendingUp, color: 'text-green-400'  },
-          { label: 'Score moyen',   value: `${scoreTotal}%`,                                  icon: Trophy,     color: 'text-amber-400'  },
+          { label: 'Candidatures', value: ranking.length,                               icon: Users,      color: 'text-[#00f098]', valColor: 'text-white' },
+          { label: 'Score ≥ 75%',  value: ranking.filter(c => c.score >= 75).length,  icon: TrendingUp, color: 'text-[#00f098]', valColor: 'text-[#00f098]' },
+          { label: 'Score moyen',  value: `${scoreTotal}%`,                           icon: Trophy,     color: 'text-white',     valColor: 'text-white' },
         ].map((s, i) => {
           const Icon = s.icon
           return (
-            <div key={i} className="bg-gray-900 border border-gray-800 rounded-xl p-4 flex items-center gap-3">
-              <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center">
-                <Icon className={`w-5 h-5 ${s.color}`} />
+            <div
+              key={i}
+              className="bg-[#0b1a19] border border-white/5 rounded-[2rem] p-6 flex items-center gap-4 hover:border-[#00f098]/30 transition-all shadow-lg group"
+            >
+              <div className="w-12 h-12 bg-[#041619] border border-white/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Icon className={`w-6 h-6 ${s.color}`} />
               </div>
               <div>
-                <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
-                <p className="text-gray-500 text-xs">{s.label}</p>
+                <p className={`text-3xl font-black tracking-tight ${s.valColor}`}>{s.value}</p>
+                <p className="text-gray-400 text-xs font-medium uppercase tracking-wider mt-0.5">{s.label}</p>
               </div>
             </div>
           )
         })}
       </div>
 
-      {/* Tableau ranking */}
-      <div className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-800 flex items-center gap-2">
-          <Trophy className="w-5 h-5 text-amber-400" />
-          <h2 className="text-white font-semibold">Classement des candidats</h2>
+      {/* ── 4. LE GRAND CONTENEUR "CLASSEMENT DES CANDIDATS" ── */}
+      <div className="bg-[#0b1a19] border border-white/5 rounded-[2rem] p-7 shadow-xl">
+        
+        {/* En-tête avec trophée allumé */}
+        <div className="flex items-center gap-3 pb-6 border-b border-white/5 mb-6">
+          <div className="w-10 h-10 rounded-xl bg-[#041619] border border-white/5 flex items-center justify-center">
+            <Trophy className="w-5 h-5 text-[#00f098]" />
+          </div>
+          <div>
+            <h2 className="text-white font-bold text-lg">Classement des candidats</h2>
+            <p className="text-gray-500 text-xs">Évaluation sémantique et ranking IA par ordre de pertinence</p>
+          </div>
         </div>
 
         {loading ? (
-          <p className="text-center text-gray-500 py-16">Chargement...</p>
+          <p className="text-center text-gray-500 py-16 font-medium">Chargement du classement...</p>
         ) : ranking.length === 0 ? (
-          <div className="text-center py-16">
+          <div className="text-center py-16 bg-[#041619] rounded-2xl border border-white/5">
             <Users className="w-12 h-12 text-gray-700 mx-auto mb-3" />
-            <p className="text-gray-500">Aucune candidature pour cette offre</p>
+            <p className="text-gray-500 font-medium">Aucune candidature pour cette offre pour le moment.</p>
           </div>
         ) : (
-          <div className="divide-y divide-gray-800">
+          /* Liste des cartes individuelles de candidats en relief (#041619) */
+          <div className="space-y-4">
             {ranking.map((candidature, index) => {
               const badge = rangBadge(index)
               const estOuvert = !!raisonsOuvertes[candidature._id]
               return (
-                <div key={candidature._id} className="px-6 py-4 flex items-center gap-4 hover:bg-gray-800/50 transition-all">
-
-                  {/* Rang */}
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0 ${badge.bg} text-white`}>
-                    {badge.text}
+                <div
+                  key={candidature._id}
+                  className="p-5 bg-[#041619] border border-white/5 rounded-2xl flex flex-col md:flex-row md:items-center gap-5 hover:border-white/10 transition-all group"
+                >
+                  {/* Badge de Rang & Avatar */}
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-sm font-bold ${badge.bg} text-white shadow-md`}>
+                      {badge.text}
+                    </div>
+                    <div className="w-10 h-10 bg-[#0b1a19] border border-white/5 rounded-xl flex items-center justify-center text-[#00f098] text-xs font-black">
+                      {candidature.candidatId?.prenom?.[0]}{candidature.candidatId?.nom?.[0]}
+                    </div>
                   </div>
 
-                  {/* Avatar initiales */}
-                  <div className="w-9 h-9 bg-indigo-900/50 border border-indigo-700 rounded-full flex items-center justify-center text-indigo-400 text-xs font-bold flex-shrink-0">
-                    {candidature.candidatId?.prenom?.[0]}{candidature.candidatId?.nom?.[0]}
-                  </div>
-
-                  {/* Infos */}
+                  {/* Informations du candidat & Analyse IA */}
                   <div className="flex-1 min-w-0">
-                    <p className="text-white font-medium text-sm">
-                      {candidature.candidatId?.prenom} {candidature.candidatId?.nom}
-                    </p>
-                    <p className="text-gray-500 text-xs">{candidature.candidatId?.email}</p>
-                    <p className="text-gray-600 text-[11px] mt-0.5 flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
+                    <div className="flex flex-wrap items-baseline gap-2">
+                      <p className="text-white font-bold text-base">
+                        {candidature.candidatId?.prenom} {candidature.candidatId?.nom}
+                      </p>
+                      <span className="text-gray-500 text-xs font-medium">{candidature.candidatId?.email}</span>
+                    </div>
+
+                    <p className="text-gray-500 text-[11px] mt-0.5 flex items-center gap-1 font-medium">
+                      <Calendar className="w-3.5 h-3.5 text-gray-600" />
                       Postulé le {formatDateCandidature(candidature.createdAt)}
                     </p>
-                    <p className={`text-gray-400 text-xs mt-1 ${estOuvert ? '' : 'truncate'}`}>
+
+                    <p className={`text-gray-300 text-xs mt-2 leading-relaxed ${estOuvert ? '' : 'line-clamp-2'}`}>
                       {candidature.raisons}
                     </p>
-                    {candidature.raisons && candidature.raisons.length > 60 && (
+
+                    {candidature.raisons && candidature.raisons.length > 90 && (
                       <button
                         onClick={() => toggleRaison(candidature._id)}
-                        className="text-[11px] text-indigo-400 hover:text-indigo-300 font-medium"
+                        className="text-[11px] text-[#00f098] hover:underline font-bold mt-1 cursor-pointer"
                       >
                         {estOuvert ? 'Voir moins' : 'Voir plus'}
                       </button>
                     )}
-                    <div className="mt-2 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+
+                    {/* JAUGE HORIZONTALE EN VERT MENTHE FLUO (#00f098) */}
+                    <div className="mt-3 h-2 bg-[#0b1a19] rounded-full overflow-hidden border border-white/5">
                       <div
-                        className={`h-full rounded-full ${scoreBar(candidature.score)}`}
+                        className="h-full rounded-full bg-[#00f098] shadow-[0_0_8px_#00f098] transition-all duration-700"
                         style={{ width: `${candidature.score}%` }}
                       />
                     </div>
                   </div>
 
-                  {/* Score */}
-                  <div className={`px-3 py-2 rounded-xl border text-sm font-bold flex-shrink-0 ${scoreBg(candidature.score)} ${scoreColor(candidature.score)}`}>
+                  {/* Bloc Score / 100 */}
+                  <div className={`px-4 py-2.5 rounded-xl border text-sm font-black flex-shrink-0 text-center ${
+                    candidature.score >= 75
+                      ? 'bg-[#00f098]/10 border-[#00f098]/20 text-[#00f098]'
+                      : candidature.score >= 50
+                      ? 'bg-amber-400/10 border-amber-400/20 text-amber-400'
+                      : 'bg-red-400/10 border-red-400/20 text-red-400'
+                  }`}>
                     {candidature.score}/100
                   </div>
 
-                  {/* Statut */}
+                  {/* Sélecteur de statut épuré */}
                   <select
                     value={candidature.statut}
                     onChange={async (e) => {
@@ -192,7 +225,7 @@ export default function Ranking() {
                         console.error(err)
                       }
                     }}
-                    className="text-xs bg-gray-800 border border-gray-700 text-gray-300 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="text-xs bg-[#0b1a19] border border-white/10 text-gray-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-[#00f098] transition-colors cursor-pointer flex-shrink-0 font-medium"
                   >
                     <option value="en_attente">En attente</option>
                     <option value="retenu">Retenu ✓</option>
@@ -204,6 +237,7 @@ export default function Ranking() {
           </div>
         )}
       </div>
+
     </div>
   )
 }
