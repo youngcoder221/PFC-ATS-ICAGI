@@ -50,8 +50,13 @@ export default function DashboardCandidat() {
     chargerCandidatures()
   }, [])
 
-  // --- GESTION DE LA MODALE ---
+  // --- VÉRIFICATION CANDIDATURE UNIQUE & MODALE ---
+  const aDejaPostule = (offreId) => {
+    return candidatures.some(c => (c.offreId?._id || c.offreId) === offreId)
+  }
+
   const handlePostuler = (offreId) => {
+    if (offreId && aDejaPostule(offreId)) return
     setUploadForm({ ...uploadForm, offreId: offreId || '' })
     setIsModalOpen(true)
     setMessage(null)
@@ -339,75 +344,84 @@ export default function DashboardCandidat() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {offresFiltrees.map(offre => (
-                <div
-                  key={offre._id}
-                  className="bg-[#0b1a19] border border-black/5 rounded-2xl p-6 flex flex-col justify-between hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group shadow-lg"
-                >
-                  <div>
-                    {/* En-tête de carte : Icône et Date */}
-                    <div className="flex items-start justify-between gap-3 mb-4">
-                      <div className="w-11 h-11 rounded-xl bg-[#041619] border border-white/5 flex items-center justify-center flex-shrink-0 text-[#00f098] group-hover:scale-105 transition-transform">
-                        <Briefcase className="w-5 h-5" />
+              {offresFiltrees.map(offre => {
+                const dejaPostule = aDejaPostule(offre._id)
+
+                return (
+                  <div
+                    key={offre._id}
+                    className="bg-[#0b1a19] border border-black/5 rounded-2xl p-6 flex flex-col justify-between hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group shadow-lg"
+                  >
+                    <div>
+                      {/* En-tête de carte : Icône et Date */}
+                      <div className="flex items-start justify-between gap-3 mb-4">
+                        <div className="w-11 h-11 rounded-xl bg-[#041619] border border-white/5 flex items-center justify-center flex-shrink-0 text-[#00f098] group-hover:scale-105 transition-transform">
+                          <Briefcase className="w-5 h-5" />
+                        </div>
+                        <span className="text-[11px] text-gray-400 font-medium bg-[#041619] border border-white/5 px-2.5 py-1 rounded-lg">
+                          {offre.createdAt ? new Date(offre.createdAt).toLocaleDateString('fr-FR') : 'Récent'}
+                        </span>
                       </div>
-                      <span className="text-[11px] text-gray-400 font-medium bg-[#041619] border border-white/5 px-2.5 py-1 rounded-lg">
-                        {offre.createdAt ? new Date(offre.createdAt).toLocaleDateString('fr-FR') : 'Récent'}
-                      </span>
-                    </div>
 
-                    {/* Titre du poste & Entreprise */}
-                    <h3 className="text-white font-bold text-lg group-hover:text-[#00f098] transition-colors leading-snug mb-1">
-                      {offre.titre}
-                    </h3>
-                    <p className="text-gray-400 text-xs font-medium mb-4">
-                      {offre.entreprise || offre.departement || 'Entreprise partenaire'}
-                    </p>
+                      {/* Titre du poste & Entreprise */}
+                      <h3 className="text-white font-bold text-lg group-hover:text-[#00f098] transition-colors leading-snug mb-1">
+                        {offre.titre}
+                      </h3>
+                      <p className="text-gray-400 text-xs font-medium mb-4">
+                        {offre.entreprise || offre.departement || 'Entreprise partenaire'}
+                      </p>
 
-                    {/* Badges d'informations internes (Fond sombre contrasté) */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {(offre.lieu || offre.localisation) && (
-                        <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs px-2.5 py-1 rounded-lg font-medium">
-                          {offre.lieu || offre.localisation}
-                        </span>
-                      )}
-                      {offre.typeContrat && (
-                        <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs px-2.5 py-1 rounded-lg font-medium">
-                          {offre.typeContrat}
-                        </span>
-                      )}
-                      {(offre.diplome || offre.niveauEtude) && (
-                        <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs px-2.5 py-1 rounded-lg font-medium">
-                          {offre.diplome || offre.niveauEtude}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Puces de compétences */}
-                    {offre.competences && offre.competences.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mb-6">
-                        {offre.competences.slice(0, 3).map((comp, idx) => (
-                          <span key={idx} className="bg-white/5 text-gray-400 text-[11px] px-2 py-0.5 rounded-md">
-                            {comp}
+                      {/* Badges d'informations internes (Fond sombre contrasté) */}
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {(offre.lieu || offre.localisation) && (
+                          <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs px-2.5 py-1 rounded-lg font-medium">
+                            {offre.lieu || offre.localisation}
                           </span>
-                        ))}
-                        {offre.competences.length > 3 && (
-                          <span className="text-gray-500 text-[10px] self-center">
-                            +{offre.competences.length - 3}
+                        )}
+                        {offre.typeContrat && (
+                          <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs px-2.5 py-1 rounded-lg font-medium">
+                            {offre.typeContrat}
+                          </span>
+                        )}
+                        {(offre.diplome || offre.niveauEtude) && (
+                          <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs px-2.5 py-1 rounded-lg font-medium">
+                            {offre.diplome || offre.niveauEtude}
                           </span>
                         )}
                       </div>
-                    )}
-                  </div>
 
-                  {/* Bouton Postuler en plein bloc vert menthe fluo */}
-                  <button
-                    onClick={() => handlePostuler(offre._id)}
-                    className="w-full bg-[#00f098] text-[#0b1a19] hover:bg-[#00d084] font-black text-xs uppercase tracking-wider py-3.5 px-4 rounded-xl transition-all shadow-[0_0_15px_rgba(0,240,152,0.25)] flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    Postuler &gt;
-                  </button>
-                </div>
-              ))}
+                      {/* Puces de compétences */}
+                      {offre.competences && offre.competences.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mb-6">
+                          {offre.competences.slice(0, 3).map((comp, idx) => (
+                            <span key={idx} className="bg-white/5 text-gray-400 text-[11px] px-2 py-0.5 rounded-md">
+                              {comp}
+                            </span>
+                          ))}
+                          {offre.competences.length > 3 && (
+                            <span className="text-gray-500 text-[10px] self-center">
+                              +{offre.competences.length - 3}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Bouton dynamique : Postuler OU Déjà postulé */}
+                    <button
+                      onClick={() => !dejaPostule && handlePostuler(offre._id)}
+                      disabled={dejaPostule}
+                      className={`w-full py-3.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all ${
+                        dejaPostule
+                          ? 'bg-gray-800 text-gray-500 cursor-not-allowed border border-white/5 shadow-none'
+                          : 'bg-[#00f098] text-[#0b1a19] hover:bg-[#00d084] shadow-[0_0_15px_rgba(0,240,152,0.25)] cursor-pointer'
+                      }`}
+                    >
+                      {dejaPostule ? 'Déjà postulé ✓' : 'Postuler >'}
+                    </button>
+                  </div>
+                )
+              })}
             </div>
           )}
         </div>
