@@ -1,70 +1,110 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Plus, X, Briefcase, Users, ChevronRight, Clock, TrendingUp, XCircle } from 'lucide-react'
+import { Plus, X, Briefcase, Users, ChevronRight, Clock, TrendingUp, XCircle, Sparkles } from 'lucide-react'
 import Layout from '../components/layout/Layout'
 import api from '../services/api'
 import OffreCardRecruteur from '../components/OffreCardRecruteur'
 
-// ── Formulaire d'offre harmonisé FDE ──
+// ── Formulaire d'offre SaaS B2B Premium FDE ──
 function FormulaireOffre({ form, setForm, handleSubmit }) {
   return (
-    <div className="bg-[#041619] border border-white/5 rounded-2xl p-6 mb-6 shadow-xl">
-      <h3 className="text-white font-bold text-lg mb-4">Créer une nouvelle offre</h3>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2">
-            <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Titre du poste</label>
-            <input
-              type="text" value={form.titre}
-              onChange={e => setForm({...form, titre: e.target.value})}
-              placeholder="ex: Développeur Full Stack JS" required
-              className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl px-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:border-[#00f098] transition-colors"
-            />
+    <div className="bg-[#041619] border border-white/5 rounded-2xl md:rounded-[2rem] p-6 md:p-8 mb-8 shadow-2xl transition-all">
+      <div className="flex items-center gap-2 mb-6">
+        <div className="w-2 h-2 rounded-full bg-[#00f098] shadow-[0_0_8px_#00f098]" />
+        <h3 className="text-white font-black text-xl tracking-tight">Créer une nouvelle offre</h3>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          
+          {/* 1. Titre du poste avec icône Briefcase et pl-12 */}
+          <div className="col-span-1 md:col-span-2">
+            <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
+              Titre du poste
+            </label>
+            <div className="relative">
+              <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+              <input
+                type="text" 
+                value={form.titre}
+                onChange={e => setForm({...form, titre: e.target.value})}
+                placeholder="ex: Développeur Full Stack JS" 
+                required
+                className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl pl-12 pr-4 py-3.5 text-sm placeholder-gray-500 focus:outline-none focus:border-[#00f098] focus:ring-1 focus:ring-[#00f098] transition-all"
+              />
+            </div>
           </div>
-          <div className="col-span-2">
-            <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Description</label>
+
+          {/* 2. Description du poste */}
+          <div className="col-span-1 md:col-span-2">
+            <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
+              Description du poste
+            </label>
             <textarea
               value={form.description}
               onChange={e => setForm({...form, description: e.target.value})}
-              rows={3} placeholder="Décrivez le poste..." required
-              className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl px-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:border-[#00f098] transition-colors resize-none"
+              rows={3} 
+              placeholder="Décrivez les missions principales et le contexte du poste..." 
+              required
+              className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl p-4 text-sm placeholder-gray-500 focus:outline-none focus:border-[#00f098] focus:ring-1 focus:ring-[#00f098] transition-all resize-none leading-relaxed"
             />
           </div>
-          <div className="col-span-2">
+
+          {/* 3. Compétences clés avec icône Sparkles et libellé explicite pour le scoring IA */}
+          <div className="col-span-1 md:col-span-2">
             <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
-              Compétences <span className="text-gray-500 text-[11px] font-normal">(séparées par des virgules)</span>
+              Compétences <span className="text-[#00f098] text-[10px] font-semibold lowercase tracking-normal">(séparées par des virgules — critiques pour le scoring IA)</span>
             </label>
-            <input
-              type="text" value={form.competences}
-              onChange={e => setForm({...form, competences: e.target.value})}
-              placeholder="React, Node.js, MongoDB, Express" required
-              className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl px-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:border-[#00f098] transition-colors"
-            />
+            <div className="relative">
+              <Sparkles className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#00f098] pointer-events-none" />
+              <input
+                type="text" 
+                value={form.competences}
+                onChange={e => setForm({...form, competences: e.target.value})}
+                placeholder="React, Node.js, MongoDB, Express, Docker" 
+                required
+                className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl pl-12 pr-4 py-3.5 text-sm placeholder-gray-500 focus:outline-none focus:border-[#00f098] focus:ring-1 focus:ring-[#00f098] transition-all"
+              />
+            </div>
           </div>
+
+          {/* 4. Niveau requis */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Niveau requis</label>
+            <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
+              Niveau requis
+            </label>
             <select
               value={form.niveauRequis}
               onChange={e => setForm({...form, niveauRequis: e.target.value})}
-              className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00f098] transition-colors cursor-pointer"
+              className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-[#00f098] transition-all cursor-pointer"
             >
-              {['Licence', 'Master', 'Ingénieur', 'Doctorat'].map(n => <option key={n} value={n} className="bg-[#0b1a19]">{n}</option>)}
+              {['Licence', 'Master', 'Ingénieur', 'Doctorat'].map(n => (
+                <option key={n} value={n} className="bg-[#0b1a19] text-white">{n}</option>
+              ))}
             </select>
           </div>
+
+          {/* 5. Type de contrat */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Type de contrat</label>
+            <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
+              Type de contrat
+            </label>
             <select
               value={form.typeContrat}
               onChange={e => setForm({...form, typeContrat: e.target.value})}
-              className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00f098] transition-colors cursor-pointer"
+              className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-[#00f098] transition-all cursor-pointer"
             >
-              {['Stage', 'CDD', 'CDI', 'Freelance'].map(t => <option key={t} value={t} className="bg-[#0b1a19]">{t}</option>)}
+              {['Stage', 'CDD', 'CDI', 'Freelance'].map(t => (
+                <option key={t} value={t} className="bg-[#0b1a19] text-white">{t}</option>
+              ))}
             </select>
           </div>
         </div>
+
+        {/* Bouton de soumission officiel */}
         <button
           type="submit"
-          className="w-full bg-[#00f098] hover:bg-[#00d084] text-[#0b1a19] py-3.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,240,152,0.2)] mt-2"
+          className="w-full bg-[#00f098] hover:bg-[#00d084] text-[#0b1a19] py-3.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,240,152,0.2)] mt-3 cursor-pointer"
         >
           Publier l'offre
         </button>
@@ -187,15 +227,15 @@ export default function DashboardRecruteur() {
       {tabActif === '' && (
         <div className="space-y-8 bg-[#0b1a19] p-6 md:p-8 rounded-[2rem] border border-white/5">
           
-          {/* Header */}
+          {/* Header parfaitement aligné verticalement */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
+            <div className="flex flex-col justify-center">
               <h1 className="text-2xl font-black text-white tracking-tight">Tableau de bord Recruteur</h1>
               <p className="text-gray-400 text-sm mt-1">Gérez vos offres et découvrez vos futurs talents grâce à l'IA.</p>
             </div>
             <button
               onClick={() => setShowForm(!showForm)}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-black transition-all duration-300 ${
+              className={`flex items-center self-start md:self-center gap-2 px-5 py-2.5 rounded-xl text-sm font-black transition-all duration-300 cursor-pointer ${
                 showForm 
                   ? 'bg-[#041619] text-white border border-white/10 hover:bg-white/5' 
                   : 'bg-[#00f098] text-[#0b1a19] hover:bg-[#00d084] shadow-[0_0_15px_rgba(0,240,152,0.2)]'
