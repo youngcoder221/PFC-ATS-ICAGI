@@ -123,26 +123,28 @@ export default function DashboardRecruteur() {
   return (
     <Layout>
 
-      {/* ══ VUE : MES OFFRES (HARMONISÉE FDE) ══ */}
+      {/* ══ VUE : MES OFFRES (HAUT CONTRASTE - CANVAS BLANC PUR) ══ */}
       {tabActif === 'offres' && (
-        <div className="space-y-8 bg-[#0b1a19] p-6 md:p-8 rounded-[2rem] border border-white/5">
+        <div className="bg-white rounded-[2rem] p-6 md:p-10 shadow-sm space-y-8">
           
-          {/* En-tête */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          {/* En-tête typographique sombre sur fond blanc */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 pb-6">
             <div>
-              <h1 className="text-2xl font-black text-white tracking-tight">Mes offres</h1>
-              <p className="text-gray-400 text-sm mt-1">{offres.length} offre(s) publiée(s) sur la plateforme</p>
+              <h1 className="text-3xl font-black text-gray-900 tracking-tight">Mes offres</h1>
+              <p className="text-gray-500 text-sm mt-1 font-medium">
+                {offres.length} offre(s) activement publiée(s) et analysée(s) par l'IA.
+              </p>
             </div>
             <button
               onClick={() => setShowForm(!showForm)}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-black transition-all duration-300 ${
+              className={`flex items-center gap-2 px-6 py-3.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-300 cursor-pointer ${
                 showForm 
-                  ? 'bg-[#041619] text-white border border-white/10 hover:bg-white/5' 
-                  : 'bg-[#00f098] text-[#0b1a19] hover:bg-[#00d084] shadow-[0_0_15px_rgba(0,240,152,0.2)]'
+                  ? 'bg-[#041619] text-white hover:bg-gray-800' 
+                  : 'bg-[#00f098] text-[#0b1a19] hover:bg-[#00d084] shadow-[0_0_15px_rgba(0,240,152,0.25)]'
               }`}
             >
               {showForm ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-              {showForm ? 'Annuler la création' : 'Publier une offre'}
+              {showForm ? 'Annuler' : 'Publier une offre'}
             </button>
           </div>
 
@@ -154,14 +156,16 @@ export default function DashboardRecruteur() {
             />
           )}
 
+          {/* État de chargement / vide adapté au fond blanc */}
           {loading ? (
-            <div className="text-center py-16 text-gray-500 font-medium">Chargement des offres...</div>
+            <p className="text-center text-gray-400 py-16 font-medium">Chargement des offres...</p>
           ) : offres.length === 0 ? (
-            <div className="text-center py-16 bg-[#041619] rounded-2xl border border-white/5">
-              <Briefcase className="w-12 h-12 text-gray-700 mx-auto mb-3" />
+            <div className="text-center py-16 bg-[#f8fafc] rounded-2xl border border-gray-100">
+              <Briefcase className="w-12 h-12 text-gray-300 mx-auto mb-3" />
               <p className="text-gray-500 font-medium">Aucune offre publiée pour le moment.</p>
             </div>
           ) : (
+            /* Grille de cartes sombres (FDE) ressortant sur le fond blanc */
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {offres.map(offre => (
                 <OffreCardRecruteur 
@@ -241,7 +245,7 @@ export default function DashboardRecruteur() {
           {/* ── DOUBLE COLONNE HARMONISÉE FDE ── */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            {/* Dernières offres (Harmonisées FDE) */}
+            {/* Dernières offres (Survol et couleurs FDE) */}
             <div className="lg:col-span-2 bg-[#041619] border border-white/5 rounded-[2rem] p-7 hover:border-white/10 transition-colors duration-300">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-white font-bold text-lg flex items-center gap-2">
@@ -272,15 +276,16 @@ export default function DashboardRecruteur() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {dernieresOffres.map(offre => (
-                    <OffreCardRecruteur 
-                      key={offre._id} 
-                      offre={offre} 
-                      onToggleStatut={async (id) => {
-                        await api.patch(`/offres/${id}/statut`)
-                        chargerOffres()
-                      }}
-                      onVoirCandidats={(id) => navigate(`/ranking/${id}`)}
-                    />
+                    <div key={offre._id} className="rounded-2xl transition-all hover:border-[#00f098]/30">
+                      <OffreCardRecruteur 
+                        offre={offre} 
+                        onToggleStatut={async (id) => {
+                          await api.patch(`/offres/${id}/statut`)
+                          chargerOffres()
+                        }}
+                        onVoirCandidats={(id) => navigate(`/ranking/${id}`)}
+                      />
+                    </div>
                   ))}
                 </div>
               )}
