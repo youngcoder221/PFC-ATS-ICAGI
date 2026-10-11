@@ -247,64 +247,66 @@ export default function Admin() {
               <p className="text-gray-500 font-medium">Aucune offre disponible dans le système.</p>
             </div>
           ) : (
-            /* Liste des cartes d'offres vert canard mat sur fond blanc */
-            <div className="space-y-3.5">
+            /* Grille moderne de cartes verticales (Cards) */
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
               {offres.map(offre => (
                 <div
                   key={offre._id}
-                  className="p-5 bg-[#0b1a19] border border-black/5 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 group"
+                  className="bg-[#041619] border border-black/5 rounded-2xl p-6 flex flex-col justify-between hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group shadow-lg"
                 >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2.5 mb-2 flex-wrap">
-                      <h3 className="text-white text-base font-bold tracking-tight">
+                  <div>
+                    {/* En haut : Titre du poste et Badge de contrat */}
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <h3 className="text-white text-lg font-bold group-hover:text-[#00f098] transition-colors leading-snug line-clamp-2 flex-1">
                         {offre.titre}
                       </h3>
-                      {/* Badge contrat */}
-                      <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg border ${typeColors[offre.typeContrat] || 'bg-white/5 text-gray-300 border-white/10'}`}>
+                      <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg border flex-shrink-0 ${typeColors[offre.typeContrat] || 'bg-white/5 text-gray-300 border-white/10'}`}>
                         {offre.typeContrat}
-                      </span>
-                      {/* Badge statut verte menthe / sombre */}
-                      <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg border ${
-                        offre.statut === 'ouverte'
-                          ? 'bg-[#00f098]/10 text-[#00f098] border-[#00f098]/20'
-                          : 'bg-white/5 text-gray-400 border-white/10'
-                      }`}>
-                        {offre.statut}
                       </span>
                     </div>
 
-                    <p className="text-gray-400 text-xs font-medium mb-3">
-                      Publiée par <span className="text-gray-200 font-semibold">{offre.recruteurId?.prenom} {offre.recruteurId?.nom}</span> <span className="mx-1.5 text-gray-600">•</span> {offre.niveauRequis}
-                    </p>
+                    {/* Au centre : Nom du recruteur et Badge de statut vert menthe fluo */}
+                    <div className="flex items-center justify-between gap-2 py-3 border-y border-white/5 mb-4">
+                      <p className="text-gray-400 text-xs font-medium truncate">
+                        Publiée par <span className="text-gray-200 font-semibold">{offre.recruteurId?.prenom} {offre.recruteurId?.nom}</span>
+                      </p>
+                      <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border flex-shrink-0 ${
+                        offre.statut === 'ouverte'
+                          ? 'bg-[#00f098]/10 text-[#00f098] border-[#00f098]/20 shadow-[0_0_10px_rgba(0,240,152,0.1)]'
+                          : 'bg-red-500/10 text-red-400 border-red-500/20'
+                      }`}>
+                        {offre.statut === 'ouverte' ? 'OUVERTE' : 'FERMÉE'}
+                      </span>
+                    </div>
 
-                    {/* Badges de compétences internes en relief sombre */}
-                    <div className="flex gap-1.5 flex-wrap">
-                      {offre.competences?.slice(0, 4).map((c, i) => (
-                        <span key={i} className="text-[11px] bg-[#041619] border border-white/5 text-gray-300 px-2.5 py-1 rounded-lg font-medium">
+                    {/* En dessous : Badges de compétences */}
+                    <div className="flex gap-1.5 flex-wrap mb-6">
+                      {offre.competences?.slice(0, 3).map((c, i) => (
+                        <span key={i} className="text-[11px] bg-white/5 border border-white/5 text-gray-300 px-2.5 py-1 rounded-lg font-medium">
                           {c}
                         </span>
                       ))}
-                      {offre.competences?.length > 4 && (
+                      {offre.competences?.length > 3 && (
                         <span className="text-[11px] text-gray-500 self-center font-medium">
-                          +{offre.competences.length - 4}
+                          +{offre.competences.length - 3}
                         </span>
                       )}
                     </div>
                   </div>
 
-                  {/* Bouton d'action Fermer / Rouvrir */}
+                  {/* Tout en bas : Bouton rouge FERMER en plein bloc pour fermer la carte */}
                   <button
                     onClick={async () => {
                       await api.patch(`/offres/${offre._id}/statut`)
                       chargerDonnees()
                     }}
-                    className={`text-xs px-4 py-2.5 rounded-xl border font-black uppercase tracking-wider transition-all cursor-pointer flex-shrink-0 ${
+                    className={`w-full py-3 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-md ${
                       offre.statut === 'ouverte'
-                        ? 'border-red-900/40 text-red-400 bg-red-900/10 hover:bg-red-900/20'
-                        : 'border-[#00f098]/30 text-[#00f098] bg-[#00f098]/10 hover:bg-[#00d084] hover:text-[#0b1a19]'
+                        ? 'bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500 hover:text-white'
+                        : 'bg-[#00f098] text-[#0b1a19] hover:bg-[#00d084] shadow-[0_0_15px_rgba(0,240,152,0.2)]'
                     }`}
                   >
-                    {offre.statut === 'ouverte' ? 'Fermer' : 'Rouvrir'}
+                    {offre.statut === 'ouverte' ? 'Fermer l\'offre' : 'Rouvrir l\'offre'}
                   </button>
                 </div>
               ))}
