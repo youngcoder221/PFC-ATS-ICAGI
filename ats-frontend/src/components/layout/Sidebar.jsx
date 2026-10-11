@@ -3,12 +3,11 @@ import { useAuth } from '../../context/AuthContext'
 import logo from '../../assets/logo-icon-small.png'
 import {
   LayoutDashboard, Briefcase, FileText,
-  Users, LogOut, ChevronRight, Award, Shield
+  Users, LogOut, ChevronRight, Shield
 } from 'lucide-react'
 
 const menuAdmin = [
   { label: 'Dashboard',      icon: LayoutDashboard, path: '/admin', tab: ''             },
-  { label: 'Statistiques',   icon: FileText,         path: '/admin', tab: 'stats'        },
   { label: 'Offres',         icon: Briefcase,        path: '/admin', tab: 'offres'       },
   { label: 'Utilisateurs',   icon: Users,            path: '/admin', tab: 'utilisateurs' },
   { label: 'Système',        icon: Shield,           path: '/admin', tab: 'system'       },

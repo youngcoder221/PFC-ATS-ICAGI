@@ -6,7 +6,7 @@ import api from '../services/api'
 
 export default function Admin() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const onglet                          = searchParams.get('tab') || 'stats'
+  const onglet                          = searchParams.get('tab') || ''
   const setOnglet                       = (tab) => setSearchParams({ tab })
   const [statsData, setStatsData]       = useState({ totalUsers: 0, totalOffres: 0, totalCandidatures: 0 })
   const [users, setUsers]               = useState([])
@@ -87,16 +87,14 @@ export default function Admin() {
                   </div>
                 </div>
                 <p className="text-3xl font-black text-white tracking-tight">{s.value}</p>
-              </div>
-            )
-          })}
-        </div>
+                </div>
+              )
+            })}
+          </div>
 
-        
-
-      {/* ── STATS (CHARTE FDE AVEC JAUGES VERT MENTHE ET RELIEF #041619) ── */}
-      {onglet === 'stats' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* ── 3. VUE DASHBOARD PAR DÉFAUT ── */}
+          {(onglet === '' || onglet === 'stats') && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
           {/* 1. Répartition utilisateurs */}
           <div className="bg-[#041619] border border-white/5 rounded-2xl p-6 hover:border-white/10 transition-colors duration-300">
