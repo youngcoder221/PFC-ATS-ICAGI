@@ -67,63 +67,70 @@ export default function Landing() {
 
       </nav>
 
-      {/* ── HERO (Dark Petrol & Neon Mint) ── */}
+      {/* ── HERO COMPACTÉ (CALÉ PILE SUR L'IMAGE SANS VIDE EN BAS) ── */}
       <section 
-        className="relative flex flex-col px-6 py-20 md:py-32 min-h-[650px] justify-center border-b border-white/5"
+        className="relative flex flex-col px-6 pt-12 pb-10 md:pt-16 md:pb-12 justify-center border-b border-white/5"
         style={{
-          backgroundImage: `linear-gradient(to right, rgba(4, 22, 25, 0.98) 0%, rgba(4, 22, 25, 0.85) 50%, rgba(4, 22, 25, 0.2) 100%), url(${heroBg})`,
+          backgroundImage: `linear-gradient(to right, rgba(4, 22, 25, 0.98) 0%, rgba(4, 22, 25, 0.85) 50%, rgba(4, 22, 25, 0.15) 100%), url(${heroBg})`,
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'right top',
-          backgroundSize: '',
+          backgroundSize: 'cover',
         }}
       >
         <div className="relative z-10 w-full max-w-7xl mx-auto">
-          <div className="flex items-center gap-4 mb-6">
+          
+          {/* Badge catégorie */}
+          <div className="flex items-center gap-3 mb-4">
             <div className="h-[2px] w-8 bg-[#00f098]"></div>
-            <span className="text-white font-bold text-xs tracking-widest uppercase">Recrutement 2.0</span>
+            <span className="text-[#00f098] font-bold text-xs tracking-widest uppercase">Recrutement 2.0</span>
           </div>
           
-          <h1 className="text-5xl md:text-6xl lg:text-[5rem] font-extrabold text-white mb-6 tracking-tight leading-[1.1] max-w-4xl">
+          {/* Titre principal */}
+          <h1 className="text-4xl md:text-5xl lg:text-[4.2rem] font-extrabold text-white mb-4 tracking-tight leading-[1.1] max-w-3xl">
             Le recrutement réinventé <br className="hidden md:block"/> par l'<span className="text-[#00f098]">Intelligence Artificielle.</span>
           </h1>
           
-          <p className="text-lg md:text-xl text-gray-300 mb-12 max-w-2xl font-light">
+          {/* Description courte */}
+          <p className="text-base md:text-lg text-gray-300 mb-6 max-w-2xl font-light leading-relaxed">
             Conçu pour les PME sénégalaises et d'Afrique de l'Ouest. Centralisez vos candidatures, automatisez le tri des CV et recrutez les meilleurs talents en quelques secondes grâce à notre moteur de scoring IA.
           </p>
 
+          {/* Boutons d'action regroupés et remontés */}
           <div className="flex flex-wrap items-center gap-4 mb-8">
-            <button onClick={() => navigate('/login')} className="bg-[#00f098] hover:bg-[#00d084] text-[#041619] px-8 py-3.5 rounded-lg font-bold transition-all text-sm shadow-[0_0_15px_rgba(0,240,152,0.3)]">
+            <button 
+              onClick={() => navigate('/login')} 
+              className="bg-[#00f098] hover:bg-[#00d084] text-[#041619] px-7 py-3 rounded-xl font-black transition-all text-sm shadow-[0_0_15px_rgba(0,240,152,0.25)] cursor-pointer"
+            >
               Espace Entreprise
             </button>
-            <div className="text-sm border-l border-white/20 pl-4">
-              <p className="text-white font-bold">Propulsé par l'IA</p>
-              <p className="text-[#00f098]">Analyse sémantique Gemini</p>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-4 mb-16">
-            <button onClick={() => navigate('/login')} className="bg-[#e8d5a5] hover:bg-[#d4c194] text-[#041619] px-6 py-3.5 rounded-lg font-bold transition-all text-sm shadow-[0_0_15px_rgba(232,213,165,0.2)]">
+            <button 
+              onClick={() => navigate('/login')} 
+              className="bg-[#e8d5a5] hover:bg-[#d4c194] text-[#041619] px-6 py-3 rounded-xl font-bold transition-all text-sm shadow-[0_0_15px_rgba(232,213,165,0.15)] cursor-pointer"
+            >
               Déposer mon CV
             </button>
-            <button className="bg-transparent border border-white/30 text-white hover:bg-white/10 px-6 py-3.5 rounded-lg font-bold transition-all text-sm">
-              Découvrir la plateforme
-            </button>
+            <div className="text-xs border-l border-white/20 pl-4 py-1">
+              <p className="text-white font-bold">Propulsé par l'IA</p>
+              <p className="text-[#00f098] font-semibold">Analyse sémantique Gemini</p>
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-8 border-t border-white/10 max-w-4xl">
+          {/* Chiffres clés directement calés sous les boutons */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-6 border-t border-white/10 max-w-3xl">
             <div>
-              <p className="text-4xl font-black text-white mb-1">654</p>
-              <p className="text-[11px] text-[#00f098] uppercase tracking-widest font-bold">opportunités actives</p>
+              <p className="text-3xl md:text-4xl font-black text-white mb-1">654</p>
+              <p className="text-[10px] text-[#00f098] uppercase tracking-widest font-bold">opportunités actives</p>
             </div>
             <div>
-              <p className="text-4xl font-black text-white mb-1">358</p>
-              <p className="text-[11px] text-[#00f098] uppercase tracking-widest font-bold">organisations</p>
+              <p className="text-3xl md:text-4xl font-black text-white mb-1">358</p>
+              <p className="text-[10px] text-[#00f098] uppercase tracking-widest font-bold">organisations</p>
             </div>
             <div>
-              <p className="text-4xl font-black text-white mb-1">43</p>
-              <p className="text-[11px] text-[#00f098] uppercase tracking-widest font-bold">stages disponibles</p>
+              <p className="text-3xl md:text-4xl font-black text-white mb-1">43</p>
+              <p className="text-[10px] text-[#00f098] uppercase tracking-widest font-bold">stages disponibles</p>
             </div>
           </div>
+
         </div>
       </section>
 
