@@ -1,3 +1,4 @@
+import heroBg from '../assets/hero-bg.png'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Search, Briefcase, Check, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles } from 'lucide-react'
@@ -70,7 +71,7 @@ export default function Landing() {
       <section 
         className="relative flex flex-col px-6 py-20 md:py-32 min-h-[650px] justify-center border-b border-white/5"
         style={{
-          backgroundImage: `linear-gradient(to right, rgba(4, 22, 25, 0.98) 0%, rgba(4, 22, 25, 0.85) 50%, rgba(4, 22, 25, 0.4) 100%), url('/hero-bg.jpg')`,
+          backgroundImage: `linear-gradient(to right, rgba(4, 22, 25, 0.98) 0%, rgba(4, 22, 25, 0.85) 50%, rgba(4, 22, 25, 0.4) 100%), url(${heroBg})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
