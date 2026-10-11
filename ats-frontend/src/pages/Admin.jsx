@@ -225,53 +225,83 @@ export default function Admin() {
       {/* ⚠️ Pense bien à fermer la div principale ouverte à l'étape 2 juste avant </Layout> : */}
       {/* </div> */}
 
-      {/* ── OFFRES ── */}
+      {/* ── OFFRES (CANVAS BLANC & CARTES SOMBRES HAUT CONTRASTE) ── */}
       {onglet === 'offres' && (
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-800">
-            <h2 className="text-white font-semibold">Toutes les offres ({offres.length})</h2>
+        <div className="bg-white rounded-[2rem] p-6 md:p-8 shadow-sm space-y-6">
+          
+          {/* En-tête typographique sombre sur fond blanc */}
+          <div className="border-b border-gray-100 pb-4">
+            <h2 className="text-2xl font-black text-gray-900 tracking-tight">
+              Toutes les offres ({offres.length})
+            </h2>
+            <p className="text-gray-500 text-xs mt-0.5 font-medium">
+              Supervision globale et gestion des statuts de recrutement.
+            </p>
           </div>
+
           {loading ? (
-            <p className="text-center text-gray-500 py-12">Chargement...</p>
+            <p className="text-center text-gray-400 py-16 font-medium">Chargement des offres...</p>
           ) : offres.length === 0 ? (
-            <p className="text-center text-gray-500 py-12">Aucune offre</p>
+            <div className="text-center py-16 bg-[#f8fafc] rounded-2xl border border-gray-100">
+              <Briefcase className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <p className="text-gray-500 font-medium">Aucune offre disponible dans le système.</p>
+            </div>
           ) : (
-            <div className="divide-y divide-gray-800">
+            /* Liste des cartes d'offres vert canard mat sur fond blanc */
+            <div className="space-y-3.5">
               {offres.map(offre => (
-                <div key={offre._id} className="px-6 py-4 flex items-center justify-between hover:bg-gray-800/50 transition-all">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-1">
-                      <h3 className="text-white text-sm font-medium">{offre.titre}</h3>
-                      <span className={`text-xs px-2 py-0.5 rounded-full border ${typeColors[offre.typeContrat] || ''}`}>
+                <div
+                  key={offre._id}
+                  className="p-5 bg-[#0b1a19] border border-black/5 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 group"
+                >
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2.5 mb-2 flex-wrap">
+                      <h3 className="text-white text-base font-bold tracking-tight">
+                        {offre.titre}
+                      </h3>
+                      {/* Badge contrat */}
+                      <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg border ${typeColors[offre.typeContrat] || 'bg-white/5 text-gray-300 border-white/10'}`}>
                         {offre.typeContrat}
                       </span>
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${
-                        offre.statut === 'ouverte' ? 'text-green-400 bg-green-900/20' : 'text-gray-500 bg-gray-800'
+                      {/* Badge statut verte menthe / sombre */}
+                      <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg border ${
+                        offre.statut === 'ouverte'
+                          ? 'bg-[#00f098]/10 text-[#00f098] border-[#00f098]/20'
+                          : 'bg-white/5 text-gray-400 border-white/10'
                       }`}>
                         {offre.statut}
                       </span>
                     </div>
-                    <p className="text-gray-500 text-xs">
-                      Par {offre.recruteurId?.prenom} {offre.recruteurId?.nom} · {offre.niveauRequis}
+
+                    <p className="text-gray-400 text-xs font-medium mb-3">
+                      Publiée par <span className="text-gray-200 font-semibold">{offre.recruteurId?.prenom} {offre.recruteurId?.nom}</span> <span className="mx-1.5 text-gray-600">•</span> {offre.niveauRequis}
                     </p>
-                    <div className="flex gap-1.5 mt-1 flex-wrap">
-                      {offre.competences.slice(0, 4).map((c, i) => (
-                        <span key={i} className="text-xs bg-gray-800 text-gray-400 px-2 py-0.5 rounded">
+
+                    {/* Badges de compétences internes en relief sombre */}
+                    <div className="flex gap-1.5 flex-wrap">
+                      {offre.competences?.slice(0, 4).map((c, i) => (
+                        <span key={i} className="text-[11px] bg-[#041619] border border-white/5 text-gray-300 px-2.5 py-1 rounded-lg font-medium">
                           {c}
                         </span>
                       ))}
+                      {offre.competences?.length > 4 && (
+                        <span className="text-[11px] text-gray-500 self-center font-medium">
+                          +{offre.competences.length - 4}
+                        </span>
+                      )}
                     </div>
                   </div>
-                  {/* Bouton fermer/rouvrir */}
+
+                  {/* Bouton d'action Fermer / Rouvrir */}
                   <button
                     onClick={async () => {
                       await api.patch(`/offres/${offre._id}/statut`)
                       chargerDonnees()
                     }}
-                    className={`ml-4 text-xs px-3 py-1.5 rounded-lg border transition-all flex-shrink-0 ${
+                    className={`text-xs px-4 py-2.5 rounded-xl border font-black uppercase tracking-wider transition-all cursor-pointer flex-shrink-0 ${
                       offre.statut === 'ouverte'
-                        ? 'border-red-700 text-red-400 hover:bg-red-900/20'
-                        : 'border-green-700 text-green-400 hover:bg-green-900/20'
+                        ? 'border-red-900/40 text-red-400 bg-red-900/10 hover:bg-red-900/20'
+                        : 'border-[#00f098]/30 text-[#00f098] bg-[#00f098]/10 hover:bg-[#00d084] hover:text-[#0b1a19]'
                     }`}
                   >
                     {offre.statut === 'ouverte' ? 'Fermer' : 'Rouvrir'}
