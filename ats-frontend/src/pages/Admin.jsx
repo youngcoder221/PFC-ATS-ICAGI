@@ -98,27 +98,7 @@ export default function Admin() {
           })}
         </div>
 
-        {/* ── 3. ONGLETS HARMONISÉS ── */}
-        <div className="flex overflow-x-auto no-scrollbar gap-2 bg-[#041619] border border-white/5 p-1.5 rounded-2xl w-fit shadow-sm">
-          {onglets.map(o => {
-            const Icon = o.icon
-            const isActive = onglet === o.key
-            return (
-              <button
-                key={o.key}
-                onClick={() => setOnglet(o.key)}
-                className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-xs uppercase font-bold tracking-wider transition-all duration-300 cursor-pointer ${
-                  isActive 
-                    ? 'bg-[#0b1a19] text-[#00f098] border border-[#00f098]/30 shadow-[0_0_15px_rgba(0,240,152,0.1)]' 
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
-                }`}
-              >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-[#00f098]' : 'text-gray-500'}`} />
-                {o.label}
-              </button>
-            )
-          })}
-        </div>
+        
 
       {/* ── STATS (CHARTE FDE AVEC JAUGES VERT MENTHE ET RELIEF #041619) ── */}
       {onglet === 'stats' && (
