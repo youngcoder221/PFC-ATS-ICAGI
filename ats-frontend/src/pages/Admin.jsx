@@ -387,9 +387,9 @@ export default function Admin() {
         </div>
       )}
 
-      {/* ── SYSTÈME (HARMONISÉ FDE) ── */}
+      {/* ── SYSTÈME (CONSOLE DE SUPERVISION FDE - MODE SOMBRE INTÉGRAL) ── */}
       {onglet === 'system' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {[
             { label: 'Version',         value: '1.0.0',                                        color: 'text-white' },
             { label: 'Stack',           value: 'MERN + IA',                                    color: 'text-[#00f098]' },
@@ -398,9 +398,16 @@ export default function Admin() {
             { label: 'Offres actives',  value: offres.filter(o => o.statut === 'ouverte').length, color: 'text-[#00f098]' },
             { label: 'Offres fermées',  value: offres.filter(o => o.statut === 'fermée').length,  color: 'text-red-400' },
           ].map((item, i) => (
-            <div key={i} className="bg-[#041619] border border-white/5 rounded-2xl p-5 shadow-sm hover:border-white/10 transition-colors">
-              <p className="text-gray-400 text-xs font-semibold uppercase tracking-wider">{item.label}</p>
-              <p className={`text-xl font-black mt-2 tracking-tight ${item.color}`}>{item.value}</p>
+            <div 
+              key={i} 
+              className="bg-[#041619] border border-white/5 rounded-2xl p-6 shadow-md hover:border-[#00f098]/30 hover:-translate-y-0.5 transition-all duration-300 group"
+            >
+              <p className="text-gray-400 text-xs font-bold uppercase tracking-wider">
+                {item.label}
+              </p>
+              <p className={`text-2xl font-black mt-3 tracking-tight ${item.color}`}>
+                {item.value}
+              </p>
             </div>
           ))}
         </div>
