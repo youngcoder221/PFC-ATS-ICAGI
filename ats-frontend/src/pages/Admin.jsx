@@ -315,33 +315,57 @@ export default function Admin() {
         </div>
       )}
 
-      {/* ── UTILISATEURS ── */}
+      {/* ── UTILISATEURS (CANVAS BLANC & LIGNES SOMBRES HAUT CONTRASTE) ── */}
       {onglet === 'utilisateurs' && (
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-800">
-            <h2 className="text-white font-semibold">Utilisateurs ({users.length})</h2>
+        <div className="bg-white rounded-[2rem] p-6 md:p-8 shadow-sm space-y-6">
+          
+          {/* En-tête typographique sombre sur fond blanc */}
+          <div className="border-b border-gray-100 pb-4">
+            <h2 className="text-2xl font-black text-gray-900 tracking-tight">
+              Utilisateurs ({users.length})
+            </h2>
+            <p className="text-gray-500 text-xs mt-0.5 font-medium">
+              Annuaire complet des comptes enregistrés sur la plateforme ATS.
+            </p>
           </div>
-          <div className="divide-y divide-gray-800">
+
+          {/* Liste des cartes d'utilisateurs vert canard mat en relief (#041619) */}
+          <div className="space-y-3.5">
             {users.map(u => (
-              <div key={u._id} className="px-6 py-4 flex items-center justify-between hover:bg-gray-800/50 transition-all">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 bg-gray-800 rounded-full flex items-center justify-center text-white text-xs font-bold">
+              <div
+                key={u._id}
+                className="p-4 md:p-5 bg-[#041619] border border-black/5 rounded-2xl flex items-center justify-between gap-4 shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 group"
+              >
+                {/* Avatar initiales + Informations */}
+                <div className="flex items-center gap-4 min-w-0">
+                  <div className="w-11 h-11 bg-[#0b1a19] border border-white/5 text-[#00f098] rounded-xl flex items-center justify-center text-xs font-black flex-shrink-0 group-hover:scale-105 transition-transform">
                     {u.prenom?.[0]}{u.nom?.[0]}
                   </div>
-                  <div>
-                    <p className="text-white text-sm font-medium">{u.prenom} {u.nom}</p>
-                    <p className="text-gray-500 text-xs">{u.email}</p>
-                    {u.poste && <p className="text-gray-600 text-xs">{u.poste}</p>}
+                  <div className="min-w-0">
+                    <p className="text-white text-sm font-bold tracking-tight truncate">
+                      {u.prenom} {u.nom}
+                    </p>
+                    <p className="text-gray-400 text-xs truncate mt-0.5 font-medium">
+                      {u.email}
+                    </p>
+                    {u.poste && (
+                      <p className="text-gray-500 text-[11px] truncate mt-0.5 font-normal">
+                        {u.poste}
+                      </p>
+                    )}
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className={`text-xs px-2.5 py-1 rounded-full border ${
-                    u.role === 'admin'     ? 'bg-purple-900/30 text-purple-400 border-purple-700' :
-                    u.role === 'recruteur' ? 'bg-teal-900/30 text-teal-400 border-teal-700' :
-                                             'bg-indigo-900/30 text-indigo-400 border-indigo-700'
+
+                {/* Badge de rôle translucide & Action corbeille */}
+                <div className="flex items-center gap-3 flex-shrink-0">
+                  <span className={`text-[10px] uppercase font-black tracking-wider px-3 py-1 rounded-lg border ${
+                    u.role === 'recruteur' ? 'text-[#00f098] bg-[#00f098]/10 border-[#00f098]/20' :
+                    u.role === 'candidat'  ? 'text-blue-400 bg-blue-500/10 border-blue-500/20' :
+                                             'text-purple-400 bg-purple-500/10 border-purple-500/20'
                   }`}>
                     {u.role}
                   </span>
+
                   {u.role !== 'admin' && (
                     <button
                       onClick={async () => {
@@ -350,7 +374,8 @@ export default function Admin() {
                           chargerDonnees()
                         }
                       }}
-                      className="text-gray-600 hover:text-red-400 transition-all"
+                      className="p-2 rounded-xl text-red-500 hover:text-red-400 hover:bg-red-500/10 transition-all cursor-pointer"
+                      title="Supprimer l'utilisateur"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
