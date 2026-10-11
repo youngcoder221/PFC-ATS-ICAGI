@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Users, Briefcase, FileText, Shield, Trash2, TrendingUp, ChevronRight } from 'lucide-react'
+import { Users, Briefcase, FileText, Shield, Trash2, ChevronRight } from 'lucide-react'
 import Layout from '../components/layout/Layout'
 import { useSearchParams } from 'react-router-dom'
 import api from '../services/api'
@@ -49,12 +49,6 @@ export default function Admin() {
     'Freelance': 'bg-white/5 text-gray-300 border-white/10',
   }
 
-  const onglets = [
-    { key: 'stats',        label: 'Statistiques',      icon: TrendingUp },
-    { key: 'offres',       label: 'Toutes les offres', icon: Briefcase  },
-    { key: 'utilisateurs', label: 'Utilisateurs',      icon: Users      },
-    { key: 'system',       label: 'Système',           icon: Shield     },
-  ]
 
   return (
     <Layout>
