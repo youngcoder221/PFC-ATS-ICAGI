@@ -71,10 +71,10 @@ export default function Landing() {
       <section 
         className="relative flex flex-col px-6 py-20 md:py-32 min-h-[650px] justify-center border-b border-white/5"
         style={{
-          backgroundImage: `linear-gradient(to right, rgba(4, 22, 25, 0.98) 0%, rgba(4, 22, 25, 0.85) 45%, rgba(4, 22, 25, 0.15) 100%), url(${heroBg})`,
+          backgroundImage: `linear-gradient(to right, rgba(4, 22, 25, 0.98) 0%, rgba(4, 22, 25, 0.85) 50%, rgba(4, 22, 25, 0.2) 100%), url(${heroBg})`,
           backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'right center',
-          backgroundSize: 'contain',
+          backgroundPosition: 'right top',
+          backgroundSize: '',
         }}
       >
         <div className="relative z-10 w-full max-w-7xl mx-auto">
