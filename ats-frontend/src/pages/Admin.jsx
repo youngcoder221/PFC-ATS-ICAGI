@@ -225,39 +225,39 @@ export default function Admin() {
       {/* ⚠️ Pense bien à fermer la div principale ouverte à l'étape 2 juste avant </Layout> : */}
       {/* </div> */}
 
-      {/* ── OFFRES (CANVAS BLANC & CARTES SOMBRES HAUT CONTRASTE) ── */}
+      {/* ── 4. VUE TOUTES LES OFFRES (CANVAS BLANC HAUT CONTRASTE) ── */}
       {onglet === 'offres' && (
-        <div className="bg-white rounded-[2rem] p-6 md:p-8 shadow-sm space-y-6">
+        <div className="bg-white rounded-2xl md:rounded-[2rem] p-6 md:p-8 shadow-sm space-y-6">
           
-          {/* En-tête typographique sombre sur fond blanc */}
-          <div className="border-b border-gray-100 pb-4">
-            <h2 className="text-2xl font-black text-gray-900 tracking-tight">
+          {/* En-tête calibré */}
+          <div className="border-b border-gray-100 pb-5">
+            <h2 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight">
               Toutes les offres ({offres.length})
             </h2>
-            <p className="text-gray-500 text-xs mt-0.5 font-medium">
+            <p className="text-gray-500 text-xs md:text-sm mt-1 font-medium leading-relaxed">
               Supervision globale et gestion des statuts de recrutement.
             </p>
           </div>
 
           {loading ? (
-            <p className="text-center text-gray-400 py-16 font-medium">Chargement des offres...</p>
+            <p className="text-center text-gray-400 py-16 font-medium text-xs">Chargement des offres...</p>
           ) : offres.length === 0 ? (
             <div className="text-center py-16 bg-[#f8fafc] rounded-2xl border border-gray-100">
-              <Briefcase className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500 font-medium">Aucune offre disponible dans le système.</p>
+              <Briefcase className="w-10 h-10 text-gray-300 mx-auto mb-2.5" />
+              <p className="text-gray-500 font-medium text-xs">Aucune offre disponible dans le système.</p>
             </div>
           ) : (
             /* Grille moderne de cartes verticales (Cards) */
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {offres.map(offre => (
                 <div
                   key={offre._id}
                   className="bg-[#041619] border border-black/5 rounded-2xl p-6 flex flex-col justify-between hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group shadow-lg"
                 >
                   <div>
-                    {/* En haut : Titre du poste et Badge de contrat */}
-                    <div className="flex items-start justify-between gap-3 mb-3">
-                      <h3 className="text-white text-lg font-bold group-hover:text-[#00f098] transition-colors leading-snug line-clamp-2 flex-1">
+                    {/* En haut : Titre du poste et Badge contrat */}
+                    <div className="flex items-start justify-between gap-3 mb-3.5">
+                      <h3 className="text-white text-lg font-black group-hover:text-[#00f098] transition-colors leading-snug line-clamp-2 flex-1">
                         {offre.titre}
                       </h3>
                       <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg border flex-shrink-0 ${typeColors[offre.typeContrat] || 'bg-white/5 text-gray-300 border-white/10'}`}>
@@ -265,14 +265,14 @@ export default function Admin() {
                       </span>
                     </div>
 
-                    {/* Au centre : Nom du recruteur et Badge de statut vert menthe fluo */}
+                    {/* Au centre : Nom du recruteur et Badge statut */}
                     <div className="flex items-center justify-between gap-2 py-3 border-y border-white/5 mb-4">
                       <p className="text-gray-400 text-xs font-medium truncate">
-                        Publiée par <span className="text-gray-200 font-semibold">{offre.recruteurId?.prenom} {offre.recruteurId?.nom}</span>
+                        Publiée par <span className="text-gray-200 font-bold">{offre.recruteurId?.prenom} {offre.recruteurId?.nom}</span>
                       </p>
                       <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border flex-shrink-0 ${
                         offre.statut === 'ouverte'
-                          ? 'bg-[#00f098]/10 text-[#00f098] border-[#00f098]/20 shadow-[0_0_10px_rgba(0,240,152,0.1)]'
+                          ? 'bg-[#00f098]/10 text-[#00f098] border-[#00f098]/20 shadow-[0_0_10px_rgba(0,240,152,0.15)]'
                           : 'bg-red-500/10 text-red-400 border-red-500/20'
                       }`}>
                         {offre.statut === 'ouverte' ? 'OUVERTE' : 'FERMÉE'}
@@ -294,7 +294,7 @@ export default function Admin() {
                     </div>
                   </div>
 
-                  {/* Tout en bas : Bouton rouge FERMER en plein bloc pour fermer la carte */}
+                  {/* Bouton d'action Fermer / Rouvrir */}
                   <button
                     onClick={async () => {
                       await api.patch(`/offres/${offre._id}/statut`)
@@ -315,30 +315,30 @@ export default function Admin() {
         </div>
       )}
 
-      {/* ── UTILISATEURS (CANVAS BLANC & LIGNES SOMBRES HAUT CONTRASTE) ── */}
+      {/* ── 5. VUE UTILISATEURS (CANVAS BLANC HAUT CONTRASTE) ── */}
       {onglet === 'utilisateurs' && (
-        <div className="bg-white rounded-[2rem] p-6 md:p-8 shadow-sm space-y-6">
+        <div className="bg-white rounded-2xl md:rounded-[2rem] p-6 md:p-8 shadow-sm space-y-6">
           
-          {/* En-tête typographique sombre sur fond blanc */}
-          <div className="border-b border-gray-100 pb-4">
-            <h2 className="text-2xl font-black text-gray-900 tracking-tight">
+          {/* En-tête calibré */}
+          <div className="border-b border-gray-100 pb-5">
+            <h2 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight">
               Utilisateurs ({users.length})
             </h2>
-            <p className="text-gray-500 text-xs mt-0.5 font-medium">
+            <p className="text-gray-500 text-xs md:text-sm mt-1 font-medium leading-relaxed">
               Annuaire complet des comptes enregistrés sur la plateforme ATS.
             </p>
           </div>
 
-          {/* Liste des cartes d'utilisateurs vert canard mat en relief (#041619) */}
-          <div className="space-y-3.5">
+          {/* Liste des cartes d'utilisateurs */}
+          <div className="space-y-3">
             {users.map(u => (
               <div
                 key={u._id}
                 className="p-4 md:p-5 bg-[#041619] border border-black/5 rounded-2xl flex items-center justify-between gap-4 shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 group"
               >
                 {/* Avatar initiales + Informations */}
-                <div className="flex items-center gap-4 min-w-0">
-                  <div className="w-11 h-11 bg-[#0b1a19] border border-white/5 text-[#00f098] rounded-xl flex items-center justify-center text-xs font-black flex-shrink-0 group-hover:scale-105 transition-transform">
+                <div className="flex items-center gap-3.5 min-w-0">
+                  <div className="w-10 h-10 bg-[#0b1a19] border border-white/5 text-[#00f098] rounded-xl flex items-center justify-center text-xs font-black flex-shrink-0 group-hover:scale-105 transition-transform">
                     {u.prenom?.[0]}{u.nom?.[0]}
                   </div>
                   <div className="min-w-0">
@@ -356,7 +356,7 @@ export default function Admin() {
                   </div>
                 </div>
 
-                {/* Badge de rôle translucide & Action corbeille */}
+                {/* Badge de rôle & Action supprimer */}
                 <div className="flex items-center gap-3 flex-shrink-0">
                   <span className={`text-[10px] uppercase font-black tracking-wider px-3 py-1 rounded-lg border ${
                     u.role === 'recruteur' ? 'text-[#00f098] bg-[#00f098]/10 border-[#00f098]/20' :
@@ -387,7 +387,7 @@ export default function Admin() {
         </div>
       )}
 
-      {/* ── SYSTÈME (CONSOLE DE SUPERVISION FDE - MODE SOMBRE INTÉGRAL) ── */}
+      {/* ── 6. VUE SYSTÈME (CONSOLE DE SUPERVISION SOMBRE FDE) ── */}
       {onglet === 'system' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {[
