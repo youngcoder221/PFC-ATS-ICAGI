@@ -163,21 +163,21 @@ export default function DashboardRecruteur() {
   return (
     <Layout>
 
-      {/* ══ VUE : MES OFFRES (HAUT CONTRASTE - CANVAS BLANC PUR) ══ */}
+      {/* ══ VUE : MES OFFRES (CANVAS BLANC HAUT CONTRASTE HARMONISÉ) ══ */}
       {tabActif === 'offres' && (
-        <div className="bg-white rounded-[2rem] p-6 md:p-10 shadow-sm space-y-8">
+        <div className="bg-white rounded-2xl md:rounded-[2rem] p-6 md:p-8 shadow-sm space-y-6">
           
-          {/* En-tête typographique sombre sur fond blanc */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 pb-6">
+          {/* En-tête typographique calibré */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 pb-5">
             <div>
-              <h1 className="text-3xl font-black text-gray-900 tracking-tight">Mes offres</h1>
-              <p className="text-gray-500 text-sm mt-1 font-medium">
+              <h1 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight">Mes offres</h1>
+              <p className="text-gray-500 text-xs md:text-sm mt-1 font-medium">
                 {offres.length} offre(s) activement publiée(s) et analysée(s) par l'IA.
               </p>
             </div>
             <button
               onClick={() => setShowForm(!showForm)}
-              className={`flex items-center gap-2 px-6 py-3.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-300 cursor-pointer ${
+              className={`flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-300 cursor-pointer ${
                 showForm 
                   ? 'bg-[#041619] text-white hover:bg-gray-800' 
                   : 'bg-[#00f098] text-[#0b1a19] hover:bg-[#00d084] shadow-[0_0_15px_rgba(0,240,152,0.25)]'
@@ -196,16 +196,14 @@ export default function DashboardRecruteur() {
             />
           )}
 
-          {/* État de chargement / vide adapté au fond blanc */}
           {loading ? (
-            <p className="text-center text-gray-400 py-16 font-medium">Chargement des offres...</p>
+            <p className="text-center text-gray-400 py-16 font-medium text-xs">Chargement des offres...</p>
           ) : offres.length === 0 ? (
             <div className="text-center py-16 bg-[#f8fafc] rounded-2xl border border-gray-100">
-              <Briefcase className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500 font-medium">Aucune offre publiée pour le moment.</p>
+              <Briefcase className="w-10 h-10 text-gray-300 mx-auto mb-2.5" />
+              <p className="text-gray-500 font-medium text-xs">Aucune offre publiée pour le moment.</p>
             </div>
           ) : (
-            /* Grille de cartes sombres (FDE) ressortant sur le fond blanc */
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {offres.map(offre => (
                 <OffreCardRecruteur 
@@ -223,19 +221,19 @@ export default function DashboardRecruteur() {
         </div>
       )}
 
-      {/* ══ VUE : DASHBOARD (défaut) ══ */}
+      {/* ══ VUE : DASHBOARD RECRUTEUR (ACCUEIL HARMONISÉ FDE) ══ */}
       {tabActif === '' && (
-        <div className="space-y-8 bg-[#0b1a19] p-6 md:p-8 rounded-[2rem] border border-white/5">
+        <div className="space-y-6 md:space-y-8 bg-[#0b1a19] p-6 md:p-8 rounded-2xl md:rounded-[2rem] border border-white/5">
           
-          {/* Header parfaitement aligné verticalement */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          {/* Header parfaitement aligné */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div className="flex flex-col justify-center">
-              <h1 className="text-2xl font-black text-white tracking-tight">Tableau de bord Recruteur</h1>
-              <p className="text-gray-400 text-sm mt-1">Gérez vos offres et découvrez vos futurs talents grâce à l'IA.</p>
+              <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight">Tableau de bord Recruteur</h1>
+              <p className="text-gray-400 text-xs md:text-sm mt-1 font-medium">Gérez vos offres et découvrez vos futurs talents grâce à l'IA.</p>
             </div>
             <button
               onClick={() => setShowForm(!showForm)}
-              className={`flex items-center self-start md:self-center gap-2 px-5 py-2.5 rounded-xl text-sm font-black transition-all duration-300 cursor-pointer ${
+              className={`flex items-center self-start md:self-center gap-2 px-5 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-300 cursor-pointer ${
                 showForm 
                   ? 'bg-[#041619] text-white border border-white/10 hover:bg-white/5' 
                   : 'bg-[#00f098] text-[#0b1a19] hover:bg-[#00d084] shadow-[0_0_15px_rgba(0,240,152,0.2)]'
@@ -254,7 +252,7 @@ export default function DashboardRecruteur() {
             />
           )}
 
-          {/* Stats KPIs (Cartes relief #041619 et icônes vert menthe / blanc) */}
+          {/* Stats KPIs (Typographie dense FDE) */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
             {[
               { label: 'Total offres',      value: offres.length,                                        icon: Briefcase,  color: 'text-white'     },
@@ -266,49 +264,49 @@ export default function DashboardRecruteur() {
               return (
                 <div 
                   key={i} 
-                  className="relative overflow-hidden bg-[#041619] border border-white/5 rounded-2xl p-5 hover:border-[#00f098]/30 hover:-translate-y-1 transition-all duration-300 group"
+                  className="relative overflow-hidden bg-[#041619] border border-white/5 rounded-2xl p-5 md:p-6 hover:border-[#00f098]/30 hover:-translate-y-1 transition-all duration-300 group shadow-md"
                 >
-                  <div className="flex items-center justify-between mb-4">
-                    <p className="text-gray-400 text-sm font-medium">{s.label}</p>
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-gray-400 text-xs font-bold uppercase tracking-wider">{s.label}</p>
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#0b1a19] border border-white/5 group-hover:scale-110 transition-transform duration-300">
                       <Icon className={`w-5 h-5 ${s.color}`} />
                     </div>
                   </div>
-                  <p className="text-3xl font-black text-white tracking-tight">{s.value}</p>
+                  <p className="text-3xl md:text-4xl font-black text-white tracking-tight">{s.value}</p>
                 </div>
               )
             })}
           </div>
 
-          {/* [SUITE INCHANGÉE : La grille en double colonne "Dernières offres" et "Actions rapides" continue ici] */}
-
-          {/* ── DOUBLE COLONNE HARMONISÉE FDE ── */}
+          {/* ── DOUBLE COLONNE CALIBRÉE ── */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            {/* Dernières offres (Survol et couleurs FDE) */}
-            <div className="lg:col-span-2 bg-[#041619] border border-white/5 rounded-[2rem] p-7 hover:border-white/10 transition-colors duration-300">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-white font-bold text-lg flex items-center gap-2">
-                  <Briefcase className="w-5 h-5 text-[#00f098]" />
-                  Dernières offres publiées
-                </h2>
+            {/* Colonne gauche (70%) : Dernières offres */}
+            <div className="lg:col-span-2 bg-[#041619] border border-white/5 rounded-2xl p-6 shadow-md">
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-2.5">
+                  <Briefcase className="w-4 h-4 text-[#00f098]" />
+                  <h2 className="text-white font-black text-lg tracking-tight">
+                    Dernières offres publiées
+                  </h2>
+                </div>
                 <button
                   onClick={() => navigate('/recruteur?tab=offres')}
-                  className="text-xs text-gray-300 hover:text-[#00f098] font-medium bg-[#0b1a19] hover:bg-white/5 border border-white/5 hover:border-[#00f098]/30 px-3.5 py-1.5 rounded-full transition-all flex items-center gap-1"
+                  className="text-xs text-gray-300 hover:text-[#00f098] font-bold bg-[#0b1a19] hover:bg-white/5 border border-white/5 hover:border-[#00f098]/30 px-3.5 py-1.5 rounded-full transition-all flex items-center gap-1 cursor-pointer"
                 >
                   Voir tout <ChevronRight className="w-3 h-3" />
                 </button>
               </div>
 
               {loading ? (
-                <p className="text-center text-gray-500 py-12 font-medium">Chargement...</p>
+                <p className="text-center text-gray-500 py-12 font-medium text-xs">Chargement...</p>
               ) : dernieresOffres.length === 0 ? (
-                <div className="text-center py-12 bg-[#0b1a19] rounded-2xl border border-white/5">
-                  <Briefcase className="w-10 h-10 text-gray-700 mx-auto mb-3" />
-                  <p className="text-gray-500 text-sm font-medium">Aucune offre publiée pour le moment.</p>
+                <div className="text-center py-12 bg-[#0b1a19] rounded-xl border border-white/5">
+                  <Briefcase className="w-8 h-8 text-gray-700 mx-auto mb-2.5" />
+                  <p className="text-gray-400 text-xs font-medium">Aucune offre publiée pour le moment.</p>
                   <button 
                     onClick={() => setShowForm(true)} 
-                    className="mt-4 text-xs bg-[#00f098] text-[#0b1a19] font-black px-4 py-2 rounded-xl hover:bg-[#00d084] transition-all"
+                    className="mt-4 text-xs bg-[#00f098] text-[#0b1a19] font-black px-4 py-2 rounded-xl hover:bg-[#00d084] transition-all cursor-pointer"
                   >
                     Créer ma première offre
                   </button>
@@ -335,9 +333,9 @@ export default function DashboardRecruteur() {
             <div className="space-y-6">
               
               {/* Actions rapides */}
-              <div className="bg-[#041619] border border-white/5 rounded-[2rem] p-7 hover:border-white/10 transition-colors duration-300">
-                <h3 className="text-white font-bold text-lg mb-5">Actions rapides</h3>
-                <div className="space-y-3">
+              <div className="bg-[#041619] border border-white/5 rounded-2xl p-6 shadow-md">
+                <h3 className="text-white font-black text-lg tracking-tight mb-4">Actions rapides</h3>
+                <div className="space-y-2.5">
                   {[
                     { label: 'Publier une offre',  icon: Plus,      action: () => setShowForm(true) },
                     { label: 'Voir mes offres',    icon: Briefcase, action: () => navigate('/recruteur?tab=offres') },
@@ -348,12 +346,12 @@ export default function DashboardRecruteur() {
                       <button 
                         key={i} 
                         onClick={a.action} 
-                        className="w-full flex items-center gap-3.5 p-3.5 rounded-2xl text-sm text-gray-300 bg-[#0b1a19] border border-white/5 hover:border-[#00f098]/30 hover:text-[#00f098] transition-all group"
+                        className="w-full flex items-center gap-3 p-3 rounded-xl text-xs font-bold text-gray-300 bg-[#0b1a19] border border-white/5 hover:border-[#00f098]/30 hover:text-[#00f098] transition-all cursor-pointer group"
                       >
-                        <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-[#041619] border border-white/5 group-hover:border-[#00f098]/30 text-gray-400 group-hover:text-[#00f098] transition-all">
-                          <Icon className="w-4 h-4" />
+                        <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-[#041619] border border-white/5 group-hover:border-[#00f098]/30 text-gray-400 group-hover:text-[#00f098] transition-all flex-shrink-0">
+                          <Icon className="w-3.5 h-3.5" />
                         </div>
-                        <span className="font-semibold text-xs text-white group-hover:text-[#00f098] transition-colors">{a.label}</span>
+                        <span className="truncate">{a.label}</span>
                       </button>
                     )
                   })}
@@ -361,14 +359,14 @@ export default function DashboardRecruteur() {
               </div>
 
               {/* Activité récente */}
-              <div className="bg-[#041619] border border-white/5 rounded-[2rem] p-7 hover:border-white/10 transition-colors duration-300">
-                <h3 className="text-white font-bold text-lg mb-5">Activité récente</h3>
-                <div className="space-y-3.5">
+              <div className="bg-[#041619] border border-white/5 rounded-2xl p-6 shadow-md">
+                <h3 className="text-white font-black text-lg tracking-tight mb-4">Activité récente</h3>
+                <div className="space-y-3">
                   {offres.slice(0, 4).map((o, i) => (
-                    <div key={i} className="flex items-center gap-3 p-2 rounded-xl transition-colors">
-                      <div className="w-2 h-2 rounded-full bg-[#00f098] shadow-[0_0_8px_#00f098] flex-shrink-0" />
-                      <p className="text-gray-400 text-xs truncate">
-                        Offre <span className="text-white font-semibold">"{o.titre}"</span> publiée
+                    <div key={i} className="flex items-center gap-2.5 p-1 rounded-xl transition-colors">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#00f098] shadow-[0_0_6px_#00f098] flex-shrink-0" />
+                      <p className="text-gray-300 text-xs truncate">
+                        Offre <span className="text-white font-bold">"{o.titre}"</span> publiée
                       </p>
                     </div>
                   ))}
