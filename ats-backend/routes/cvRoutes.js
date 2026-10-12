@@ -1,6 +1,6 @@
 const express     = require('express')
 const router      = express.Router()
-const { uploadCV, getRanking, mesCandidatures } = require('../controllers/cvController')
+const { uploadCV, getRanking, mesCandidatures, supprimerCandidatureAdmin } = require('../controllers/cvController')
 const { protect, autoriser } = require('../middleware/authMiddleware')
 const upload      = require('../middleware/uploadMiddleware')
 const Candidature = require('../models/Candidature')
@@ -30,5 +30,8 @@ router.put('/candidatures/:id/statut', protect, autoriser('recruteur', 'admin'),
     res.status(500).json({ message: '❌ Erreur', erreur: err.message })
   }
 })
+
+// Supprimer définitivement une candidature (admin uniquement)
+router.delete('/candidatures/:id', protect, autoriser('admin'), supprimerCandidatureAdmin)
 
 module.exports = router

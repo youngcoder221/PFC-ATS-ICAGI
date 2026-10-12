@@ -116,4 +116,23 @@ const mesCandidatures = async (req, res) => {
   }
 }
 
-module.exports = { uploadCV, getRanking, mesCandidatures }
+// ─── SUPPRIMER UNE CANDIDATURE (ADMIN) ──────────────────
+const supprimerCandidatureAdmin = async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const candidature = await Candidature.findByIdAndDelete(id)
+    if (!candidature) {
+      return res.status(404).json({ message: '❌ Candidature introuvable' })
+    }
+
+    res.status(200).json({
+      message: "✓ Candidature supprimée avec succès par l'administrateur."
+    })
+
+  } catch (error) {
+    res.status(500).json({ message: '❌ Erreur serveur', erreur: error.message })
+  }
+}
+
+module.exports = { uploadCV, getRanking, mesCandidatures, supprimerCandidatureAdmin }
