@@ -35,6 +35,34 @@ export default function Admin() {
     }
   }
 
+  // ─── SUPPRESSION D'UNE CANDIDATURE (ADMIN) ─────────────
+  const handleSupprimerCandidature = async (candidatureId) => {
+    if (!confirm("Voulez-vous vraiment supprimer cette candidature ?")) return
+
+    try {
+      await api.delete(`/admin/candidatures/${candidatureId}`)
+
+      // Mise à jour instantanée de l'état local sans rechargement
+      setUsers(prevUsers => prevUsers.map(u => {
+        if (u.candidatures) {
+          return {
+            ...u,
+            candidatures: u.candidatures.filter(c => c._id !== candidatureId)
+          }
+        }
+        return u
+      }))
+
+      // Décrémenter le compteur global de candidatures
+      setStatsData(prev => ({
+        ...prev,
+        totalCandidatures: Math.max(0, prev.totalCandidatures - 1)
+      }))
+    } catch (err) {
+      console.error("Erreur lors de la suppression de la candidature :", err)
+    }
+  }
+
   const statsCards = [
     { label: 'Utilisateurs',    value: statsData.totalUsers,        icon: Users,      color: 'text-white'     },
     { label: 'Offres',          value: statsData.totalOffres,       icon: Briefcase,  color: 'text-[#00f098]' },
@@ -334,53 +362,91 @@ export default function Admin() {
             {users.map(u => (
               <div
                 key={u._id}
-                className="p-4 md:p-5 bg-[#041619] border border-black/5 rounded-2xl flex items-center justify-between gap-4 shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 group"
+                className="p-4 md:p-5 bg-[#041619] border border-black/5 rounded-2xl flex flex-col gap-4 shadow-md hover:shadow-xl transition-all duration-300"
               >
-                {/* Avatar initiales + Informations */}
-                <div className="flex items-center gap-3.5 min-w-0">
-                  <div className="w-10 h-10 bg-[#0b1a19] border border-white/5 text-[#00f098] rounded-xl flex items-center justify-center text-xs font-black flex-shrink-0 group-hover:scale-105 transition-transform">
-                    {u.prenom?.[0]}{u.nom?.[0]}
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-white text-sm font-bold tracking-tight truncate">
-                      {u.prenom} {u.nom}
-                    </p>
-                    <p className="text-gray-400 text-xs truncate mt-0.5 font-medium">
-                      {u.email}
-                    </p>
-                    {u.poste && (
-                      <p className="text-gray-500 text-[11px] truncate mt-0.5 font-normal">
-                        {u.poste}
+                {/* Ligne principale du profil utilisateur */}
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3.5 min-w-0">
+                    <div className="w-10 h-10 bg-[#0b1a19] border border-white/5 text-[#00f098] rounded-xl flex items-center justify-center text-xs font-black flex-shrink-0">
+                      {u.prenom?.[0]}{u.nom?.[0]}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-white text-sm font-bold tracking-tight truncate">
+                        {u.prenom} {u.nom}
                       </p>
+                      <p className="text-gray-400 text-xs truncate mt-0.5 font-medium">
+                        {u.email}
+                      </p>
+                      {u.poste && (
+                        <p className="text-gray-500 text-[11px] truncate mt-0.5 font-normal">
+                          {u.poste}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Badge de rôle & Suppression compte */}
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    <span className={`text-[10px] uppercase font-black tracking-wider px-3 py-1 rounded-lg border ${
+                      u.role === 'recruteur' ? 'text-[#00f098] bg-[#00f098]/10 border-[#00f098]/20' :
+                      u.role === 'candidat'  ? 'text-blue-400 bg-blue-500/10 border-blue-500/20' :
+                                               'text-purple-400 bg-purple-500/10 border-purple-500/20'
+                    }`}>
+                      {u.role}
+                    </span>
+
+                    {u.role !== 'admin' && (
+                      <button
+                        onClick={async () => {
+                          if (confirm(`Supprimer ${u.prenom} ${u.nom} ?`)) {
+                            await api.delete(`/admin/users/${u._id}`)
+                            chargerDonnees()
+                          }
+                        }}
+                        className="p-2 rounded-xl text-red-500 hover:text-red-400 hover:bg-red-500/10 transition-all cursor-pointer"
+                        title="Supprimer l'utilisateur"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     )}
                   </div>
                 </div>
 
-                {/* Badge de rôle & Action supprimer */}
-                <div className="flex items-center gap-3 flex-shrink-0">
-                  <span className={`text-[10px] uppercase font-black tracking-wider px-3 py-1 rounded-lg border ${
-                    u.role === 'recruteur' ? 'text-[#00f098] bg-[#00f098]/10 border-[#00f098]/20' :
-                    u.role === 'candidat'  ? 'text-blue-400 bg-blue-500/10 border-blue-500/20' :
-                                             'text-purple-400 bg-purple-500/10 border-purple-500/20'
-                  }`}>
-                    {u.role}
-                  </span>
+                {/* Sous-section : Candidatures associées au candidat avec corbeille de suppression */}
+                {u.role === 'candidat' && u.candidatures && u.candidatures.length > 0 && (
+                  <div className="pt-3 border-t border-white/5 space-y-2">
+                    <p className="text-[10px] font-black uppercase tracking-wider text-gray-500">
+                      Candidatures soumises ({u.candidatures.length}) :
+                    </p>
+                    <div className="space-y-1.5">
+                      {u.candidatures.map(cand => (
+                        <div
+                          key={cand._id}
+                          className="flex items-center justify-between p-2.5 bg-[#0b1a19] border border-white/5 rounded-xl text-xs hover:border-white/10 transition-all"
+                        >
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#00f098] flex-shrink-0" />
+                            <span className="text-white font-bold truncate">
+                              {cand.offreId?.titre || cand.titre || 'Poste postulé'}
+                            </span>
+                            <span className="text-gray-500 text-[11px] hidden sm:inline">
+                              • {new Date(cand.createdAt).toLocaleDateString('fr-FR')}
+                            </span>
+                          </div>
 
-                  {u.role !== 'admin' && (
-                    <button
-                      onClick={async () => {
-                        if (confirm(`Supprimer ${u.prenom} ${u.nom} ?`)) {
-                          await api.delete(`/admin/users/${u._id}`)
-                          chargerDonnees()
-                        }
-                      }}
-                      className="p-2 rounded-xl text-red-500 hover:text-red-400 hover:bg-red-500/10 transition-all cursor-pointer"
-                      title="Supprimer l'utilisateur"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
+                          {/* Bouton corbeille dédié à la suppression de cette candidature */}
+                          <button
+                            onClick={() => handleSupprimerCandidature(cand._id)}
+                            className="p-1.5 rounded-lg text-red-500 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer flex-shrink-0"
+                            title="Supprimer cette candidature"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
