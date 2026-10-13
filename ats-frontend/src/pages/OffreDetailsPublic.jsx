@@ -14,9 +14,10 @@ export default function OffreDetailsPublic() {
   const [loading, setLoading]     = useState(true)
   const [copie, setCopie]         = useState(false)
 
-  // États pour la modale de dépôt de CV
+  // États pour la modale de candidature
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [uploadForm, setUploadForm]   = useState({ diplome: '', experience: 0 })
+  const [diplome, setDiplome]         = useState('')
+  const [experience, setExperience]   = useState(0)
   const [fichier, setFichier]         = useState(null)
   const [uploading, setUploading]     = useState(false)
   const [message, setMessage]         = useState(null)
@@ -35,40 +36,46 @@ export default function OffreDetailsPublic() {
     fetchOffre()
   }, [id])
 
-  // Copier le lien de l'offre
   const handlePartager = () => {
     navigator.clipboard.writeText(window.location.href)
     setCopie(true)
     setTimeout(() => setCopie(false), 2500)
   }
 
-  // Clic sur "Postuler à l'offre"
+  // Ouvrir la modale ou rediriger
   const handleOuvrirModal = () => {
     if (!user) {
       navigate('/login')
+      return
+    }
+    if (user.role !== 'candidat') {
+      alert("⚠️ Seuls les comptes candidats peuvent postuler aux offres.")
       return
     }
     setIsModalOpen(true)
     setMessage(null)
   }
 
-  // Soumission du CV avec analyse IA
+  // Envoi sécurisé du CV au backend
   const handleUpload = async (e) => {
     e.preventDefault()
-    if (!fichier) return setMessage({ type: 'error', text: '❌ Sélectionnez un fichier PDF' })
+    if (!fichier) {
+      setMessage({ type: 'error', text: '❌ Veuillez sélectionner un fichier PDF' })
+      return
+    }
 
     setUploading(true)
     setMessage(null)
+
     try {
       const formData = new FormData()
       formData.append('cv', fichier)
       formData.append('offreId', id)
-      formData.append('diplome', uploadForm.diplome)
-      formData.append('experience', uploadForm.experience)
+      formData.append('diplome', diplome)
+      formData.append('experience', experience)
 
-      await api.post('/cv/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      })
+      // On laisse Axios définir automatiquement le Content-Type avec son boundary
+      await api.post('/cv/upload', formData)
 
       setMessage({ type: 'success', text: '✅ Candidature envoyée et analysée avec succès !' })
       setTimeout(() => {
@@ -77,7 +84,10 @@ export default function OffreDetailsPublic() {
         navigate('/candidat?tab=candidatures')
       }, 1500)
     } catch (err) {
-      setMessage({ type: 'error', text: err.response?.data?.message || '❌ Erreur upload' })
+      setMessage({ 
+        type: 'error', 
+        text: err.response?.data?.message || '❌ Erreur lors de l\'envoi de la candidature' 
+      })
     } finally {
       setUploading(false)
     }
@@ -116,7 +126,7 @@ export default function OffreDetailsPublic() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
       
-      {/* ── 1. NAVBAR PUBLIQUE ── */}
+      {/* ── NAVBAR PUBLIQUE ── */}
       <nav className="bg-[#0b1a19] border-b border-white/5 px-6 py-4 sticky top-0 z-50">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <button onClick={() => navigate('/')} className="flex items-center gap-3 cursor-pointer">
@@ -134,10 +144,9 @@ export default function OffreDetailsPublic() {
         </div>
       </nav>
 
-      {/* ── 2. BANDEAU SUPÉRIEUR (STYLE OPPORTUNITÉS221) ── */}
+      {/* ── BANDEAU SUPÉRIEUR ── */}
       <header className="bg-[#0b1a19] text-white pt-8 pb-12 px-6 border-b border-white/5 relative">
         <div className="max-w-6xl mx-auto">
-          {/* Bouton retour */}
           <button
             onClick={() => navigate(-1)}
             className="inline-flex items-center gap-2 text-gray-400 hover:text-[#00f098] text-xs font-bold transition-colors mb-6 cursor-pointer"
@@ -145,18 +154,15 @@ export default function OffreDetailsPublic() {
             <ArrowLeft className="w-4 h-4" /> Retour aux opportunités
           </button>
 
-          {/* Entreprise & Localisation */}
           <p className="text-[#00f098] font-bold text-xs uppercase tracking-wider mb-2 flex items-center gap-2">
             <Building2 className="w-3.5 h-3.5" />
             {nomEntreprise} <span className="text-gray-600">•</span> {offre.localisation || 'Sénégal'}
           </p>
 
-          {/* Titre du poste */}
           <h1 className="text-3xl md:text-5xl font-black tracking-tight mb-4 leading-tight">
             {offre.titre}
           </h1>
 
-          {/* Méta-catégories */}
           <div className="flex flex-wrap items-center gap-3 text-xs text-gray-300 font-medium">
             <span className="bg-[#041619] border border-white/10 px-3 py-1 rounded-lg">
               {offre.secteur || 'Technologie & Numérique'}
@@ -171,14 +177,12 @@ export default function OffreDetailsPublic() {
         </div>
       </header>
 
-      {/* ── 3. CONTENU PRINCIPAL EN DEUX COLONNES (CANVAS BLANC) ── */}
+      {/* ── CONTENU EN DEUX COLONNES ── */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-6 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
 
-          {/* COLONNE GAUCHE (70%) : Description & Missions */}
+          {/* GAUCHE : Description & Compétences */}
           <div className="lg:col-span-2 bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 space-y-8">
-            
-            {/* À propos de l'offre */}
             <div>
               <h2 className="text-lg font-black text-gray-900 uppercase tracking-wider mb-3">
                 À propos de l'offre
@@ -188,7 +192,6 @@ export default function OffreDetailsPublic() {
               </p>
             </div>
 
-            {/* Compétences requises (Critères de matching IA) */}
             <div className="border-t border-gray-100 pt-6">
               <h2 className="text-lg font-black text-gray-900 uppercase tracking-wider mb-3 flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-[#00f098]" /> Compétences ciblées
@@ -205,21 +208,19 @@ export default function OffreDetailsPublic() {
               </div>
             </div>
 
-            {/* Profil recherché */}
             <div className="border-t border-gray-100 pt-6">
               <h2 className="text-lg font-black text-gray-900 uppercase tracking-wider mb-3">
                 Profil recherché & Niveau d'études
               </h2>
               <p className="text-gray-600 text-sm leading-relaxed">
                 Niveau d'études exigé : <span className="font-bold text-gray-900">{offre.niveauRequis || 'Non spécifié'}</span>. 
-                Une analyse sémantique sera automatiquement effectuée sur votre CV pour valider la correspondance de vos compétences avec ce profil.
+                Une analyse sémantique sera automatiquement effectuée sur votre CV par notre IA pour évaluer votre profil.
               </p>
             </div>
           </div>
 
-          {/* COLONNE DROITE (30%) : Encadré Résumé & Action */}
+          {/* DROITE : Récapitulatif & Action Postuler */}
           <aside className="bg-[#041619] text-white rounded-2xl p-6 border border-white/5 shadow-xl space-y-6 sticky top-24">
-            
             <h3 className="text-sm font-black uppercase tracking-wider text-[#00f098]">
               Détails du recrutement
             </h3>
@@ -266,7 +267,6 @@ export default function OffreDetailsPublic() {
               </div>
             </div>
 
-            {/* Boutons d'actions */}
             <div className="space-y-3 pt-2">
               <button
                 onClick={handleOuvrirModal}
@@ -283,16 +283,12 @@ export default function OffreDetailsPublic() {
                 {copie ? 'Lien copié ✓' : 'Partager cette offre'}
               </button>
             </div>
-
-            <p className="text-[11px] text-gray-500 text-center leading-tight">
-              Analyse automatisée du CV par l'IA Gemini.
-            </p>
           </aside>
 
         </div>
       </main>
 
-      {/* ── MODALE DE DÉPÔT DE CV (API GEMINI) ── */}
+      {/* ── MODALE DE DÉPÔT DE CANDIDATURE (PARSING IA GEMINI) ── */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#041619]/80 backdrop-blur-sm">
           <div className="relative w-full max-w-4xl bg-[#0b1a19] border border-[#00f098]/30 rounded-[2rem] p-8 md:p-10 shadow-2xl animate-in fade-in zoom-in duration-300">
@@ -317,7 +313,7 @@ export default function OffreDetailsPublic() {
                   {offre.titre} — {nomEntreprise}
                 </p>
                 <p className="text-gray-400 text-xs leading-relaxed mb-6">
-                  Téléversez votre CV en PDF. Notre Intelligence Artificielle extraira vos compétences pour évaluer votre profil instantanément.
+                  Téléversez votre CV en PDF. Notre Intelligence Artificielle analysera vos compétences pour calculer votre adéquation avec l'offre.
                 </p>
 
                 {message && (
@@ -330,9 +326,36 @@ export default function OffreDetailsPublic() {
                 )}
                 
                 <form onSubmit={handleUpload} className="space-y-4">
-                  <div className="flex flex-col sm:flex-row items-center gap-3">
-                    <label className="w-full flex-1 flex items-center justify-between bg-[#041619] border border-white/10 hover:border-[#00f098]/50 px-4 py-3 rounded-xl cursor-pointer transition-all group">
-                      <span className={`text-sm font-bold truncate ${fichier ? 'text-[#00f098]' : 'text-gray-400 group-hover:text-white'}`}>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">
+                        Dernier diplôme obtenu
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="ex: Licence 3, Master 2..."
+                        value={diplome}
+                        onChange={(e) => setDiplome(e.target.value)}
+                        className="w-full bg-[#041619] border border-white/10 text-white rounded-xl px-4 py-3 text-xs placeholder-gray-500 focus:outline-none focus:border-[#00f098]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">
+                        Années d'expérience
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={experience}
+                        onChange={(e) => setExperience(e.target.value)}
+                        className="w-full bg-[#041619] border border-white/10 text-white rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-[#00f098]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
+                    <label className="w-full flex-1 flex items-center justify-between bg-[#041619] border border-white/10 hover:border-[#00f098]/50 px-4 py-3.5 rounded-xl cursor-pointer transition-all group">
+                      <span className={`text-xs font-bold truncate ${fichier ? 'text-[#00f098]' : 'text-gray-400 group-hover:text-white'}`}>
                         {fichier ? fichier.name : 'Sélectionner mon CV (PDF)...'}
                       </span>
                       <FileText className={`w-5 h-5 ${fichier ? 'text-[#00f098]' : 'text-gray-600 group-hover:text-[#00f098]'}`} />
@@ -341,17 +364,17 @@ export default function OffreDetailsPublic() {
                     <button 
                       type="submit"
                       disabled={!fichier || uploading}
-                      className="w-full sm:w-auto bg-[#00f098] text-[#0b1a19] hover:bg-[#00d084] px-6 py-3.5 rounded-xl text-sm font-black uppercase tracking-wider transition-all disabled:opacity-50 shadow-[0_0_15px_rgba(0,240,152,0.2)] flex justify-center items-center gap-2 cursor-pointer"
+                      className="w-full sm:w-auto bg-[#00f098] text-[#0b1a19] hover:bg-[#00d084] px-8 py-3.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all disabled:opacity-50 shadow-[0_0_15px_rgba(0,240,152,0.2)] flex justify-center items-center gap-2 cursor-pointer"
                     >
                       {uploading ? (
                         <><span className="w-4 h-4 border-2 border-[#0b1a19]/30 border-t-[#0b1a19] rounded-full animate-spin" /> Analyse...</>
-                      ) : 'Envoyer'}
+                      ) : 'Envoyer ma candidature'}
                     </button>
                   </div>
                 </form>
               </div>
 
-              {/* Visuel illustration scanner IA */}
+              {/* Visuel scanner IA */}
               <div className="hidden md:flex flex-1 items-center justify-center">
                 <div className="relative w-48 h-56 bg-[#041619] border border-white/10 rounded-2xl p-4 shadow-2xl transform rotate-3">
                   <div className="w-full h-4 bg-gray-800 rounded mb-4" />

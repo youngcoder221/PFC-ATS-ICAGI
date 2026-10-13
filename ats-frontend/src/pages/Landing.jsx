@@ -58,9 +58,7 @@ export default function Landing() {
       formData.append('diplome', uploadForm.diplome)
       formData.append('experience', uploadForm.experience)
 
-      await api.post('/cv/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      })
+      await api.post('/cv/upload', formData)
 
       setMessage({ type: 'success', text: '✅ Candidature envoyée et analysée avec succès !' })
       setTimeout(() => {
