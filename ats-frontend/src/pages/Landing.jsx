@@ -266,7 +266,7 @@ export default function Landing() {
                       {/* Boutons CTA */}
                       <div className="mt-auto flex items-center gap-2.5">
                         <button 
-                          onClick={() => navigate('/login')}
+                          onClick={() => navigate(`/offres/${offre._id}`)}
                           className="flex-1 bg-[#041619] border border-white/10 text-white font-bold py-2.5 rounded-xl hover:border-[#00f098]/50 hover:text-[#00f098] transition-colors text-xs cursor-pointer"
                         >
                           Détails
