@@ -95,14 +95,9 @@ export default function OffreDetailsPublic() {
       {/* ── BANDEAU DU TITRE ── */}
       <header className="bg-[#0b1a19] text-white pt-8 pb-12 px-6 border-b border-white/5 relative">
         <div className="max-w-6xl mx-auto">
-          {/* Bouton redirigeant directement vers le catalogue d'offres de l'accueil */}
+          {/* Bouton retour avec ancre vers la liste des offres */}
           <button
-            onClick={() => {
-              navigate('/#offres')
-              // Défilement fluide vers le catalogue
-              const el = document.getElementById('offres')
-              if (el) el.scrollIntoView({ behavior: 'smooth' })
-            }}
+            onClick={() => navigate('/#offres')}
             className="inline-flex items-center gap-2 text-gray-400 hover:text-[#00f098] text-xs font-bold transition-colors mb-6 cursor-pointer group"
           >
             <ArrowLeft className="w-4 h-4 text-[#00f098] group-hover:-translate-x-1 transition-transform" />

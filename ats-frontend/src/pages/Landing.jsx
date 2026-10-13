@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { Search, Briefcase, Check, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import logo from '../assets/logo-icon-small.png'
@@ -7,10 +7,11 @@ import heroBg from '../assets/hero-bg.png'
 import api from '../services/api'
 
 export default function Landing() {
-  const navigate                  = useNavigate()
-  const { user }                  = useAuth()
+  const navigate                      = useNavigate()
+  const location                      = useLocation()
+  const { user }                      = useAuth()
   const [searchQuery, setSearchQuery] = useState('')
-  const [offres, setOffres]       = useState([])
+  const [offres, setOffres]           = useState([])
 
   // Chargement des offres au montage de la page
   useEffect(() => {
@@ -24,6 +25,18 @@ export default function Landing() {
     }
     fetchOffres()
   }, [])
+
+  // 🎯 Défilement automatique vers la liste des offres si l'URL contient #offres
+  useEffect(() => {
+    if (location.hash === '#offres') {
+      setTimeout(() => {
+        const el = document.getElementById('offres')
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' })
+        }
+      }, 150)
+    }
+  }, [location])
 
   // 🚀 Redirection intelligente vers la page de détails avec ouverture automatique
   const handlePostulerCarte = (offreId) => {
@@ -146,7 +159,7 @@ export default function Landing() {
       </section>
 
       {/* ── LISTE DES OFFRES (CANVAS BLANC HAUT CONTRASTE) ── */}
-      <main id="offres" className="flex-1 w-full bg-white py-14 md:py-18 relative scroll-mt-16">
+      <main id="offres" className="flex-1 w-full bg-white py-14 md:py-18 relative scroll-mt-20">
         <div className="max-w-7xl mx-auto px-6">
           
           {/* En-tête de section équilibré */}
