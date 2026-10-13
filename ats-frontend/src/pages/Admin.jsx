@@ -15,10 +15,6 @@ export default function Admin() {
   const [loading, setLoading]           = useState(true)
   const [expandedUserId, setExpandedUserId] = useState(null)
 
-  useEffect(() => {
-    chargerDonnees()
-  }, [])
-
   const chargerDonnees = async () => {
     try {
       const [resStats, resUsers, resOffres] = await Promise.all([
@@ -35,6 +31,11 @@ export default function Admin() {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    chargerDonnees()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ─── SUPPRESSION D'UNE CANDIDATURE (ADMIN) ─────────────
   const handleSupprimerCandidature = async (candidatureId) => {
