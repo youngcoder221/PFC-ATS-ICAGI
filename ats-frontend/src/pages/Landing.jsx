@@ -1,14 +1,23 @@
 import heroBg from '../assets/hero-bg.png'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Briefcase, Check, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles } from 'lucide-react'
+import { Search, Briefcase, Check, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles, X, CheckCircle, XCircle } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
 import logo from '../assets/logo-icon-small.png'
 import api from '../services/api'
 
 export default function Landing() {
-  const navigate = useNavigate()
+  const navigate                  = useNavigate()
+  const { user }                  = useAuth()
   const [searchQuery, setSearchQuery] = useState('')
-  const [offres, setOffres] = useState([])
+  const [offres, setOffres]       = useState([])
+
+  // États pour la modale de candidature rapide depuis les cartes
+  const [isModalOpen, setIsModalOpen]   = useState(false)
+  const [uploadForm, setUploadForm]     = useState({ offreId: '', diplome: '', experience: 0 })
+  const [fichier, setFichier]           = useState(null)
+  const [uploading, setUploading]       = useState(false)
+  const [message, setMessage]           = useState(null)
 
   // Chargement des offres au montage de la page
   useEffect(() => {
@@ -22,6 +31,49 @@ export default function Landing() {
     }
     fetchOffres()
   }, [])
+
+  // Clic sur "Postuler" d'une carte d'offre
+  const handlePostulerCarte = (offreId) => {
+    if (!user) {
+      navigate('/login')
+      return
+    }
+    setUploadForm({ ...uploadForm, offreId: offreId || '' })
+    setIsModalOpen(true)
+    setMessage(null)
+  }
+
+  // Soumission et analyse par l'IA Gemini
+  const handleUpload = async (e) => {
+    e.preventDefault()
+    if (!fichier) return setMessage({ type: 'error', text: '❌ Sélectionnez un fichier PDF' })
+    if (!uploadForm.offreId) return setMessage({ type: 'error', text: '❌ Offre introuvable' })
+
+    setUploading(true)
+    setMessage(null)
+    try {
+      const formData = new FormData()
+      formData.append('cv', fichier)
+      formData.append('offreId', uploadForm.offreId)
+      formData.append('diplome', uploadForm.diplome)
+      formData.append('experience', uploadForm.experience)
+
+      await api.post('/cv/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+
+      setMessage({ type: 'success', text: '✅ Candidature envoyée et analysée avec succès !' })
+      setTimeout(() => {
+        setIsModalOpen(false)
+        setFichier(null)
+        navigate('/candidat?tab=candidatures')
+      }, 1500)
+    } catch (err) {
+      setMessage({ type: 'error', text: err.response?.data?.message || '❌ Erreur upload' })
+    } finally {
+      setUploading(false)
+    }
+  }
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-[#041619]">
@@ -272,7 +324,7 @@ export default function Landing() {
                           Détails
                         </button>
                         <button 
-                          onClick={() => navigate('/login')}
+                          onClick={() => handlePostulerCarte(offre._id)}
                           className="flex-1 bg-[#00f098] text-[#041619] font-black py-2.5 rounded-xl hover:bg-[#00d084] transition-colors flex items-center justify-center gap-1.5 text-xs shadow-[0_0_12px_rgba(0,240,152,0.2)] cursor-pointer"
                         >
                           Postuler <ArrowUpRight className="w-3.5 h-3.5" />
@@ -387,6 +439,96 @@ export default function Landing() {
           </div>
         </div>
       </footer>
+
+      {/* ── MODALE DE DÉPÔT RAPIDE DE CV (API GEMINI) ── */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#041619]/80 backdrop-blur-sm">
+          <div className="relative w-full max-w-4xl bg-[#0b1a19] border border-[#00f098]/30 rounded-[2rem] p-8 md:p-10 shadow-2xl animate-in fade-in zoom-in duration-300">
+            <button 
+              onClick={() => setIsModalOpen(false)} 
+              className="absolute top-6 right-6 text-gray-500 hover:text-[#00f098] transition-colors bg-[#041619] p-2 rounded-full border border-white/5 cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            <div className="absolute top-0 right-0 w-96 h-96 bg-[#00f098]/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+            
+            <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
+              <div className="flex-1 w-full">
+                <div className="inline-flex items-center gap-2 bg-[#00f098]/10 border border-[#00f098]/20 rounded-lg px-3 py-1.5 text-[#00f098] text-[10px] font-black uppercase tracking-widest mb-4">
+                  <Sparkles className="w-3 h-3" /> Parsing API Gemini
+                </div>
+                <h2 className="text-3xl font-black text-white mb-3 tracking-tight">
+                  Soumettre ma candidature
+                </h2>
+                <p className="text-gray-400 text-xs leading-relaxed mb-6">
+                  Téléversez votre CV en PDF. Notre Intelligence Artificielle extraira vos compétences clés pour évaluer votre profil instantanément.
+                </p>
+
+                {message && (
+                  <div className={`px-4 py-3 rounded-xl mb-6 text-sm font-bold flex items-center gap-2 border ${
+                    message.type === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-400' : 'bg-red-500/10 border-red-500/20 text-red-400'
+                  }`}>
+                    {message.type === 'success' ? <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
+                    {message.text}
+                  </div>
+                )}
+                
+                <form onSubmit={handleUpload} className="space-y-4">
+                  <div className="mb-4">
+                    <select
+                      value={uploadForm.offreId}
+                      onChange={e => setUploadForm({...uploadForm, offreId: e.target.value})}
+                      required
+                      className="w-full bg-[#041619] border border-white/10 text-white font-bold rounded-xl px-4 py-3.5 text-xs focus:outline-none focus:border-[#00f098] transition-colors appearance-none cursor-pointer"
+                    >
+                      <option value="" disabled className="text-gray-500">Sélectionnez l'offre visée...</option>
+                      {offres.map(o => (
+                        <option key={o._id} value={o._id} className="bg-[#0b1a19] text-white">
+                          {o.titre} ({o.typeContrat})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-center gap-3">
+                    <label className="w-full flex-1 flex items-center justify-between bg-[#041619] border border-white/10 hover:border-[#00f098]/50 px-4 py-3 rounded-xl cursor-pointer transition-all group">
+                      <span className={`text-xs font-bold truncate ${fichier ? 'text-[#00f098]' : 'text-gray-400 group-hover:text-white'}`}>
+                        {fichier ? fichier.name : 'Sélectionner mon CV (PDF)...'}
+                      </span>
+                      <FileText className={`w-5 h-5 ${fichier ? 'text-[#00f098]' : 'text-gray-600 group-hover:text-[#00f098]'}`} />
+                      <input type="file" accept=".pdf" className="hidden" onChange={(e) => setFichier(e.target.files[0])} />
+                    </label>
+                    <button 
+                      type="submit"
+                      disabled={!fichier || uploading}
+                      className="w-full sm:w-auto bg-[#00f098] text-[#0b1a19] hover:bg-[#00d084] px-6 py-3.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all disabled:opacity-50 shadow-[0_0_15px_rgba(0,240,152,0.2)] flex justify-center items-center gap-2 cursor-pointer"
+                    >
+                      {uploading ? (
+                        <><span className="w-4 h-4 border-2 border-[#0b1a19]/30 border-t-[#0b1a19] rounded-full animate-spin" /> Analyse...</>
+                      ) : 'Postuler'}
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              {/* Visuel illustration scanner IA */}
+              <div className="hidden md:flex flex-1 items-center justify-center">
+                <div className="relative w-48 h-56 bg-[#041619] border border-white/10 rounded-2xl p-4 shadow-2xl transform rotate-3">
+                  <div className="w-full h-4 bg-gray-800 rounded mb-4" />
+                  <div className="w-3/4 h-3 bg-gray-800 rounded mb-2" />
+                  <div className="w-5/6 h-3 bg-gray-800 rounded mb-6" />
+                  <div className="flex gap-2 mb-4">
+                    <div className="w-10 h-4 bg-[#00f098]/20 rounded" />
+                    <div className="w-12 h-4 bg-[#00f098]/20 rounded" />
+                  </div>
+                  <div className="absolute top-1/2 left-0 w-full h-0.5 bg-[#00f098] shadow-[0_0_10px_#00f098] animate-[ping_3s_ease-in-out_infinite]" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   )
