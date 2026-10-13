@@ -80,33 +80,33 @@ export default function OffreDetailsPublic() {
   return (
     <div className="min-h-screen bg-white flex flex-col font-sans">
       
-      {/* ── 1. NAVBAR PUBLIQUE ── */}
+      {/* ── NAVBAR PUBLIQUE (ÉPURÉE SANS LIEN REDONDANT) ── */}
       <nav className="bg-[#0b1a19] border-b border-white/5 px-6 py-4 sticky top-0 z-50">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <button onClick={() => navigate('/')} className="flex items-center gap-3 cursor-pointer">
-            <img src={logo} alt="ATS Sénégal" className="w-9 h-9 object-contain" />
+          <button onClick={() => navigate('/')} className="flex items-center gap-3 cursor-pointer group">
+            <img src={logo} alt="ATS Sénégal" className="w-10 h-10 object-contain group-hover:scale-105 transition-transform" />
             <span className="text-white font-black text-lg tracking-tight">
               ATS <span className="text-[#00f098]">Sénégal</span>
             </span>
           </button>
-          <button
-            onClick={() => navigate('/')}
-            className="text-gray-400 hover:text-[#00f098] text-xs font-bold transition-colors cursor-pointer"
-          >
-            Toutes les offres
-          </button>
         </div>
       </nav>
 
-      {/* ── 2. BANDEAU HORIZONTAL D'EN-TÊTE (VERT CANARD FDE #0b1a19) ── */}
+      {/* ── BANDEAU DU TITRE ── */}
       <header className="bg-[#0b1a19] text-white pt-8 pb-12 px-6 border-b border-white/5 relative">
         <div className="max-w-6xl mx-auto">
-          {/* Bouton retour */}
+          {/* Bouton redirigeant directement vers le catalogue d'offres de l'accueil */}
           <button
-            onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-[#00f098] text-xs font-bold transition-colors mb-6 cursor-pointer"
+            onClick={() => {
+              navigate('/#offres')
+              // Défilement fluide vers le catalogue
+              const el = document.getElementById('offres')
+              if (el) el.scrollIntoView({ behavior: 'smooth' })
+            }}
+            className="inline-flex items-center gap-2 text-gray-400 hover:text-[#00f098] text-xs font-bold transition-colors mb-6 cursor-pointer group"
           >
-            <ArrowLeft className="w-4 h-4" /> Retour aux opportunités
+            <ArrowLeft className="w-4 h-4 text-[#00f098] group-hover:-translate-x-1 transition-transform" />
+            Retour aux offres
           </button>
 
           {/* Entreprise et localisation */}

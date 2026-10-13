@@ -146,7 +146,7 @@ export default function Landing() {
       </section>
 
       {/* ── LISTE DES OFFRES (CANVAS BLANC HAUT CONTRASTE) ── */}
-      <main className="flex-1 w-full bg-white py-14 md:py-18 relative">
+      <main id="offres" className="flex-1 w-full bg-white py-14 md:py-18 relative scroll-mt-16">
         <div className="max-w-7xl mx-auto px-6">
           
           {/* En-tête de section équilibré */}
