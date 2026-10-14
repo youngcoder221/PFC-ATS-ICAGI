@@ -50,6 +50,20 @@ export default function DashboardCandidat() {
     chargerCandidatures()
   }, [])
 
+  // 🚀 ECOUTEUR DE DEEP LINKING (Ouverture auto de la modale)
+  useEffect(() => {
+    const offreToApply = searchParams.get('postulerOffreId')
+    if (offreToApply) {
+      // 1. Ouvre la modale et présélectionne l'offre
+      setUploadForm(prev => ({ ...prev, offreId: offreToApply }))
+      setIsModalOpen(true)
+      
+      // 2. Nettoie l'URL pour ne pas ré-ouvrir la modale au prochain rafraîchissement (F5)
+      searchParams.delete('postulerOffreId')
+      setSearchParams(searchParams, { replace: true })
+    }
+  }, [searchParams, setSearchParams])
+
   // --- VÉRIFICATION CANDIDATURE UNIQUE & MODALE ---
   const aDejaPostule = (offreId) => {
     return candidatures.some(c => (c.offreId?._id || c.offreId) === offreId)

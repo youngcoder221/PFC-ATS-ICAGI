@@ -38,13 +38,17 @@ export default function Landing() {
     }
   }, [location])
 
-  // 🚀 Redirection intelligente vers la page de détails avec ouverture automatique
+  // 🚀 Mémorisation de l'offre ciblée (Deep Linking)
   const handlePostulerCarte = (offreId) => {
     if (!user) {
-      navigate('/login', { state: { from: `/offres/${offreId}` } })
-      return
+      // On passe l'ID de l'offre dans l'état du routeur pour que le Login s'en souvienne
+      navigate('/login', { state: { targetOffreId: offreId } })
+    } else if (user.role === 'candidat') {
+      // Si déjà connecté, on envoie directement au dashboard avec le paramètre
+      navigate(`/candidat?postulerOffreId=${offreId}`)
+    } else {
+      navigate('/login')
     }
-    navigate(`/offres/${offreId}`, { state: { ouvrirModale: true } })
   }
 
   return (

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { Eye, EyeOff, Mail, Lock, CheckCircle, ArrowLeft } from 'lucide-react'
 import api from '../services/api'
@@ -13,6 +13,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
   const { login }             = useAuth()
   const navigate              = useNavigate()
+  const location              = useLocation() // Intercepte les paramètres passés par le routeur
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -23,12 +24,22 @@ export default function Login() {
       const user = res.data.user
       login(user, res.data.token)
 
-      // Redirection automatique selon le rôle
-      if (user.role === 'recruteur')  navigate('/recruteur')
-      else if (user.role === 'candidat') navigate('/candidat')
+      // On vérifie si une offre était ciblée avant la connexion
+      const targetOffreId = location.state?.targetOffreId
+
+      // Redirection automatique avec le "colis" si présent
+      if (user.role === 'candidat') {
+        if (targetOffreId) {
+          navigate(`/candidat?postulerOffreId=${targetOffreId}`)
+        } else {
+          navigate('/candidat')
+        }
+      } 
+      else if (user.role === 'recruteur') navigate('/recruteur')
       else navigate('/admin')
 
     } catch (err) {
+// ...
       setErreur(err.response?.data?.message || '❌ Identifiants incorrects')
     } finally {
       setLoading(false)

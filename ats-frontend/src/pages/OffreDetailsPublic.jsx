@@ -36,14 +36,12 @@ export default function OffreDetailsPublic() {
     setTimeout(() => setCopie(false), 2500)
   }
 
-  // Workflow classique de candidature
+  // Workflow de candidature avec mémorisation de l'offre
   const handlePostuler = () => {
     if (!user) {
-      // Redirection vers login avec conservation de l'URL d'origine
-      navigate('/login', { state: { from: `/offres/${id}` } })
+      navigate('/login', { state: { targetOffreId: id } })
     } else if (user.role === 'candidat') {
-      // Candidat connecté → accès à son espace pour postuler
-      navigate('/candidat?tab=offres')
+      navigate(`/candidat?postulerOffreId=${id}`)
     } else {
       navigate('/login')
     }
