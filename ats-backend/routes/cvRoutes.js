@@ -1,6 +1,6 @@
 const express     = require('express')
 const router      = express.Router()
-const { uploadCV, getRanking, mesCandidatures, supprimerCandidatureAdmin } = require('../controllers/cvController')
+const { uploadCV, getRanking, mesCandidatures, supprimerCandidatureAdmin, telechargerCV } = require('../controllers/cvController')
 const { protect, autoriser } = require('../middleware/authMiddleware')
 const upload      = require('../middleware/uploadMiddleware')
 const Candidature = require('../models/Candidature')
@@ -33,5 +33,8 @@ router.put('/candidatures/:id/statut', protect, autoriser('recruteur', 'admin'),
 
 // Supprimer définitivement une candidature (admin uniquement)
 router.delete('/candidatures/:id', protect, autoriser('admin'), supprimerCandidatureAdmin)
+
+// Télécharger le CV source d'un candidat (Recruteur & Admin)
+router.get('/download/:id', protect, autoriser('recruteur', 'admin'), telechargerCV)
 
 module.exports = router

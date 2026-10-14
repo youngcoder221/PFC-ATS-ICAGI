@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/immutability */
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Trophy, Users, TrendingUp, CheckCircle, Clock, XCircle, Calendar } from 'lucide-react'
+import { ArrowLeft, Trophy, Users, TrendingUp, CheckCircle, Clock, XCircle, Calendar, Download } from 'lucide-react'
 import api from '../services/api'
 
 export default function Ranking() {
@@ -40,6 +40,26 @@ export default function Ranking() {
       setOffre(res.data)
     } catch (err) {
       console.error(err)
+    }
+  }
+
+  // Fonction pour appeler la route protégée et forcer le téléchargement du PDF
+  const handleDownloadCV = async (cvId, nomFichier) => {
+    try {
+      const res = await api.get(`/cv/download/${cvId}`, {
+        responseType: 'blob' // Indispensable pour traiter un fichier binaire
+      })
+      // Création d'une URL locale temporaire pour déclencher le téléchargement
+      const url = window.URL.createObjectURL(new Blob([res.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `CV_${nomFichier.replace(/\s+/g, '_')}.pdf`) // Formate le nom du fichier
+      document.body.appendChild(link)
+      link.click()
+      link.remove() // Nettoyage
+    } catch (err) {
+      console.error("Erreur lors du téléchargement :", err)
+      alert("Le fichier source du CV est introuvable sur le serveur.")
     }
   }
 
@@ -209,23 +229,34 @@ export default function Ranking() {
                     {candidature.score}/100
                   </div>
 
-                  {/* Sélecteur de statut */}
-                  <select
-                    value={candidature.statut}
-                    onChange={async (e) => {
-                      try {
-                        await api.put(`/cv/candidatures/${candidature._id}/statut`, { statut: e.target.value })
-                        chargerRanking()
-                      } catch (err) {
-                        console.error(err)
-                      }
-                    }}
-                    className="text-xs bg-[#041619] border border-white/10 text-gray-300 rounded-xl px-3 py-2.5 focus:outline-none focus:border-[#00f098] transition-colors cursor-pointer flex-shrink-0 font-medium"
-                  >
-                    <option value="en_attente" className="bg-[#0b1a19]">En attente</option>
-                    <option value="retenu" className="bg-[#0b1a19]">Retenu ✓</option>
-                    <option value="refusé" className="bg-[#0b1a19]">Refusé</option>
-                  </select>
+                  {/* Actions : Téléchargement + Statut */}
+                  <div className="flex items-center gap-2.5 flex-shrink-0">
+                    <button
+                      onClick={() => handleDownloadCV(candidature.cvId?._id || candidature.cvId, `${candidature.candidatId?.prenom}_${candidature.candidatId?.nom}`)}
+                      className="w-10 h-10 flex items-center justify-center bg-[#041619] border border-white/10 rounded-xl text-gray-400 hover:text-[#00f098] hover:border-[#00f098]/30 transition-all cursor-pointer shadow-sm"
+                      title="Télécharger le CV PDF"
+                    >
+                      <Download className="w-4 h-4" />
+                    </button>
+
+                    <select
+                      value={candidature.statut}
+                      onChange={async (e) => {
+                        try {
+                          await api.put(`/cv/candidatures/${candidature._id}/statut`, { statut: e.target.value })
+                          chargerRanking()
+                        } catch (err) {
+                          console.error(err)
+                        }
+                      }}
+                      className="text-xs bg-[#041619] border border-white/10 text-gray-300 rounded-xl px-3 py-2.5 h-10 focus:outline-none focus:border-[#00f098] transition-colors cursor-pointer font-medium"
+                    >
+                      <option value="en_attente" className="bg-[#0b1a19]">En attente</option>
+                      <option value="retenu" className="bg-[#0b1a19]">Retenu ✓</option>
+                      <option value="refusé" className="bg-[#0b1a19]">Refusé</option>
+                    </select>
+                  </div>
+
                 </div>
               )
             })}

@@ -1,4 +1,5 @@
 const fs                  = require('fs')
+const path                = require('path')
 const CV                  = require('../models/CV')
 const Candidature         = require('../models/Candidature')
 const Offre               = require('../models/Offre')
@@ -135,4 +136,28 @@ const supprimerCandidatureAdmin = async (req, res) => {
   }
 }
 
-module.exports = { uploadCV, getRanking, mesCandidatures, supprimerCandidatureAdmin }
+// ─── TÉLÉCHARGER LE CV (Sécurisé) ───────────────────────
+const telechargerCV = async (req, res) => {
+  try {
+    const cv = await CV.findById(req.params.id)
+    if (!cv) {
+      return res.status(404).json({ message: '❌ CV introuvable en base de données' })
+    }
+
+    // Résoudre le chemin absolu du fichier stocké
+    const filePath = path.resolve(cv.fichierUrl)
+
+    // Vérifier si le fichier physique n'a pas été supprimé du serveur
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ message: '❌ Le fichier physique n\'existe plus sur le serveur' })
+    }
+
+    // Déclenche le téléchargement du fichier
+    res.download(filePath, `CV_Candidat.pdf`)
+
+  } catch (error) {
+    res.status(500).json({ message: '❌ Erreur lors du téléchargement', erreur: error.message })
+  }
+}
+
+module.exports = { uploadCV, getRanking, mesCandidatures, supprimerCandidatureAdmin, telechargerCV }
