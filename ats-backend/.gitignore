@@ -1,5 +1,24 @@
+# ── DEPENDANCES ──
 node_modules/
+
+# ── VARIABLES D'ENVIRONNEMENT (Sécurité critique) ──
 .env
+.env.local
+.env.*.local
+
+# ── LOGS & DEBUG ──
+logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── DOSSIER DES CV UPLOADÉS ──
+# On ignore TOUT le contenu du dossier uploads...
 uploads/*
+# ... SAUF le fichier .gitkeep pour préserver la structure du dossier !
 !uploads/.gitkeep
+
+# ── FICHIERS SYSTÈME (Mac/Windows) ──
+.DS_Store
+Thumbs.db
