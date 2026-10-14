@@ -55,6 +55,7 @@ export default function DashboardCandidat() {
     const offreToApply = searchParams.get('postulerOffreId')
     if (offreToApply) {
       // 1. Ouvre la modale et présélectionne l'offre
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setUploadForm(prev => ({ ...prev, offreId: offreToApply }))
       setIsModalOpen(true)
       
@@ -62,7 +63,8 @@ export default function DashboardCandidat() {
       searchParams.delete('postulerOffreId')
       setSearchParams(searchParams, { replace: true })
     }
-  }, [searchParams, setSearchParams])
+    
+  }, [searchParams])
 
   // --- VÉRIFICATION CANDIDATURE UNIQUE & MODALE ---
   const aDejaPostule = (offreId) => {
