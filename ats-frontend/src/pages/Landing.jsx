@@ -132,7 +132,7 @@ export default function Landing() {
               Espace Entreprise
             </button>
             <button 
-              onClick={() => navigate('/login')} 
+              onClick={() => document.getElementById('offres')?.scrollIntoView({ behavior: 'smooth' })} 
               className="bg-[#e8d5a5] hover:bg-[#d4c194] text-[#041619] px-6 py-3 rounded-xl font-bold transition-all text-sm shadow-[0_0_15px_rgba(232,213,165,0.15)] cursor-pointer"
             >
               Déposer mon CV
