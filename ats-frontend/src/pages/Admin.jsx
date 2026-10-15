@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react'
-import { Users, Briefcase, FileText, Shield, Trash2, ChevronRight, ChevronDown } from 'lucide-react'
+import { Users, Briefcase, FileText, Shield, Trash2, ChevronRight, ChevronDown, Download } from 'lucide-react'
 import Layout from '../components/layout/Layout'
 import { useSearchParams } from 'react-router-dom'
 import api from '../services/api'
@@ -42,29 +42,42 @@ export default function Admin() {
     if (!confirm("Voulez-vous vraiment supprimer cette candidature ?")) return
 
     try {
-      await api.delete(`/admin/candidatures/${candidatureId}`)
+      await api.delete(`/candidatures/${candidatureId}`) // <-- Utilise la route correcte de cvRoutes
     } catch (err) {
       console.warn("Requête API transmise :", err.message)
     }
 
-    // Suppression visuelle immédiate dans la liste locale
-    setUsers(prevUsers => prevUsers.map(u => {
-      const liste = (u.candidatures && u.candidatures.length > 0)
-        ? u.candidatures
-        : [
-            { _id: 'demo-1', titre: 'Consultant Cybersécurité', createdAt: '2026-10-12T10:00:00.000Z' },
-            { _id: 'demo-2', titre: 'Développeur Web Full Stack', createdAt: '2026-10-10T14:30:00.000Z' }
-          ]
-      return {
-        ...u,
-        candidatures: liste.filter(c => c._id !== candidatureId)
-      }
-    }))
+    // Suppression visuelle immédiate sur les vraies données
+    setUsers(prevUsers => prevUsers.map(u => ({
+      ...u,
+      candidatures: (u.candidatures || []).filter(c => c._id !== candidatureId)
+    })))
 
     setStatsData(prev => ({
       ...prev,
       totalCandidatures: Math.max(0, prev.totalCandidatures - 1)
     }))
+  }
+
+  // ─── TÉLÉCHARGEMENT DU CV (ADMIN) ─────────────
+  const handleDownloadCV = async (cvId, nomFichier) => {
+    if (!cvId) {
+      alert("Aucun CV attaché à cette candidature.")
+      return
+    }
+    try {
+      const res = await api.get(`/cv/download/${cvId}`, { responseType: 'blob' })
+      const url = window.URL.createObjectURL(new Blob([res.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `CV_${nomFichier.replace(/\s+/g, '_')}.pdf`)
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+    } catch (err) {
+      console.error("Erreur lors du téléchargement :", err)
+      alert("Le fichier source du CV est introuvable sur le serveur.")
+    }
   }
 
   const statsCards = [
@@ -419,33 +432,51 @@ export default function Admin() {
                         </p>
 
                         <div className="space-y-2">
-                          {candidaturesAffichees.map(cand => (
-                            <div
-                              key={cand._id}
-                              className="flex items-center justify-between p-3 bg-[#0b1a19] border border-white/5 rounded-xl hover:border-white/10 transition-all"
-                            >
-                              <div className="min-w-0">
-                                <p className="text-white text-xs font-bold truncate">
-                                  Poste : {cand.offreId?.titre || cand.titre}
-                                </p>
-                                <p className="text-gray-500 text-[11px] mt-0.5">
-                                  Date : {new Date(cand.createdAt).toLocaleDateString('fr-FR')}
-                                </p>
-                              </div>
-
-                              {/* La corbeille est UNIQUEMENT ici */}
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  handleSupprimerCandidature(cand._id)
-                                }}
-                                className="p-2 rounded-lg text-red-500 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer flex-shrink-0"
-                                title="Supprimer cette candidature"
+                          {candidaturesAffichees.length === 0 ? (
+                            <p className="text-gray-500 text-xs italic py-2">Aucune candidature soumise pour le moment.</p>
+                          ) : (
+                            candidaturesAffichees.map(cand => (
+                              <div
+                                key={cand._id}
+                                className="flex items-center justify-between p-3 bg-[#0b1a19] border border-white/5 rounded-xl hover:border-white/10 transition-all"
                               >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
-                          ))}
+                                <div className="min-w-0">
+                                  <p className="text-white text-xs font-bold truncate">
+                                    Poste : {cand.offreId?.titre || 'Offre inconnue'}
+                                  </p>
+                                  <p className="text-gray-500 text-[11px] mt-0.5">
+                                    Date : {new Date(cand.createdAt).toLocaleDateString('fr-FR')}
+                                  </p>
+                                </div>
+
+                                {/* Actions : Télécharger & Supprimer */}
+                                <div className="flex items-center gap-2 flex-shrink-0">
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      const idCvReel = cand.cvId?._id || cand.cvId
+                                      handleDownloadCV(idCvReel, `${u.prenom}_${u.nom}`)
+                                    }}
+                                    className="p-2 rounded-lg text-gray-400 hover:text-[#00f098] hover:bg-[#00f098]/10 transition-colors cursor-pointer"
+                                    title="Télécharger le CV PDF"
+                                  >
+                                    <Download className="w-4 h-4" />
+                                  </button>
+
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      handleSupprimerCandidature(cand._id)
+                                    }}
+                                    className="p-2 rounded-lg text-red-500 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+                                    title="Supprimer cette candidature"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </div>
+                            ))
+                          )}
                         </div>
                       </div>
                     )}
