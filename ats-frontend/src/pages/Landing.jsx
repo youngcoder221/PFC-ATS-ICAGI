@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Search, Briefcase, Check, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles } from 'lucide-react'
+import { Search, Briefcase, Check, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles, MapPin } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import logo from '../assets/logo-icon-small.png'
 import heroBg from '../assets/hero-bg.png'
@@ -162,56 +162,68 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── LISTE DES OFFRES (CANVAS BLANC HAUT CONTRASTE) ── */}
-      <main id="offres" className="flex-1 w-full bg-white py-14 md:py-18 relative scroll-mt-20">
+      {/* ── LISTE DES OFFRES (STYLE WELLFOUND x FDE) ── */}
+      {/* L'ID "offres" permet au bouton "Déposer mon CV" de scroller jusqu'ici */}
+      <main id="offres" className="flex-1 w-full bg-white py-16 md:py-24 relative scroll-mt-6">
         <div className="max-w-7xl mx-auto px-6">
           
-          {/* En-tête de section équilibré */}
-          <div className="mb-8">
-            <p className="text-[#00f098] font-black text-xs tracking-widest uppercase mb-2">
+          {/* En-tête centré et épuré */}
+          <div className="text-center mb-10">
+            <p className="text-[#00f098] font-black text-xs tracking-widest uppercase mb-4">
               Opportunités de carrière
             </p>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <h2 className="text-3xl md:text-4xl lg:text-[2.6rem] font-black text-[#041619] max-w-2xl leading-[1.15] tracking-tight">
-                Découvrez les postes ouverts et postulez en un clic
-              </h2>
-              <p className="text-gray-600 max-w-md text-sm md:text-base leading-relaxed">
-                Consultez les offres publiées par nos entreprises partenaires et laissez notre algorithme analyser votre profil pour un matching parfait.
-              </p>
+            <h2 className="text-4xl md:text-5xl font-black text-[#041619] tracking-tight mb-4">
+              Découvrez votre prochaine étape.
+            </h2>
+            <p className="text-gray-500 text-base max-w-2xl mx-auto">
+              Consultez les offres publiées par nos entreprises partenaires et laissez notre IA analyser votre profil pour un matching parfait.
+            </p>
+          </div>
+
+          {/* Barre de recherche "Pill" géante (Inspiration Wellfound) */}
+          <div className="max-w-4xl mx-auto mb-8">
+            <div className="bg-white border border-gray-200 rounded-full p-2 shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex flex-col md:flex-row items-center gap-2 transition-all focus-within:ring-2 focus-within:ring-[#00f098]/30 focus-within:border-[#00f098]">
+              
+              <div className="flex-1 flex items-center gap-3 px-5 py-3 w-full">
+                <Search className="w-5 h-5 text-[#041619]" />
+                <input
+                  type="text"
+                  placeholder="Poste, entreprise, compétence..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-transparent border-none outline-none text-gray-900 placeholder-gray-400 font-medium text-base"
+                />
+              </div>
+
+              {/* Ligne de séparation verticale (Desktop) */}
+              <div className="hidden md:block w-px h-8 bg-gray-200"></div>
+
+              {/* Faux champ localisation pour l'esthétique Wellfound */}
+              <div className="flex-1 flex items-center gap-3 px-5 py-3 w-full opacity-70 pointer-events-none">
+                <MapPin className="w-5 h-5 text-[#041619]" />
+                <span className="font-medium text-gray-500 truncate">Sénégal (Toutes régions)</span>
+              </div>
+
+              <button 
+                onClick={() => setSearchQuery('')}
+                className="w-full md:w-auto bg-[#041619] hover:bg-[#0b1a19] text-white font-bold px-8 py-3.5 rounded-full transition-all text-sm shadow-md cursor-pointer"
+              >
+                {searchQuery ? 'Réinitialiser' : 'Rechercher'}
+              </button>
             </div>
           </div>
 
-          {/* Filtres de contrats */}
-          <div className="flex flex-wrap gap-3 mb-6 text-xs md:text-sm font-bold">
-            <button className="bg-[#08282d] border border-[#00f098]/30 text-white px-5 py-3 rounded-xl flex items-center gap-2.5 shadow-[0_0_15px_rgba(0,240,152,0.1)] cursor-pointer">
-              Postes ouverts <span className="bg-[#00f098] text-[#041619] px-2 py-0.5 rounded-full text-xs font-black">584</span>
-            </button>
-            <button className="bg-white border border-gray-200 text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-4 py-3 rounded-xl flex items-center gap-2.5 transition-colors cursor-pointer">
-              CDI & CDD <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full text-xs font-semibold">515</span>
-            </button>
-            <button className="bg-white border border-gray-200 text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-4 py-3 rounded-xl flex items-center gap-2.5 transition-colors cursor-pointer">
-              Stages <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full text-xs font-semibold">43</span>
-            </button>
-          </div>
-
-          {/* Barre de recherche */}
-          <div className="bg-[#08282d] border border-white/5 rounded-2xl p-2.5 mb-10 shadow-lg flex flex-col md:flex-row gap-2.5 items-center">
-            <div className="flex-1 w-full flex items-center gap-3 bg-[#041619] px-4 py-3 rounded-xl border border-white/5 focus-within:border-[#00f098]/50 transition-colors">
-              <Search className="w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Poste, entreprise, compétence..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-transparent border-none outline-none text-white text-sm placeholder-gray-500 font-medium"
-              />
+          {/* Filtres de contrats sous forme de tags discrets centrés */}
+          <div className="flex flex-wrap justify-center gap-3 mb-16 text-sm font-bold">
+            <div className="bg-gray-100 border border-gray-200 text-[#041619] px-5 py-2.5 rounded-full flex items-center gap-3">
+              Postes ouverts <span className="bg-white text-[#041619] px-2.5 py-0.5 rounded-full text-xs shadow-sm">{offres.length}</span>
             </div>
-            <button 
-              onClick={() => setSearchQuery('')}
-              className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold px-6 py-3 rounded-xl w-full md:w-auto transition-colors text-xs uppercase tracking-wider cursor-pointer"
-            >
-              Réinitialiser
-            </button>
+            <div className="bg-white border border-gray-200 text-gray-400 px-5 py-2.5 rounded-full flex items-center gap-3">
+              CDI & CDD <span className="bg-gray-50 text-gray-400 px-2.5 py-0.5 rounded-full text-xs border border-gray-100">{offres.filter(o => ['CDI', 'CDD'].includes(o.typeContrat)).length}</span>
+            </div>
+            <div className="bg-white border border-gray-200 text-gray-400 px-5 py-2.5 rounded-full flex items-center gap-3">
+              Stages <span className="bg-gray-50 text-gray-400 px-2.5 py-0.5 rounded-full text-xs border border-gray-100">{offres.filter(o => o.typeContrat === 'Stage').length}</span>
+            </div>
           </div>
 
           {offres.length === 0 ? (
