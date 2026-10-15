@@ -132,7 +132,13 @@ export default function Landing() {
               Espace Entreprise
             </button>
             <button 
-              onClick={() => document.getElementById('offres')?.scrollIntoView({ behavior: 'smooth' })} 
+              onClick={() => {
+                if (user?.role === 'candidat') {
+                  navigate('/candidat')
+                } else {
+                  document.getElementById('offres')?.scrollIntoView({ behavior: 'smooth' })
+                }
+              }} 
               className="bg-[#e8d5a5] hover:bg-[#d4c194] text-[#041619] px-6 py-3 rounded-xl font-bold transition-all text-sm shadow-[0_0_15px_rgba(232,213,165,0.15)] cursor-pointer"
             >
               Déposer mon CV
@@ -180,62 +186,61 @@ export default function Landing() {
             </p>
           </div>
 
-          {/* Barre de recherche "Pill" géante (Inspiration Wellfound) */}
-          <div className="max-w-4xl mx-auto mb-8">
+          {/* Barre de recherche "Pill" compactée */}
+          <div className="max-w-4xl mx-auto mb-5">
             <div className="bg-white border border-gray-200 rounded-full p-2 shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex flex-col md:flex-row items-center gap-2 transition-all focus-within:ring-2 focus-within:ring-[#00f098]/30 focus-within:border-[#00f098]">
               
-              <div className="flex-1 flex items-center gap-3 px-5 py-3 w-full">
-                <Search className="w-5 h-5 text-[#041619]" />
+              <div className="flex-1 flex items-center gap-3 px-5 py-2.5 w-full">
+                <Search className="w-4 h-4 text-[#041619]" />
                 <input
                   type="text"
                   placeholder="Poste, entreprise, compétence..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-transparent border-none outline-none text-gray-900 placeholder-gray-400 font-medium text-base"
+                  className="w-full bg-transparent border-none outline-none text-gray-900 placeholder-gray-400 font-medium text-sm"
                 />
               </div>
 
               {/* Ligne de séparation verticale (Desktop) */}
-              <div className="hidden md:block w-px h-8 bg-gray-200"></div>
+              <div className="hidden md:block w-px h-6 bg-gray-200"></div>
 
-              {/* Faux champ localisation pour l'esthétique Wellfound */}
-              <div className="flex-1 flex items-center gap-3 px-5 py-3 w-full opacity-70 pointer-events-none">
-                <MapPin className="w-5 h-5 text-[#041619]" />
-                <span className="font-medium text-gray-500 truncate">Sénégal (Toutes régions)</span>
+              {/* Faux champ localisation pour l'esthétique */}
+              <div className="flex-1 flex items-center gap-3 px-5 py-2.5 w-full opacity-70 pointer-events-none">
+                <MapPin className="w-4 h-4 text-[#041619]" />
+                <span className="font-medium text-gray-500 text-sm truncate">Sénégal (Toutes régions)</span>
               </div>
 
               <button 
                 onClick={() => setSearchQuery('')}
-                className="w-full md:w-auto bg-[#041619] hover:bg-[#0b1a19] text-white font-bold px-8 py-3.5 rounded-full transition-all text-sm shadow-md cursor-pointer"
+                className="w-full md:w-auto bg-[#041619] hover:bg-[#0b1a19] text-white font-black px-7 py-3 rounded-full transition-all text-xs uppercase tracking-wider shadow-md cursor-pointer"
               >
                 {searchQuery ? 'Réinitialiser' : 'Rechercher'}
               </button>
             </div>
           </div>
 
-          {/* Filtres de contrats sous forme de tags discrets centrés */}
-          {/* 💡 Les marges géantes (mb-24 lg:mb-36) repoussent les cartes sous la ligne de flottaison */}
-          <div className="flex flex-wrap justify-center gap-3 mb-24 lg:mb-36 text-sm font-bold">
-            <div className="bg-gray-100 border border-gray-200 text-[#041619] px-5 py-2.5 rounded-full flex items-center gap-3">
-              Postes ouverts <span className="bg-white text-[#041619] px-2.5 py-0.5 rounded-full text-xs shadow-sm">{offres.length}</span>
+          {/* Filtres de contrats équilibrés (Marge resserrée) */}
+          <div className="flex flex-wrap justify-center gap-2.5 mb-8 text-xs font-bold">
+            <div className="bg-gray-100 border border-gray-200 text-[#041619] px-4 py-2 rounded-full flex items-center gap-2 shadow-sm">
+              Postes ouverts <span className="bg-white text-[#041619] px-2 py-0.5 rounded-full text-[11px] font-black">{offres.length}</span>
             </div>
-            <div className="bg-white border border-gray-200 text-gray-400 px-5 py-2.5 rounded-full flex items-center gap-3">
-              CDI & CDD <span className="bg-gray-50 text-gray-400 px-2.5 py-0.5 rounded-full text-xs border border-gray-100">{offres.filter(o => ['CDI', 'CDD'].includes(o.typeContrat)).length}</span>
+            <div className="bg-white border border-gray-200 text-gray-500 px-4 py-2 rounded-full flex items-center gap-2">
+              CDI & CDD <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-[11px] font-bold">{offres.filter(o => ['CDI', 'CDD'].includes(o.typeContrat)).length}</span>
             </div>
-            <div className="bg-white border border-gray-200 text-gray-400 px-5 py-2.5 rounded-full flex items-center gap-3">
-            Stages <span className="bg-gray-50 text-gray-400 px-2.5 py-0.5 rounded-full text-xs border border-gray-100">{offres.filter(o => o.typeContrat === 'Stage').length}</span>
+            <div className="bg-white border border-gray-200 text-gray-500 px-4 py-2 rounded-full flex items-center gap-2">
+              Stages <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-[11px] font-bold">{offres.filter(o => o.typeContrat === 'Stage').length}</span>
+            </div>
           </div>
-        </div>
 
-        {/* Ligne de séparation discrète */}
-        <div className="w-full h-px bg-gray-100 mb-14"></div>
-
-        {/* Titre de section "Trending" (Inspiration Wellfound) */}
-        <div className="mb-8">
-          <h2 className="text-2xl md:text-3xl font-black text-[#041619] tracking-tight">
-            Opportunités en vogue actuellement
-          </h2>
-        </div>
+          {/* Titre direct sans séparateur superflu */}
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl md:text-2xl font-black text-[#041619] tracking-tight">
+              Opportunités en vogue actuellement
+            </h2>
+            <span className="text-xs text-gray-400 font-medium hidden sm:inline">
+              Mises à jour en temps réel
+            </span>
+          </div>
 
         {offres.length === 0 ? (
             <div className="text-center py-20 bg-[#f8fafc] rounded-[2rem] border border-gray-100 shadow-sm">
