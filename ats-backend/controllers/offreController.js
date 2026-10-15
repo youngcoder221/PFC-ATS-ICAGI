@@ -3,18 +3,34 @@ const Offre = require('../models/Offre')
 // ─── CRÉER UNE OFFRE (recruteur) ────────────────────────
 const creerOffre = async (req, res) => {
   try {
-    const { titre, description, competences, niveauRequis, typeContrat } = req.body
+    const { 
+      titre, 
+      description, 
+      entreprise,
+      logoUrl,
+      localisation,
+      secteur,
+      salaire,
+      competences, 
+      niveauRequis, 
+      typeContrat 
+    } = req.body
 
     const offre = await Offre.create({
       titre,
       description,
+      entreprise: entreprise || 'Entreprise Partenaire',
+      logoUrl: logoUrl || '',
+      localisation: localisation || 'Dakar, Sénégal',
+      secteur: secteur || 'Technologie & Numérique',
+      salaire: salaire || 'À négocier',
       competences,
       niveauRequis,
       typeContrat,
       recruteurId: req.user.id   // vient du token JWT
     })
 
-    res.status(201).json({ message: '✅ Offre créée', offre })
+    res.status(201).json({ message: '✅ Offre créée avec succès', offre })
 
   } catch (error) {
     res.status(500).json({ message: '❌ Erreur serveur', erreur: error.message })
