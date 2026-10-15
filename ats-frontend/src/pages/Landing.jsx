@@ -223,14 +223,21 @@ export default function Landing() {
               CDI & CDD <span className="bg-gray-50 text-gray-400 px-2.5 py-0.5 rounded-full text-xs border border-gray-100">{offres.filter(o => ['CDI', 'CDD'].includes(o.typeContrat)).length}</span>
             </div>
             <div className="bg-white border border-gray-200 text-gray-400 px-5 py-2.5 rounded-full flex items-center gap-3">
-              Stages <span className="bg-gray-50 text-gray-400 px-2.5 py-0.5 rounded-full text-xs border border-gray-100">{offres.filter(o => o.typeContrat === 'Stage').length}</span>
-            </div>
+            Stages <span className="bg-gray-50 text-gray-400 px-2.5 py-0.5 rounded-full text-xs border border-gray-100">{offres.filter(o => o.typeContrat === 'Stage').length}</span>
           </div>
+        </div>
 
-          {/* Ligne de séparation élégante repoussée très bas pour isoler la zone de recherche */}
-          <div className="w-full max-w-2xl mx-auto h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-16 lg:mb-24"></div>
+        {/* Ligne de séparation discrète */}
+        <div className="w-full h-px bg-gray-100 mb-14"></div>
 
-          {offres.length === 0 ? (
+        {/* Titre de section "Trending" (Inspiration Wellfound) */}
+        <div className="mb-8">
+          <h2 className="text-2xl md:text-3xl font-black text-[#041619] tracking-tight">
+            Opportunités en vogue actuellement
+          </h2>
+        </div>
+
+        {offres.length === 0 ? (
             <div className="text-center py-20 bg-[#f8fafc] rounded-[2rem] border border-gray-100 shadow-sm">
               <Briefcase className="w-12 h-12 text-gray-300 mx-auto mb-3" />
               <h3 className="text-gray-900 font-bold text-lg">Aucune offre pour le moment</h3>
