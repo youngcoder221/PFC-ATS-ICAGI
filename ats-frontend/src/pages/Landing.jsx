@@ -214,7 +214,8 @@ export default function Landing() {
           </div>
 
           {/* Filtres de contrats sous forme de tags discrets centrés */}
-          <div className="flex flex-wrap justify-center gap-3 mb-16 text-sm font-bold">
+          {/* 💡 Les marges géantes (mb-24 lg:mb-36) repoussent les cartes sous la ligne de flottaison */}
+          <div className="flex flex-wrap justify-center gap-3 mb-24 lg:mb-36 text-sm font-bold">
             <div className="bg-gray-100 border border-gray-200 text-[#041619] px-5 py-2.5 rounded-full flex items-center gap-3">
               Postes ouverts <span className="bg-white text-[#041619] px-2.5 py-0.5 rounded-full text-xs shadow-sm">{offres.length}</span>
             </div>
@@ -226,8 +227,8 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* Ligne de séparation élégante pour adoucir la transition avec le fond blanc */}
-          <div className="w-full max-w-2xl mx-auto h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-12"></div>
+          {/* Ligne de séparation élégante repoussée très bas pour isoler la zone de recherche */}
+          <div className="w-full max-w-2xl mx-auto h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-16 lg:mb-24"></div>
 
           {offres.length === 0 ? (
             <div className="text-center py-20 bg-[#f8fafc] rounded-[2rem] border border-gray-100 shadow-sm">
