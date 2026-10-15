@@ -226,15 +226,18 @@ export default function Landing() {
             </div>
           </div>
 
+          {/* Ligne de séparation élégante pour adoucir la transition avec le fond blanc */}
+          <div className="w-full max-w-2xl mx-auto h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-12"></div>
+
           {offres.length === 0 ? (
-            <div className="text-center py-16 bg-[#08282d] rounded-2xl border border-white/10 shadow-sm">
-              <Briefcase className="w-10 h-10 text-gray-500 mx-auto mb-3" />
-              <h3 className="text-white font-bold text-base">Aucune offre disponible pour le moment</h3>
+            <div className="text-center py-20 bg-[#f8fafc] rounded-[2rem] border border-gray-100 shadow-sm">
+              <Briefcase className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <h3 className="text-gray-900 font-bold text-lg">Aucune offre pour le moment</h3>
             </div>
           ) : (
             <>
-              {/* Grille des cartes d'offres sombres FDE */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Grille des cartes avec effet Flottant (Soft Shadow) pour casser la découpe */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {offres
                   .filter(o => 
                     searchQuery === '' || 
@@ -245,13 +248,16 @@ export default function Landing() {
                   return (
                     <div 
                       key={offre._id} 
-                      className="bg-[#08282d] border border-white/10 rounded-2xl p-6 hover:shadow-2xl hover:border-[#00f098]/40 hover:-translate-y-1 transition-all duration-300 flex flex-col group"
+                      className="bg-[#08282d] border border-transparent rounded-[2rem] p-7 shadow-[0_15px_40px_rgba(4,22,25,0.08)] hover:shadow-[0_20px_50px_rgba(4,22,25,0.15)] hover:border-[#00f098]/30 hover:-translate-y-2 transition-all duration-500 flex flex-col group relative overflow-hidden"
                     >
+                      {/* Subtil effet de lumière en haut de la carte au survol */}
+                      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
                       {/* Header de carte */}
-                      <div className="flex justify-between items-center mb-4">
+                      <div className="flex justify-between items-center mb-6">
                         <div className="flex items-center gap-2">
                           <div className="w-2.5 h-2.5 rounded-full bg-[#00f098]"></div>
-                          <span className="text-gray-400 font-bold text-xs tracking-wider uppercase">
+                          <span className="text-gray-400 font-bold text-xs tracking-widest uppercase">
                             {offre.recruteurId?.entreprise || 'Confidentiel'}
                           </span>
                         </div>
@@ -261,61 +267,72 @@ export default function Landing() {
                       </div>
 
                       {/* Titre */}
-                      <h3 className="text-lg md:text-xl font-black text-white mb-4 line-clamp-2 leading-snug group-hover:text-[#00f098] transition-colors">
+                      <h3 className="text-xl font-black text-white mb-5 line-clamp-2 leading-tight group-hover:text-[#00f098] transition-colors">
                         {offre.titre}
                       </h3>
 
                       {/* Badges métadonnées */}
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs font-bold px-3 py-1.5 rounded-lg">
+                      <div className="flex flex-wrap gap-2 mb-5">
+                        <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs font-bold px-3.5 py-2 rounded-xl">
                           {offre.secteur || 'Technologies'}
                         </span>
-                        <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs font-bold px-3 py-1.5 rounded-lg">
+                        <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs font-bold px-3.5 py-2 rounded-xl">
                           {offre.typeContrat}
                         </span>
                       </div>
 
                       {/* Informations dates & lieu */}
-                      <div className="grid grid-cols-3 gap-2 border-t border-b border-white/5 py-3 mb-4">
+                      <div className="grid grid-cols-3 gap-2 border-t border-b border-white/5 py-4 mb-5">
                         <div>
-                          <p className="text-[10px] text-gray-500 font-bold uppercase mb-0.5">Localisation</p>
+                          <p className="text-[10px] text-gray-500 font-bold uppercase mb-1">Localisation</p>
                           <p className="text-xs text-white font-bold truncate">{offre.localisation || 'Sénégal'}</p>
                         </div>
                         <div>
-                          <p className="text-[10px] text-gray-500 font-bold uppercase mb-0.5">Publication</p>
+                          <p className="text-[10px] text-gray-500 font-bold uppercase mb-1">Publication</p>
                           <p className="text-xs text-white font-bold">
                             {new Date(offre.createdAt).toLocaleDateString('fr-FR', {day: '2-digit', month:'short'})}
                           </p>
                         </div>
                         <div>
-                          <p className="text-[10px] text-gray-500 font-bold uppercase mb-0.5">Date limite</p>
+                          <p className="text-[10px] text-gray-500 font-bold uppercase mb-1">Date limite</p>
                           <p className="text-xs text-white font-bold">Non précisée</p>
                         </div>
                       </div>
 
-                      {/* Description */}
-                      <p className="text-gray-400 text-xs md:text-sm mb-4 line-clamp-2 leading-relaxed">
-                        {offre.description}
-                      </p>
+                      {/* Puces de compétences */}
+                      {offre.competences && offre.competences.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mb-6">
+                          {offre.competences.slice(0, 3).map((comp, idx) => (
+                            <span key={idx} className="bg-white/5 text-gray-400 text-[11px] px-2.5 py-1 rounded-lg font-medium border border-white/5">
+                              {comp}
+                            </span>
+                          ))}
+                          {offre.competences.length > 3 && (
+                            <span className="text-gray-500 text-[10px] self-center font-bold">
+                              +{offre.competences.length - 3} autres
+                            </span>
+                          )}
+                        </div>
+                      )}
 
                       <p className="text-[#00f098] text-xs font-bold mb-6 flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5" />
-                        Scoring IA disponible pour cette offre
+                        Scoring IA disponible
                       </p>
 
-                      {/* Boutons CTA */}
-                      <div className="mt-auto flex items-center gap-2.5">
+                      {/* Boutons CTA avec espacement optimisé */}
+                      <div className="mt-auto flex items-center gap-3 pt-2">
                         <button 
                           onClick={() => navigate(`/offres/${offre._id}`)}
-                          className="flex-1 bg-[#041619] border border-white/10 text-white font-bold py-2.5 rounded-xl hover:border-[#00f098]/50 hover:text-[#00f098] transition-colors text-xs cursor-pointer"
+                          className="flex-1 bg-[#041619] border border-white/10 text-white font-bold py-3.5 rounded-xl hover:border-[#00f098]/50 hover:text-[#00f098] transition-colors text-xs cursor-pointer shadow-inner"
                         >
                           Détails
                         </button>
                         <button 
                           onClick={() => handlePostulerCarte(offre._id)}
-                          className="flex-1 bg-[#00f098] text-[#041619] font-black py-2.5 rounded-xl hover:bg-[#00d084] transition-colors flex items-center justify-center gap-1.5 text-xs shadow-[0_0_12px_rgba(0,240,152,0.2)] cursor-pointer"
+                          className="flex-1 bg-[#00f098] text-[#041619] font-black py-3.5 rounded-xl hover:bg-[#00d084] transition-colors flex items-center justify-center gap-1.5 text-xs shadow-[0_0_15px_rgba(0,240,152,0.2)] cursor-pointer"
                         >
-                          Postuler <ArrowUpRight className="w-3.5 h-3.5" />
+                          Postuler <ArrowUpRight className="w-4 h-4" />
                         </button>
                       </div>
                     </div>
@@ -323,12 +340,10 @@ export default function Landing() {
                 })}
               </div>
 
-              <div className="flex justify-center mt-10">
-                <button 
-                  onClick={() => navigate('/login')}
-                  className="bg-[#08282d] border border-white/10 text-white font-bold px-8 py-3.5 rounded-xl hover:border-[#00f098]/50 hover:text-[#00f098] transition-all text-sm flex items-center gap-2 cursor-pointer shadow-md"
-                >
-                  Afficher toutes les opportunités ({offres.length})
+              {/* Bouton Noir Massif - Afficher plus d'offres */}
+              <div className="flex justify-center mt-16">
+                <button className="bg-[#041619] border border-transparent text-white font-bold px-10 py-4 rounded-full hover:bg-[#08282d] hover:border-[#00f098]/30 transition-all shadow-[0_10px_30px_rgba(4,22,25,0.15)] text-sm flex items-center gap-3">
+                  Afficher toutes les opportunités
                 </button>
               </div>
             </>
