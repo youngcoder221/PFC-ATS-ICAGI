@@ -77,17 +77,17 @@ export default function Landing() {
           ))}
         </div>
 
-        {/* 3. SECTION DROITE (Authentification) */}
-        <div className="flex-1 flex items-center justify-end gap-4">
+        {/* 3. SECTION DROITE (Authentification style Handshake) */}
+        <div className="flex-1 flex items-center justify-end gap-3.5">
           <button
             onClick={() => navigate('/login')}
-            className="bg-transparent text-white font-medium px-4 py-2 rounded-lg hover:text-[#00f098] transition-colors duration-300 text-sm"
+            className="bg-transparent border border-white text-white font-bold px-5 py-2.5 rounded-xl hover:bg-white/10 hover:border-white transition-all text-sm cursor-pointer"
           >
             Se connecter
           </button>
           <button
             onClick={() => navigate('/register')}
-            className="bg-[#00f098] text-[#0b1a19] font-black px-5 py-2.5 rounded-xl transition-all hover:bg-[#00d084] shadow-[0_0_15px_rgba(0,240,152,0.2)] text-sm tracking-wide"
+            className="bg-[#00f098] text-[#0b1a19] font-black px-5 py-2.5 rounded-xl transition-all hover:bg-[#00d084] shadow-[0_0_15px_rgba(0,240,152,0.2)] text-sm tracking-wide cursor-pointer"
           >
             S'inscrire
           </button>
