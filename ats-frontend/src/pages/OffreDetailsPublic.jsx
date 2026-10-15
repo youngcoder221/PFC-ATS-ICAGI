@@ -90,10 +90,11 @@ export default function OffreDetailsPublic() {
         </div>
       </nav>
 
-      {/* ── BANDEAU DU TITRE ── */}
+      {/* ── BANDEAU DU TITRE (INSPIRATION FDE / HANDSHAKE) ── */}
       <header className="bg-[#0b1a19] text-white pt-8 pb-12 px-6 border-b border-white/5 relative">
         <div className="max-w-6xl mx-auto">
-          {/* Bouton retour avec ancre vers la liste des offres */}
+          
+          {/* 1. Bouton retour intact */}
           <button
             onClick={() => navigate('/#offres')}
             className="inline-flex items-center gap-2 text-gray-400 hover:text-[#00f098] text-xs font-bold transition-colors mb-6 cursor-pointer group"
@@ -102,29 +103,38 @@ export default function OffreDetailsPublic() {
             Retour aux offres
           </button>
 
-          {/* Entreprise et localisation */}
-          <p className="text-[#00f098] font-bold text-xs uppercase tracking-wider mb-2 flex items-center gap-2">
-            <Building2 className="w-3.5 h-3.5" />
-            {nomEntreprise} <span className="text-gray-600">•</span> {offre.localisation || 'Sénégal'}
-          </p>
-
-          {/* Titre du poste en grand */}
-          <h1 className="text-3xl md:text-5xl font-black tracking-tight mb-4 leading-tight">
+          {/* 2. Titre du poste en premier (Gros et impactant) */}
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tight mb-4 leading-[1.1]">
             {offre.titre}
           </h1>
 
-          {/* Méta-tags */}
-          <div className="flex flex-wrap items-center gap-3 text-xs text-gray-300 font-medium">
-            <span className="bg-[#041619] border border-white/10 px-3 py-1 rounded-lg">
-              {offre.secteur || 'Technologie & Numérique'}
-            </span>
-            <span className="bg-[#041619] border border-white/10 px-3 py-1 rounded-lg">
-              {offre.typeContrat || 'CDI'}
-            </span>
-            <span className="bg-[#00f098]/10 text-[#00f098] border border-[#00f098]/20 px-3 py-1 rounded-lg flex items-center gap-1 font-bold">
-              <Check className="w-3 h-3" /> Offre active
+          {/* 3. Entreprise en dessous : "Publié par [Entreprise]" */}
+          <div className="flex flex-wrap items-center gap-3 mb-6">
+            <span className="text-gray-400 text-sm font-medium">Publié par</span>
+            <div className="inline-flex items-center gap-2 bg-[#041619] border border-white/10 px-3 py-1.5 rounded-xl shadow-sm">
+              <Building2 className="w-4 h-4 text-[#00f098]" />
+              <span className="text-white font-bold text-sm tracking-wide">{nomEntreprise}</span>
+            </div>
+            <span className="text-gray-600 hidden sm:inline">•</span>
+            <span className="text-gray-400 text-xs font-medium flex items-center gap-1.5">
+              <MapPin className="w-3.5 h-3.5 text-gray-500" />
+              {offre.localisation || 'Sénégal'}
             </span>
           </div>
+
+          {/* 4. Badges d'informations complémentaires */}
+          <div className="flex flex-wrap items-center gap-2.5 text-xs text-gray-300 font-medium">
+            <span className="bg-[#041619] border border-white/10 px-3 py-1.5 rounded-xl">
+              {offre.secteur || 'Technologie & Numérique'}
+            </span>
+            <span className="bg-[#041619] border border-white/10 px-3 py-1.5 rounded-xl">
+              {offre.typeContrat || 'CDI'}
+            </span>
+            <span className="bg-[#00f098]/10 text-[#00f098] border border-[#00f098]/20 px-3 py-1.5 rounded-xl flex items-center gap-1.5 font-bold">
+              <Check className="w-3.5 h-3.5" /> Offre active
+            </span>
+          </div>
+
         </div>
       </header>
 
