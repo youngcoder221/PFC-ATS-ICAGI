@@ -359,13 +359,8 @@ export default function Admin() {
                 const estOuvert = expandedUserId === u._id
                 const estCandidat = u.role === 'candidat'
                 
-                // Candidatures réelles ou lignes de test prêtes à tester
-                const candidaturesAffichees = (u.candidatures && u.candidatures.length > 0)
-                  ? u.candidatures
-                  : [
-                      { _id: 'demo-1', titre: 'Consultant Cybersécurité', createdAt: '2026-10-12T10:00:00.000Z' },
-                      { _id: 'demo-2', titre: 'Développeur Web Full Stack', createdAt: '2026-10-10T14:30:00.000Z' }
-                    ]
+                // Vraies candidatures issues de MongoDB
+                const candidaturesAffichees = u.candidatures || []
 
                 return (
                   <div
