@@ -103,8 +103,8 @@ export default function OffreDetailsPublic() {
             Retour aux offres
           </button>
 
-          {/* 2. Titre du poste aéré style FDE (interligne respirant & largeur naturelle) */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-5 leading-[1.2] max-w-3xl md:max-w-4xl text-balance">
+          {/* 2. Titre du poste aéré avec espacement généreux FDE */}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-8 md:mb-10 leading-[1.2] max-w-3xl md:max-w-4xl text-balance">
             {offre.titre}
           </h1>
 
