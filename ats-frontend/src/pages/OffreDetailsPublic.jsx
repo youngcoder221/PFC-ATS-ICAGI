@@ -103,8 +103,8 @@ export default function OffreDetailsPublic() {
             Retour aux offres
           </button>
 
-          {/* 2. Titre du poste calibré style FDE avec coupure équilibrée */}
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tight mb-4 leading-[1.08] max-w-2xl md:max-w-3xl text-balance">
+          {/* 2. Titre du poste aéré style FDE (interligne respirant & largeur naturelle) */}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-5 leading-[1.2] max-w-3xl md:max-w-4xl text-balance">
             {offre.titre}
           </h1>
 
