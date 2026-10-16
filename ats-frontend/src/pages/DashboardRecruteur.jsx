@@ -1,113 +1,203 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Plus, X, Briefcase, Users, ChevronRight, Clock, TrendingUp, XCircle, Sparkles } from 'lucide-react'
+import { Plus, X, Briefcase, Users, ChevronRight, Clock, TrendingUp, XCircle, Sparkles, Building2, MapPin, Image, Coins } from 'lucide-react'
 import Layout from '../components/layout/Layout'
 import api from '../services/api'
 import OffreCardRecruteur from '../components/OffreCardRecruteur'
 
-// ── Formulaire d'offre SaaS B2B Premium FDE ──
+// ── Formulaire d'offre SaaS B2B Premium FDE (Standard Greenhouse / Lever) ──
 function FormulaireOffre({ form, setForm, handleSubmit }) {
   return (
     <div className="bg-[#041619] border border-white/5 rounded-2xl md:rounded-[2rem] p-6 md:p-8 mb-8 shadow-2xl transition-all">
       <div className="flex items-center gap-2 mb-6">
         <div className="w-2 h-2 rounded-full bg-[#00f098] shadow-[0_0_8px_#00f098]" />
-        <h3 className="text-white font-black text-xl tracking-tight">Créer une nouvelle offre</h3>
+        <h3 className="text-white font-black text-xl tracking-tight">Publier une nouvelle offre d'emploi</h3>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          
-          {/* 1. Titre du poste avec icône Briefcase et pl-12 */}
-          <div className="col-span-1 md:col-span-2">
-            <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
-              Titre du poste
-            </label>
-            <div className="relative">
-              <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
-              <input
-                type="text" 
-                value={form.titre}
-                onChange={e => setForm({...form, titre: e.target.value})}
-                placeholder="ex: Développeur Full Stack JS" 
-                required
-                className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl pl-12 pr-4 py-3.5 text-sm placeholder-gray-500 focus:outline-none focus:border-[#00f098] focus:ring-1 focus:ring-[#00f098] transition-all"
-              />
+      <form onSubmit={handleSubmit} className="space-y-6">
+        
+        {/* 🏢 SECTION 1 : IDENTITÉ DE L'ENTREPRISE (PME) */}
+        <div>
+          <p className="text-[#00f098] font-bold text-xs uppercase tracking-wider mb-3">1. Identité de l'entreprise & Localisation</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            {/* Nom de l'entreprise */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Nom de l'entreprise / PME</label>
+              <div className="relative">
+                <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                <input
+                  type="text"
+                  value={form.entreprise}
+                  onChange={e => setForm({...form, entreprise: e.target.value})}
+                  placeholder="ex: Wave Sénégal, Free, Sonatel..."
+                  required
+                  className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl pl-12 pr-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:border-[#00f098] transition-all"
+                />
+              </div>
             </div>
-          </div>
 
-          {/* 2. Description du poste */}
-          <div className="col-span-1 md:col-span-2">
-            <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
-              Description du poste
-            </label>
-            <textarea
-              value={form.description}
-              onChange={e => setForm({...form, description: e.target.value})}
-              rows={3} 
-              placeholder="Décrivez les missions principales et le contexte du poste..." 
-              required
-              className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl p-4 text-sm placeholder-gray-500 focus:outline-none focus:border-[#00f098] focus:ring-1 focus:ring-[#00f098] transition-all resize-none leading-relaxed"
-            />
-          </div>
-
-          {/* 3. Compétences clés avec icône Sparkles et libellé explicite pour le scoring IA */}
-          <div className="col-span-1 md:col-span-2">
-            <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
-              Compétences <span className="text-[#00f098] text-[10px] font-semibold lowercase tracking-normal">(séparées par des virgules — critiques pour le scoring IA)</span>
-            </label>
-            <div className="relative">
-              <Sparkles className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#00f098] pointer-events-none" />
-              <input
-                type="text" 
-                value={form.competences}
-                onChange={e => setForm({...form, competences: e.target.value})}
-                placeholder="React, Node.js, MongoDB, Express, Docker" 
-                required
-                className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl pl-12 pr-4 py-3.5 text-sm placeholder-gray-500 focus:outline-none focus:border-[#00f098] focus:ring-1 focus:ring-[#00f098] transition-all"
-              />
+            {/* Logo de l'entreprise (URL) */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">URL du Logo (Image)</label>
+              <div className="relative">
+                <Image className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                <input
+                  type="url"
+                  value={form.logoUrl}
+                  onChange={e => setForm({...form, logoUrl: e.target.value})}
+                  placeholder="https://.../logo.png (Optionnel)"
+                  className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl pl-12 pr-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:border-[#00f098] transition-all"
+                />
+              </div>
             </div>
-          </div>
 
-          {/* 4. Niveau requis */}
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
-              Niveau requis
-            </label>
-            <select
-              value={form.niveauRequis}
-              onChange={e => setForm({...form, niveauRequis: e.target.value})}
-              className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-[#00f098] transition-all cursor-pointer"
-            >
-              {['Licence', 'Master', 'Ingénieur', 'Doctorat'].map(n => (
-                <option key={n} value={n} className="bg-[#0b1a19] text-white">{n}</option>
-              ))}
-            </select>
-          </div>
+            {/* Localisation */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Localisation / Région</label>
+              <div className="relative">
+                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                <input
+                  type="text"
+                  value={form.localisation}
+                  onChange={e => setForm({...form, localisation: e.target.value})}
+                  placeholder="ex: Dakar - Almadies, Saint-Louis..."
+                  required
+                  className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl pl-12 pr-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:border-[#00f098] transition-all"
+                />
+              </div>
+            </div>
 
-          {/* 5. Type de contrat */}
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
-              Type de contrat
-            </label>
-            <select
-              value={form.typeContrat}
-              onChange={e => setForm({...form, typeContrat: e.target.value})}
-              className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-[#00f098] transition-all cursor-pointer"
-            >
-              {['Stage', 'CDD', 'CDI', 'Freelance'].map(t => (
-                <option key={t} value={t} className="bg-[#0b1a19] text-white">{t}</option>
-              ))}
-            </select>
+            {/* Secteur d'activité */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Secteur d'activité</label>
+              <div className="relative">
+                <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                <input
+                  type="text"
+                  value={form.secteur}
+                  onChange={e => setForm({...form, secteur: e.target.value})}
+                  placeholder="ex: Fintech, Télécoms, Numérique..."
+                  required
+                  className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl pl-12 pr-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:border-[#00f098] transition-all"
+                />
+              </div>
+            </div>
+
           </div>
         </div>
 
-        {/* Bouton de soumission officiel */}
+        {/* 💼 SECTION 2 : LE POSTE & CRITÈRES */}
+        <div className="border-t border-white/5 pt-4">
+          <p className="text-[#00f098] font-bold text-xs uppercase tracking-wider mb-3">2. Détails du poste & Conditions</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            {/* Titre du poste */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Titre du poste</label>
+              <input
+                type="text"
+                value={form.titre}
+                onChange={e => setForm({...form, titre: e.target.value})}
+                placeholder="ex: Développeur Full Stack React / Node"
+                required
+                className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl px-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:border-[#00f098] transition-all"
+              />
+            </div>
+
+            {/* Salaire / Rémunération */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Rémunération / Salaire</label>
+              <div className="relative">
+                <Coins className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                <input
+                  type="text"
+                  value={form.salaire}
+                  onChange={e => setForm({...form, salaire: e.target.value})}
+                  placeholder="ex: 350 000 - 500 000 FCFA (ou À négocier)"
+                  className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl pl-12 pr-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:border-[#00f098] transition-all"
+                />
+              </div>
+            </div>
+
+            {/* Type de contrat */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Type de contrat</label>
+              <select
+                value={form.typeContrat}
+                onChange={e => setForm({...form, typeContrat: e.target.value})}
+                className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00f098] transition-all cursor-pointer"
+              >
+                {['Stage', 'CDD', 'CDI', 'Freelance'].map(t => (
+                  <option key={t} value={t} className="bg-[#0b1a19] text-white">{t}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Niveau d'études requis */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Niveau d'études requis</label>
+              <select
+                value={form.niveauRequis}
+                onChange={e => setForm({...form, niveauRequis: e.target.value})}
+                className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00f098] transition-all cursor-pointer"
+              >
+                {['Licence', 'Master', 'Ingénieur', 'Doctorat'].map(n => (
+                  <option key={n} value={n} className="bg-[#0b1a19] text-white">{n}</option>
+                ))}
+              </select>
+            </div>
+
+          </div>
+        </div>
+
+        {/* 🤖 SECTION 3 : COMPÉTENCES IA & DESCRIPTION */}
+        <div className="border-t border-white/5 pt-4">
+          <p className="text-[#00f098] font-bold text-xs uppercase tracking-wider mb-3">3. Analyse IA & Descriptif</p>
+          <div className="space-y-4">
+            
+            {/* Compétences clés */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
+                Compétences clés <span className="text-[#00f098] text-[10px] font-semibold lowercase tracking-normal">(critiques pour le scoring IA — séparées par des virgules)</span>
+              </label>
+              <div className="relative">
+                <Sparkles className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#00f098] pointer-events-none" />
+                <input
+                  type="text"
+                  value={form.competences}
+                  onChange={e => setForm({...form, competences: e.target.value})}
+                  placeholder="React, Node.js, MongoDB, Express, Docker"
+                  required
+                  className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl pl-12 pr-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:border-[#00f098] transition-all"
+                />
+              </div>
+            </div>
+
+            {/* Description du poste */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Description & Missions</label>
+              <textarea
+                value={form.description}
+                onChange={e => setForm({...form, description: e.target.value})}
+                rows={3}
+                placeholder="Décrivez les responsabilités principales et le profil idéal..."
+                required
+                className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl p-4 text-sm placeholder-gray-500 focus:outline-none focus:border-[#00f098] transition-all resize-none leading-relaxed"
+              />
+            </div>
+
+          </div>
+        </div>
+
+        {/* Bouton de publication */}
         <button
           type="submit"
-          className="w-full bg-[#00f098] hover:bg-[#00d084] text-[#0b1a19] py-3.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,240,152,0.2)] mt-3 cursor-pointer"
+          className="w-full bg-[#00f098] hover:bg-[#00d084] text-[#041619] py-3.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,240,152,0.2)] cursor-pointer"
         >
           Publier l'offre
         </button>
+
       </form>
     </div>
   )
@@ -120,15 +210,25 @@ export default function DashboardRecruteur() {
   const [offres, setOffres]     = useState([])
   const [loading, setLoading]   = useState(true)
   const [showForm, setShowForm] = useState(false)
-  const [form, setForm]         = useState({
-    titre: '', description: '',
-    competences: '', niveauRequis: 'Licence', typeContrat: 'Stage'
-  })
+  const formInitial = {
+    titre: '',
+    description: '',
+    entreprise: '',
+    logoUrl: '',
+    localisation: 'Dakar, Sénégal',
+    secteur: 'Technologie & Numérique',
+    salaire: '',
+    competences: '',
+    niveauRequis: 'Licence',
+    typeContrat: 'Stage'
+  }
+
+  const [form, setForm] = useState(formInitial)
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/immutability
     chargerOffres()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [])
 
   const chargerOffres = async () => {
     try {
@@ -149,10 +249,10 @@ export default function DashboardRecruteur() {
         competences: form.competences.split(',').map(c => c.trim())
       })
       setShowForm(false)
-      setForm({ titre: '', description: '', competences: '', niveauRequis: 'Licence', typeContrat: 'Stage' })
+      setForm(formInitial)
       chargerOffres()
     } catch (err) {
-      console.error(err)
+      console.error("Erreur lors de la création de l'offre :", err)
     }
   }
 
