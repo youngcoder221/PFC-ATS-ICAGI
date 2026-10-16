@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Search, Briefcase, Check, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles, MapPin } from 'lucide-react'
+import { Search, Briefcase, Check, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles, MapPin, Building2 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import logo from '../assets/logo-icon-small.png'
 import heroBg from '../assets/hero-bg.png'
@@ -258,99 +258,129 @@ export default function Landing() {
                     o.competences?.some(c => c.toLowerCase().includes(searchQuery.toLowerCase()))
                   )
                   .map((offre) => {
-                  return (
-                    <div 
-                      key={offre._id} 
-                      className="bg-[#08282d] border border-transparent rounded-[2rem] p-7 shadow-[0_15px_40px_rgba(4,22,25,0.08)] hover:shadow-[0_20px_50px_rgba(4,22,25,0.15)] hover:border-[#00f098]/30 hover:-translate-y-2 transition-all duration-500 flex flex-col group relative overflow-hidden"
-                    >
-                      {/* Subtil effet de lumière en haut de la carte au survol */}
-                      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    const nomEntreprise = offre.entreprise || offre.recruteurId?.entreprise || 'Entreprise Partenaire'
 
-                      {/* Header de carte */}
-                      <div className="flex justify-between items-center mb-6">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2.5 h-2.5 rounded-full bg-[#00f098]"></div>
-                          <span className="text-gray-400 font-bold text-xs tracking-widest uppercase">
-                            {offre.recruteurId?.entreprise || 'Confidentiel'}
+                    return (
+                      <div 
+                        key={offre._id} 
+                        className="bg-[#08282d] border border-transparent rounded-[2rem] p-7 shadow-[0_15px_40px_rgba(4,22,25,0.08)] hover:shadow-[0_20px_50px_rgba(4,22,25,0.15)] hover:border-[#00f098]/30 hover:-translate-y-2 transition-all duration-500 flex flex-col group relative overflow-hidden"
+                      >
+                        {/* Subtil reflet de lumière au survol */}
+                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                        {/* 🏢 EN-TÊTE AVEC LOGO DE LA PME */}
+                        <div className="flex justify-between items-start mb-5">
+                          <div className="flex items-center gap-3 min-w-0">
+                            
+                            {/* Logo ou Avatar d'initiales de la PME */}
+                            <div className="w-12 h-12 rounded-xl bg-[#041619] border border-white/10 p-1.5 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-inner">
+                              {offre.logoUrl ? (
+                                <img 
+                                  src={offre.logoUrl} 
+                                  alt={nomEntreprise} 
+                                  className="w-full h-full object-contain rounded-lg"
+                                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                                />
+                              ) : (
+                                <span className="text-[#00f098] font-black text-xs tracking-wider">
+                                  {nomEntreprise.slice(0, 2).toUpperCase()}
+                                </span>
+                              )}
+                            </div>
+
+                            <div className="min-w-0">
+                              <h4 className="text-white font-bold text-sm tracking-tight truncate group-hover:text-[#00f098] transition-colors">
+                                {nomEntreprise}
+                              </h4>
+                              <p className="text-gray-400 text-xs mt-0.5 flex items-center gap-1 font-medium truncate">
+                                <MapPin className="w-3 h-3 text-[#00f098]" />
+                                {offre.localisation || 'Dakar, Sénégal'}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Badge vérifié */}
+                          <div className="flex items-center gap-1.5 text-[#00f098] bg-[#00f098]/10 px-2.5 py-1 rounded-lg text-[11px] font-bold border border-[#00f098]/20 flex-shrink-0">
+                            <Check className="w-3 h-3" /> Vérifiée
+                          </div>
+                        </div>
+
+                        {/* Titre du poste */}
+                        <h3 className="text-xl font-black text-white mb-4 line-clamp-2 leading-tight group-hover:text-[#00f098] transition-colors">
+                          {offre.titre}
+                        </h3>
+
+                        {/* Badges métadonnées (Secteur + Contrat) */}
+                        <div className="flex flex-wrap gap-2 mb-5">
+                          <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs font-bold px-3 py-1.5 rounded-lg">
+                            {offre.secteur || 'Technologie & Numérique'}
+                          </span>
+                          <span className="bg-[#041619] border border-white/5 text-[#00f098] text-xs font-bold px-3 py-1.5 rounded-lg">
+                            {offre.typeContrat}
                           </span>
                         </div>
-                        <div className="flex items-center gap-1.5 text-[#00f098] bg-[#00f098]/10 px-2.5 py-0.5 rounded-md text-[11px] font-bold border border-[#00f098]/20">
-                          <Check className="w-3 h-3" /> Vérifiée
+
+                        {/* Grille d'informations (Rémunération, Publication, Niveau) */}
+                        <div className="grid grid-cols-3 gap-2 border-t border-b border-white/5 py-3 mb-5">
+                          <div>
+                            <p className="text-[10px] text-gray-500 font-bold uppercase mb-0.5">Rémunération</p>
+                            <p className="text-xs text-white font-bold truncate">
+                              {offre.salaire && offre.salaire !== 'À négocier' ? offre.salaire : 'À négocier'}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] text-gray-500 font-bold uppercase mb-0.5">Publication</p>
+                            <p className="text-xs text-white font-bold">
+                              {new Date(offre.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] text-gray-500 font-bold uppercase mb-0.5">Niveau</p>
+                            <p className="text-xs text-gray-300 font-bold truncate">
+                              {offre.niveauRequis || 'Tous profils'}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Puces de compétences clés */}
+                        {offre.competences && offre.competences.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 mb-5">
+                            {offre.competences.slice(0, 3).map((comp, idx) => (
+                              <span key={idx} className="bg-white/5 text-gray-400 text-[11px] px-2.5 py-1 rounded-lg font-medium border border-white/5">
+                                {comp}
+                              </span>
+                            ))}
+                            {offre.competences.length > 3 && (
+                              <span className="text-gray-500 text-[10px] self-center font-bold">
+                                +{offre.competences.length - 3} autres
+                              </span>
+                            )}
+                          </div>
+                        )}
+
+                        <p className="text-[#00f098] text-xs font-bold mb-6 flex items-center gap-1.5">
+                          <Sparkles className="w-3.5 h-3.5" />
+                          Scoring IA disponible
+                        </p>
+
+                        {/* Boutons d'action CTA */}
+                        <div className="mt-auto flex items-center gap-3 pt-2">
+                          <button 
+                            onClick={() => navigate(`/offres/${offre._id}`)}
+                            className="flex-1 bg-[#041619] border border-white/10 text-white font-bold py-3.5 rounded-xl hover:border-[#00f098]/50 hover:text-[#00f098] transition-colors text-xs cursor-pointer shadow-inner text-center"
+                          >
+                            Détails
+                          </button>
+                          <button 
+                            onClick={() => handlePostulerCarte(offre._id)}
+                            className="flex-1 bg-[#00f098] text-[#041619] font-black py-3.5 rounded-xl hover:bg-[#00d084] transition-colors flex items-center justify-center gap-1.5 text-xs shadow-[0_0_15px_rgba(0,240,152,0.2)] cursor-pointer"
+                          >
+                            Postuler <ArrowUpRight className="w-4 h-4" />
+                          </button>
                         </div>
                       </div>
-
-                      {/* Titre */}
-                      <h3 className="text-xl font-black text-white mb-5 line-clamp-2 leading-tight group-hover:text-[#00f098] transition-colors">
-                        {offre.titre}
-                      </h3>
-
-                      {/* Badges métadonnées */}
-                      <div className="flex flex-wrap gap-2 mb-5">
-                        <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs font-bold px-3.5 py-2 rounded-xl">
-                          {offre.secteur || 'Technologies'}
-                        </span>
-                        <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs font-bold px-3.5 py-2 rounded-xl">
-                          {offre.typeContrat}
-                        </span>
-                      </div>
-
-                      {/* Informations dates & lieu */}
-                      <div className="grid grid-cols-3 gap-2 border-t border-b border-white/5 py-4 mb-5">
-                        <div>
-                          <p className="text-[10px] text-gray-500 font-bold uppercase mb-1">Localisation</p>
-                          <p className="text-xs text-white font-bold truncate">{offre.localisation || 'Sénégal'}</p>
-                        </div>
-                        <div>
-                          <p className="text-[10px] text-gray-500 font-bold uppercase mb-1">Publication</p>
-                          <p className="text-xs text-white font-bold">
-                            {new Date(offre.createdAt).toLocaleDateString('fr-FR', {day: '2-digit', month:'short'})}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-[10px] text-gray-500 font-bold uppercase mb-1">Date limite</p>
-                          <p className="text-xs text-white font-bold">Non précisée</p>
-                        </div>
-                      </div>
-
-                      {/* Puces de compétences */}
-                      {offre.competences && offre.competences.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 mb-6">
-                          {offre.competences.slice(0, 3).map((comp, idx) => (
-                            <span key={idx} className="bg-white/5 text-gray-400 text-[11px] px-2.5 py-1 rounded-lg font-medium border border-white/5">
-                              {comp}
-                            </span>
-                          ))}
-                          {offre.competences.length > 3 && (
-                            <span className="text-gray-500 text-[10px] self-center font-bold">
-                              +{offre.competences.length - 3} autres
-                            </span>
-                          )}
-                        </div>
-                      )}
-
-                      <p className="text-[#00f098] text-xs font-bold mb-6 flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5" />
-                        Scoring IA disponible
-                      </p>
-
-                      {/* Boutons CTA avec espacement optimisé */}
-                      <div className="mt-auto flex items-center gap-3 pt-2">
-                        <button 
-                          onClick={() => navigate(`/offres/${offre._id}`)}
-                          className="flex-1 bg-[#041619] border border-white/10 text-white font-bold py-3.5 rounded-xl hover:border-[#00f098]/50 hover:text-[#00f098] transition-colors text-xs cursor-pointer shadow-inner"
-                        >
-                          Détails
-                        </button>
-                        <button 
-                          onClick={() => handlePostulerCarte(offre._id)}
-                          className="flex-1 bg-[#00f098] text-[#041619] font-black py-3.5 rounded-xl hover:bg-[#00d084] transition-colors flex items-center justify-center gap-1.5 text-xs shadow-[0_0_15px_rgba(0,240,152,0.2)] cursor-pointer"
-                        >
-                          Postuler <ArrowUpRight className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  )
-                })}
+                    )
+                  })}
               </div>
 
               {/* Bouton Noir Massif - Afficher plus d'offres */}
