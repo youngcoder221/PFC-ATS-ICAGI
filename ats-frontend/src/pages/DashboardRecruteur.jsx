@@ -37,18 +37,44 @@ function FormulaireOffre({ form, setForm, handleSubmit }) {
               </div>
             </div>
 
-            {/* Logo de l'entreprise (URL) */}
+            {/* Upload du Logo de l'entreprise (Fichier PNG / JPG avec aperçu) */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">URL du Logo (Image)</label>
-              <div className="relative">
-                <Image className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
-                <input
-                  type="url"
-                  value={form.logoUrl}
-                  onChange={e => setForm({...form, logoUrl: e.target.value})}
-                  placeholder="https://.../logo.png (Optionnel)"
-                  className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl pl-12 pr-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:border-[#00f098] transition-all"
-                />
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
+                Logo de la PME (PNG, JPG)
+              </label>
+              <div className="flex items-center gap-3">
+                <label className="flex-1 flex items-center justify-between bg-[#0b1a19] border border-white/10 hover:border-[#00f098]/50 px-4 py-3 rounded-xl cursor-pointer transition-all group">
+                  <span className={`text-xs font-medium truncate ${form.logoUrl ? 'text-[#00f098] font-bold' : 'text-gray-400 group-hover:text-white'}`}>
+                    {form.logoUrl ? 'Logo sélectionné ✓' : 'Sélectionner le logo (PNG, JPG)...'}
+                  </span>
+                  <Image className={`w-4 h-4 ${form.logoUrl ? 'text-[#00f098]' : 'text-gray-500 group-hover:text-[#00f098]'}`} />
+                  <input
+                    type="file"
+                    accept="image/png, image/jpeg, image/webp"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files[0]
+                      if (file) {
+                        if (file.size > 2 * 1024 * 1024) {
+                          alert("⚠️ L'image du logo ne doit pas dépasser 2 Mo.")
+                          return
+                        }
+                        const reader = new FileReader()
+                        reader.onloadend = () => {
+                          setForm(prev => ({ ...prev, logoUrl: reader.result }))
+                        }
+                        reader.readAsDataURL(file)
+                      }
+                    }}
+                  />
+                </label>
+
+                {/* Vignette d'aperçu en direct du logo sélectionné */}
+                {form.logoUrl && (
+                  <div className="w-11 h-11 rounded-xl bg-[#041619] border border-[#00f098]/40 p-1 flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm">
+                    <img src={form.logoUrl} alt="Aperçu logo" className="w-full h-full object-contain rounded-lg" />
+                  </div>
+                )}
               </div>
             </div>
 
