@@ -103,8 +103,8 @@ export default function OffreDetailsPublic() {
             Retour aux offres
           </button>
 
-          {/* 2. Titre du poste en premier (Gros et impactant) */}
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tight mb-4 leading-[1.1]">
+          {/* 2. Titre du poste calibré style FDE avec coupure équilibrée */}
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tight mb-4 leading-[1.08] max-w-2xl md:max-w-3xl text-balance">
             {offre.titre}
           </h1>
 
