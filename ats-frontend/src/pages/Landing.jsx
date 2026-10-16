@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Search, Briefcase, Check, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles, MapPin, Building2 } from 'lucide-react'
+import { Search, Briefcase, Check, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles, MapPin } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import logo from '../assets/logo-icon-small.png'
 import heroBg from '../assets/hero-bg.png'
