@@ -108,13 +108,17 @@ export default function OffreDetailsPublic() {
             {offre.titre}
           </h1>
 
-          {/* 3. "Publié par [Logo PME] Nom de l'entreprise" (Strictement comme FDE) */}
+          {/* 3. "Publié par [Logo PME] Nom de l'entreprise" (Cliquable vers la page PME) */}
           <div className="flex items-center gap-3">
             <span className="text-gray-400 text-sm md:text-base font-normal">Publié par</span>
             
-            <div className="inline-flex items-center gap-2.5">
+            <button
+              onClick={() => navigate(`/entreprises/${encodeURIComponent(nomEntreprise)}`)}
+              className="inline-flex items-center gap-2.5 cursor-pointer group/link text-left"
+              title={`Voir toutes les offres de ${nomEntreprise}`}
+            >
               {/* Logo ou Avatar d'initiales de la PME */}
-              <div className="w-7 h-7 rounded-lg bg-[#041619] border border-white/10 p-0.5 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm">
+              <div className="w-7 h-7 rounded-lg bg-[#041619] border border-white/10 group-hover/link:border-[#00f098]/40 p-0.5 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm transition-colors">
                 {offre.logoUrl ? (
                   <img 
                     src={offre.logoUrl} 
@@ -129,11 +133,11 @@ export default function OffreDetailsPublic() {
                 )}
               </div>
 
-              {/* Nom de la PME avec soulignement stylisé FDE */}
-              <span className="text-white font-bold text-sm md:text-base underline underline-offset-4 decoration-white/30 hover:decoration-[#00f098] hover:text-[#00f098] transition-colors cursor-pointer">
+              {/* Nom de la PME souligné style FDE */}
+              <span className="text-white font-bold text-sm md:text-base underline underline-offset-4 decoration-white/30 group-hover/link:decoration-[#00f098] group-hover/link:text-[#00f098] transition-colors">
                 {nomEntreprise}
               </span>
-            </div>
+            </button>
           </div>
 
         </div>

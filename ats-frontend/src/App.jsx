@@ -7,7 +7,8 @@ import DashboardRecruteur from './pages/DashboardRecruteur'
 import DashboardCandidat  from './pages/DashboardCandidat'
 import Ranking            from './pages/Ranking'
 import Admin              from './pages/Admin'
-import OffreDetailsPublic from './pages/OffreDetailsPublic'  
+import OffreDetailsPublic from './pages/OffreDetailsPublic' 
+import EntreprisePublic from './pages/EntreprisePublic' 
 
 // Route protégée selon le rôle
 const PrivateRoute = ({ children, role }) => {
@@ -24,6 +25,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/offres/:id" element={<OffreDetailsPublic />} />
+          <Route path="/entreprises/:nom" element={<EntreprisePublic />} />
           <Route path="/login"   element={<Login />} />
           <Route path="/register" element={<Register />} />
 

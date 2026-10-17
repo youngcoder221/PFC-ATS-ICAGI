@@ -37,10 +37,17 @@ const creerOffre = async (req, res) => {
   }
 }
 
-// ─── LISTER TOUTES LES OFFRES (public) ──────────────────
+// ─── LISTER TOUTES LES OFFRES (public avec filtre entreprise optionnel) ───
 const getOffres = async (req, res) => {
   try {
-    const offres = await Offre.find({ statut: 'ouverte' })
+    const filtre = { statut: 'ouverte' }
+
+    // Si un nom d'entreprise est passé en paramètre d'URL (?entreprise=...)
+    if (req.query.entreprise) {
+      filtre.entreprise = new RegExp(`^${req.query.entreprise.trim()}$`, 'i')
+    }
+
+    const offres = await Offre.find(filtre)
       .populate('recruteurId', 'nom prenom email')
       .sort({ createdAt: -1 })
 
