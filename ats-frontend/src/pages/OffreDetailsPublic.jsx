@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, MapPin, Briefcase, GraduationCap, Calendar, Share2, Sparkles, Building2, Check, Clock } from 'lucide-react'
+import { ArrowLeft, MapPin, Briefcase, GraduationCap, Calendar, Share2, Sparkles, Clock, X, CheckCircle, XCircle, FileText } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
 import logo from '../assets/logo-icon-small.png'
@@ -73,7 +73,7 @@ export default function OffreDetailsPublic() {
     )
   }
 
-  const nomEntreprise = offre.recruteurId?.entreprise || `${offre.recruteurId?.prenom || ''} ${offre.recruteurId?.nom || ''}`.trim() || 'Entreprise partenaire'
+  const nomEntreprise = offre.entreprise || offre.recruteurId?.entreprise || 'Entreprise Partenaire'
 
   return (
     <div className="min-h-screen bg-white flex flex-col font-sans">
@@ -90,11 +90,11 @@ export default function OffreDetailsPublic() {
         </div>
       </nav>
 
-      {/* ── BANDEAU DU TITRE (INSPIRATION FDE / HANDSHAKE) ── */}
-      <header className="bg-[#0b1a19] text-white pt-8 pb-12 px-6 border-b border-white/5 relative">
+      {/* ── BANDEAU DU TITRE (STYLE FDE ÉPURÉ : RETOUR + TITRE + LOGO PME) ── */}
+      <header className="bg-[#0b1a19] text-white pt-8 pb-14 px-6 border-b border-white/5 relative">
         <div className="max-w-6xl mx-auto">
           
-          {/* 1. Bouton retour intact */}
+          {/* 1. Bouton retour aux offres */}
           <button
             onClick={() => navigate('/#offres')}
             className="inline-flex items-center gap-2 text-gray-400 hover:text-[#00f098] text-xs font-bold transition-colors mb-6 cursor-pointer group"
@@ -103,36 +103,37 @@ export default function OffreDetailsPublic() {
             Retour aux offres
           </button>
 
-          {/* 2. Titre du poste aéré avec espacement généreux FDE */}
+          {/* 2. Titre du poste imposant */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-8 md:mb-10 leading-[1.2] max-w-3xl md:max-w-4xl text-balance">
             {offre.titre}
           </h1>
 
-          {/* 3. Entreprise en dessous : "Publié par [Entreprise]" */}
-          <div className="flex flex-wrap items-center gap-3 mb-6">
-            <span className="text-gray-400 text-sm font-medium">Publié par</span>
-            <div className="inline-flex items-center gap-2 bg-[#041619] border border-white/10 px-3 py-1.5 rounded-xl shadow-sm">
-              <Building2 className="w-4 h-4 text-[#00f098]" />
-              <span className="text-white font-bold text-sm tracking-wide">{nomEntreprise}</span>
-            </div>
-            <span className="text-gray-600 hidden sm:inline">•</span>
-            <span className="text-gray-400 text-xs font-medium flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-gray-500" />
-              {offre.localisation || 'Sénégal'}
-            </span>
-          </div>
+          {/* 3. "Publié par [Logo PME] Nom de l'entreprise" (Strictement comme FDE) */}
+          <div className="flex items-center gap-3">
+            <span className="text-gray-400 text-sm md:text-base font-normal">Publié par</span>
+            
+            <div className="inline-flex items-center gap-2.5">
+              {/* Logo ou Avatar d'initiales de la PME */}
+              <div className="w-7 h-7 rounded-lg bg-[#041619] border border-white/10 p-0.5 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm">
+                {offre.logoUrl ? (
+                  <img 
+                    src={offre.logoUrl} 
+                    alt={nomEntreprise} 
+                    className="w-full h-full object-contain rounded-md"
+                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                  />
+                ) : (
+                  <span className="text-[#00f098] font-black text-[10px]">
+                    {nomEntreprise.slice(0, 2).toUpperCase()}
+                  </span>
+                )}
+              </div>
 
-          {/* 4. Badges d'informations complémentaires */}
-          <div className="flex flex-wrap items-center gap-2.5 text-xs text-gray-300 font-medium">
-            <span className="bg-[#041619] border border-white/10 px-3 py-1.5 rounded-xl">
-              {offre.secteur || 'Technologie & Numérique'}
-            </span>
-            <span className="bg-[#041619] border border-white/10 px-3 py-1.5 rounded-xl">
-              {offre.typeContrat || 'CDI'}
-            </span>
-            <span className="bg-[#00f098]/10 text-[#00f098] border border-[#00f098]/20 px-3 py-1.5 rounded-xl flex items-center gap-1.5 font-bold">
-              <Check className="w-3.5 h-3.5" /> Offre active
-            </span>
+              {/* Nom de la PME avec soulignement stylisé FDE */}
+              <span className="text-white font-bold text-sm md:text-base underline underline-offset-4 decoration-white/30 hover:decoration-[#00f098] hover:text-[#00f098] transition-colors cursor-pointer">
+                {nomEntreprise}
+              </span>
+            </div>
           </div>
 
         </div>
