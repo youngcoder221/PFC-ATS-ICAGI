@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, MapPin, Briefcase, GraduationCap, Calendar, Share2, Sparkles, Clock, X, CheckCircle, XCircle, FileText } from 'lucide-react'
+import { ArrowLeft, MapPin, Briefcase, GraduationCap, Calendar, Share2, Sparkles, Clock } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
 import logo from '../assets/logo-icon-small.png'
