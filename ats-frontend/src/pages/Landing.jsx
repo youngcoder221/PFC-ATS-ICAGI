@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Search, Briefcase, Check, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles, MapPin } from 'lucide-react'
+import { Search, Briefcase, Check, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles, MapPin, Coins, GraduationCap } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import logo from '../assets/logo-icon-small.png'
 import heroBg from '../assets/hero-bg.png'
@@ -268,12 +268,12 @@ export default function Landing() {
                         {/* Subtil reflet de lumière au survol */}
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                        {/* 🏢 EN-TÊTE AVEC LOGO DE LA PME */}
-                        <div className="flex justify-between items-start mb-5">
+                        {/* 🏢 1. EN-TÊTE AÉRÉ : Logo + Nom PME (gauche) & Badge Vérifié (droite) */}
+                        <div className="flex justify-between items-start mb-4">
                           <div className="flex items-center gap-3 min-w-0">
                             
                             {/* Logo ou Avatar d'initiales de la PME */}
-                            <div className="w-12 h-12 rounded-xl bg-[#041619] border border-white/10 p-1.5 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-inner">
+                            <div className="w-12 h-12 rounded-xl bg-[#041619] border border-white/10 p-1 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-inner">
                               {offre.logoUrl ? (
                                 <img 
                                   src={offre.logoUrl} 
@@ -292,59 +292,57 @@ export default function Landing() {
                               <h4 className="text-white font-bold text-sm tracking-tight truncate group-hover:text-[#00f098] transition-colors">
                                 {nomEntreprise}
                               </h4>
-                              <p className="text-gray-400 text-xs mt-0.5 flex items-center gap-1 font-medium truncate">
-                                <MapPin className="w-3 h-3 text-[#00f098]" />
-                                {offre.localisation || 'Dakar, Sénégal'}
+                              <p className="text-gray-400 text-xs mt-0.5 font-medium truncate">
+                                {offre.secteur || 'Technologie & Numérique'}
                               </p>
                             </div>
                           </div>
 
-                          {/* Badge vérifié */}
-                          <div className="flex items-center gap-1.5 text-[#00f098] bg-[#00f098]/10 px-2.5 py-1 rounded-lg text-[11px] font-bold border border-[#00f098]/20 flex-shrink-0">
+                          {/* Badge vérifié net */}
+                          <div className="flex items-center gap-1.5 text-[#00f098] bg-[#00f098]/10 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider border border-[#00f098]/20 flex-shrink-0">
                             <Check className="w-3 h-3" /> Vérifiée
                           </div>
                         </div>
 
-                        {/* Titre du poste */}
-                        <h3 className="text-xl font-black text-white mb-4 line-clamp-2 leading-tight group-hover:text-[#00f098] transition-colors">
+                        {/* 🎯 2. TITRE DU POSTE (Uniformisé en blanc, s'allume au survol) */}
+                        <h3 className="text-lg md:text-xl font-black text-white mb-3 line-clamp-2 leading-snug group-hover:text-[#00f098] transition-colors">
                           {offre.titre}
                         </h3>
 
-                        {/* Badges métadonnées (Secteur + Contrat) */}
-                        <div className="flex flex-wrap gap-2 mb-5">
-                          <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs font-bold px-3 py-1.5 rounded-lg">
-                            {offre.secteur || 'Technologie & Numérique'}
+                        {/* 📍 3. LIGNE DES MÉTADONNÉES AÉRÉE (Localisation, Contrat, Niveau) */}
+                        <div className="flex flex-wrap items-center gap-2 mb-4">
+                          <span className="inline-flex items-center gap-1.5 text-xs bg-[#041619] border border-white/5 text-gray-300 px-3 py-1.5 rounded-xl font-medium">
+                            <MapPin className="w-3.5 h-3.5 text-[#00f098] flex-shrink-0" />
+                            {offre.localisation || 'Dakar, Sénégal'}
                           </span>
-                          <span className="bg-[#041619] border border-white/5 text-[#00f098] text-xs font-bold px-3 py-1.5 rounded-lg">
-                            {offre.typeContrat}
+                          <span className="inline-flex items-center gap-1.5 text-xs bg-[#041619] border border-white/5 text-[#00f098] px-3 py-1.5 rounded-xl font-black">
+                            <Briefcase className="w-3.5 h-3.5 text-[#00f098] flex-shrink-0" />
+                            {offre.typeContrat || 'CDI'}
+                          </span>
+                          {offre.niveauRequis && (
+                            <span className="inline-flex items-center gap-1.5 text-xs bg-[#041619] border border-white/5 text-gray-300 px-3 py-1.5 rounded-xl font-medium">
+                              <GraduationCap className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+                              {offre.niveauRequis}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* 💰 4. BANDEAU DE RÉMUNÉRATION DÉDIÉ (Plus de troncature) */}
+                        <div className="flex items-center justify-between py-3 border-t border-b border-white/5 mb-4 text-xs">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <Coins className="w-4 h-4 text-[#00f098] flex-shrink-0" />
+                            <span className="text-white font-black truncate">
+                              {offre.salaire && offre.salaire !== 'À négocier' ? offre.salaire : 'Rémunération à négocier'}
+                            </span>
+                          </div>
+                          <span className="text-gray-400 text-[11px] font-medium flex-shrink-0">
+                            {new Date(offre.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })}
                           </span>
                         </div>
 
-                        {/* Grille d'informations (Rémunération, Publication, Niveau) */}
-                        <div className="grid grid-cols-3 gap-2 border-t border-b border-white/5 py-3 mb-5">
-                          <div>
-                            <p className="text-[10px] text-gray-500 font-bold uppercase mb-0.5">Rémunération</p>
-                            <p className="text-xs text-white font-bold truncate">
-                              {offre.salaire && offre.salaire !== 'À négocier' ? offre.salaire : 'À négocier'}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] text-gray-500 font-bold uppercase mb-0.5">Publication</p>
-                            <p className="text-xs text-white font-bold">
-                              {new Date(offre.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] text-gray-500 font-bold uppercase mb-0.5">Niveau</p>
-                            <p className="text-xs text-gray-300 font-bold truncate">
-                              {offre.niveauRequis || 'Tous profils'}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Puces de compétences clés */}
+                        {/* 🧩 5. COMPÉTENCES CLÉS */}
                         {offre.competences && offre.competences.length > 0 && (
-                          <div className="flex flex-wrap gap-1.5 mb-5">
+                          <div className="flex flex-wrap gap-1.5 mb-4">
                             {offre.competences.slice(0, 3).map((comp, idx) => (
                               <span key={idx} className="bg-white/5 text-gray-400 text-[11px] px-2.5 py-1 rounded-lg font-medium border border-white/5">
                                 {comp}
@@ -363,7 +361,7 @@ export default function Landing() {
                           Scoring IA disponible
                         </p>
 
-                        {/* Boutons d'action CTA */}
+                        {/* 🚀 6. ACTIONS CTA */}
                         <div className="mt-auto flex items-center gap-3 pt-2">
                           <button 
                             onClick={() => navigate(`/offres/${offre._id}`)}
