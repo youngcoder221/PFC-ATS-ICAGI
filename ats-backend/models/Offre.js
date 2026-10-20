@@ -6,6 +6,7 @@ const offreSchema = new mongoose.Schema({
   entreprise:   { type: String, default: 'Entreprise Partenaire' },
   logoUrl:      { type: String, default: '' },
   localisation: { type: String, default: 'Dakar, Sénégal' },
+  modeTravail:  { type: String, enum: ['Sur site', 'Hybride', 'Télétravail'], default: 'Sur site' },
   secteur:      { type: String, default: 'Technologie & Numérique' },
   salaire:      { type: String, default: 'À négocier' },
   competences:  [{ type: String }],
