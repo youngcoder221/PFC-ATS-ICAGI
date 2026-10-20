@@ -113,7 +113,7 @@ function FormulaireOffre({ form, setForm, handleSubmit }) {
           </div>
         </div>
 
-        {/* 💼 SECTION 2 : LE POSTE & CRITÈRES */}
+        {/* 💼 SECTION 2 : LE POSTE & CONDITIONS */}
         <div className="border-t border-white/5 pt-4">
           <p className="text-[#00f098] font-bold text-xs uppercase tracking-wider mb-3">2. Détails du poste & Conditions</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -131,7 +131,7 @@ function FormulaireOffre({ form, setForm, handleSubmit }) {
               />
             </div>
 
-            {/* Salaire / Rémunération avec guidage au format compact */}
+            {/* Salaire / Rémunération avec format conseillé */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
                 Rémunération <span className="text-[#00f098] text-[10px] font-semibold lowercase tracking-normal">(ex: 450k – 700k FCFA)</span>
@@ -162,8 +162,22 @@ function FormulaireOffre({ form, setForm, handleSubmit }) {
               </select>
             </div>
 
-            {/* Niveau d'études requis */}
+            {/* 🌐 Mode de travail (Liste déroulante : Sur site, Hybride, Télétravail) */}
             <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Mode de travail</label>
+              <select
+                value={form.modeTravail}
+                onChange={e => setForm({...form, modeTravail: e.target.value})}
+                className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00f098] transition-all cursor-pointer"
+              >
+                {['Sur site', 'Hybride', 'Télétravail'].map(m => (
+                  <option key={m} value={m} className="bg-[#0b1a19] text-white">{m}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Niveau d'études requis */}
+            <div className="md:col-span-2">
               <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Niveau d'études requis</label>
               <select
                 value={form.niveauRequis}
@@ -244,6 +258,7 @@ export default function DashboardRecruteur() {
     entreprise: '',
     logoUrl: '',
     localisation: 'Dakar, Sénégal',
+    modeTravail: 'Sur site',
     secteur: 'Technologie & Numérique',
     salaire: '',
     competences: '',
