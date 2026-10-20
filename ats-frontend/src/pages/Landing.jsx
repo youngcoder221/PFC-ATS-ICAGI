@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Search, Briefcase, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles, MapPin } from 'lucide-react'
+import { Search, Briefcase, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles, MapPin, Laptop } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import logo from '../assets/logo-icon-small.png'
 import heroBg from '../assets/hero-bg.png'
@@ -310,7 +310,7 @@ export default function Landing() {
                           {offre.titre}
                         </h3>
 
-                        {/* 🏷️ 3. BADGES DE CATÉGORIE & CONTRAT (Style OPP221) */}
+                        {/* 🏷️ 3. BADGES DE CATÉGORIE, CONTRAT & MODE DE TRAVAIL */}
                         <div className="flex flex-wrap items-center gap-2 mb-4">
                           <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs font-semibold px-3 py-1.5 rounded-xl">
                             {offre.secteur || 'Technologies'}
@@ -318,6 +318,13 @@ export default function Landing() {
                           <span className="bg-[#041619] border border-white/5 text-[#00f098] text-xs font-bold px-3 py-1.5 rounded-xl">
                             {offre.typeContrat}
                           </span>
+
+                          {/* 🌐 Badge Mode de travail (Sur site, Hybride, Télétravail) */}
+                          <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs font-medium px-3 py-1.5 rounded-xl inline-flex items-center gap-1.5">
+                            <Laptop className="w-3.5 h-3.5 text-[#00f098]" />
+                            {offre.modeTravail || 'Sur site'}
+                          </span>
+
                           {offre.niveauRequis && (
                             <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs font-medium px-3 py-1.5 rounded-xl">
                               {offre.niveauRequis}
