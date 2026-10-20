@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, MapPin, Briefcase, GraduationCap, Calendar, Share2, Sparkles, Clock } from 'lucide-react'
+import { ArrowLeft, MapPin, Briefcase, GraduationCap, Calendar, Share2, Sparkles, Clock, Laptop, Coins } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
 import logo from '../assets/logo-icon-small.png'
@@ -204,11 +204,29 @@ export default function OffreDetailsPublic() {
                 </p>
               </div>
 
+              {/* 🌐 Mode de travail (Sur site, Hybride, Télétravail) */}
+              <div className="border-b border-white/5 pb-3">
+                <p className="text-gray-500 uppercase tracking-wider text-[10px] mb-1">Mode de travail</p>
+                <p className="text-white font-bold flex items-center gap-1.5">
+                  <Laptop className="w-3.5 h-3.5 text-[#00f098]" />
+                  <span className="text-[#00f098]">{offre.modeTravail || 'Sur site'}</span>
+                </p>
+              </div>
+
               <div className="border-b border-white/5 pb-3">
                 <p className="text-gray-500 uppercase tracking-wider text-[10px] mb-1">Contrat</p>
                 <p className="text-white font-bold flex items-center gap-1.5">
                   <Briefcase className="w-3.5 h-3.5 text-[#00f098]" />
                   {offre.typeContrat || 'CDI'}
+                </p>
+              </div>
+
+              {/* 💰 Rémunération si précisée */}
+              <div className="border-b border-white/5 pb-3">
+                <p className="text-gray-500 uppercase tracking-wider text-[10px] mb-1">Rémunération</p>
+                <p className="text-white font-bold flex items-center gap-1.5">
+                  <Coins className="w-3.5 h-3.5 text-[#00f098]" />
+                  {offre.salaire && offre.salaire !== 'À négocier' ? offre.salaire : 'À négocier'}
                 </p>
               </div>
 
