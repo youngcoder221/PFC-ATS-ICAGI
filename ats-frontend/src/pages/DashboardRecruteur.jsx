@@ -131,16 +131,18 @@ function FormulaireOffre({ form, setForm, handleSubmit }) {
               />
             </div>
 
-            {/* Salaire / Rémunération */}
+            {/* Salaire / Rémunération avec guidage au format compact */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Rémunération / Salaire</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
+                Rémunération <span className="text-[#00f098] text-[10px] font-semibold lowercase tracking-normal">(ex: 450k – 700k FCFA)</span>
+              </label>
               <div className="relative">
                 <Coins className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                 <input
                   type="text"
                   value={form.salaire}
                   onChange={e => setForm({...form, salaire: e.target.value})}
-                  placeholder="ex: 350 000 - 500 000 FCFA (ou À négocier)"
+                  placeholder="ex: 450k – 700k FCFA (ou À négocier)"
                   className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl pl-12 pr-4 py-3 text-sm placeholder-gray-500 focus:outline-none focus:border-[#00f098] transition-all"
                 />
               </div>

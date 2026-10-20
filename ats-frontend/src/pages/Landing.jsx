@@ -51,6 +51,15 @@ export default function Landing() {
     }
   }
 
+  // 💰 Formate automatiquement les montants en format compact (ex: 500 000 -> 500k)
+  const formaterSalaire = (salaire) => {
+    if (!salaire || salaire.toLowerCase().includes('négocier')) return 'À négocier'
+    return salaire
+      .replace(/(\d+)\s*000/g, '$1k')
+      .replace(/-/g, '–')
+      .trim()
+  }
+
   return (
     <div className="min-h-screen flex flex-col font-sans bg-[#041619]">
       
@@ -339,13 +348,13 @@ export default function Landing() {
                             </p>
                           </div>
 
-                          {/* Colonne 3 : Rémunération */}
+                          {/* Colonne 3 : Rémunération (Formatée automatiquement en 450k – 700k FCFA) */}
                           <div className="min-w-0">
                             <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider mb-1">
                               Rémunération
                             </p>
                             <p className="text-xs text-[#00f098] font-black leading-tight line-clamp-2">
-                              {offre.salaire && offre.salaire !== 'À négocier' ? offre.salaire : 'À négocier'}
+                              {formaterSalaire(offre.salaire)}
                             </p>
                           </div>
 
