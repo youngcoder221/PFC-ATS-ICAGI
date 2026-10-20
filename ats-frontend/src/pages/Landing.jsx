@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Search, Briefcase, Check, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles, MapPin, Coins, GraduationCap } from 'lucide-react'
+import { Search, Briefcase, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles, MapPin } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import logo from '../assets/logo-icon-small.png'
 import heroBg from '../assets/hero-bg.png'
@@ -268,76 +268,87 @@ export default function Landing() {
                         {/* Subtil reflet de lumière au survol */}
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                        {/* 🏢 1. EN-TÊTE AÉRÉ : Logo + Nom PME (gauche) & Badge Vérifié (droite) */}
-                        <div className="flex justify-between items-start mb-4">
-                          <div className="flex items-center gap-3 min-w-0">
-                            
-                            {/* Logo ou Avatar d'initiales de la PME */}
-                            <div className="w-12 h-12 rounded-xl bg-[#041619] border border-white/10 p-1 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-inner">
-                              {offre.logoUrl ? (
-                                <img 
-                                  src={offre.logoUrl} 
-                                  alt={nomEntreprise} 
-                                  className="w-full h-full object-contain rounded-lg"
-                                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                                />
-                              ) : (
-                                <span className="text-[#00f098] font-black text-xs tracking-wider">
-                                  {nomEntreprise.slice(0, 2).toUpperCase()}
-                                </span>
-                              )}
-                            </div>
-
-                            <div className="min-w-0">
-                              <h4 className="text-white font-bold text-sm tracking-tight truncate group-hover:text-[#00f098] transition-colors">
-                                {nomEntreprise}
-                              </h4>
-                              <p className="text-gray-400 text-xs mt-0.5 font-medium truncate">
-                                {offre.secteur || 'Technologie & Numérique'}
-                              </p>
-                            </div>
+                        {/* 🏢 1. EN-TÊTE SANS LE BADGE "VÉRIFIÉE" (Plein espace pour la PME) */}
+                        <div className="flex items-center gap-3.5 mb-4 min-w-0">
+                          {/* Logo ou Avatar d'initiales de la PME */}
+                          <div className="w-12 h-12 rounded-xl bg-[#041619] border border-white/10 p-1 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-inner">
+                            {offre.logoUrl ? (
+                              <img 
+                                src={offre.logoUrl} 
+                                alt={nomEntreprise} 
+                                className="w-full h-full object-contain rounded-lg"
+                                onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                              />
+                            ) : (
+                              <span className="text-[#00f098] font-black text-xs tracking-wider">
+                                {nomEntreprise.slice(0, 2).toUpperCase()}
+                              </span>
+                            )}
                           </div>
 
-                          {/* Badge vérifié net */}
-                          <div className="flex items-center gap-1.5 text-[#00f098] bg-[#00f098]/10 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider border border-[#00f098]/20 flex-shrink-0">
-                            <Check className="w-3 h-3" /> Vérifiée
+                          <div className="min-w-0 flex-1">
+                            <h4 className="text-white font-bold text-sm tracking-tight truncate group-hover:text-[#00f098] transition-colors">
+                              {nomEntreprise}
+                            </h4>
+                            <p className="text-gray-400 text-xs mt-0.5 font-medium truncate">
+                              {offre.secteur || 'Technologie & Numérique'}
+                            </p>
                           </div>
                         </div>
 
-                        {/* 🎯 2. TITRE DU POSTE (Uniformisé en blanc, s'allume au survol) */}
+                        {/* 🎯 2. TITRE DU POSTE */}
                         <h3 className="text-lg md:text-xl font-black text-white mb-3 line-clamp-2 leading-snug group-hover:text-[#00f098] transition-colors">
                           {offre.titre}
                         </h3>
 
-                        {/* 📍 3. LIGNE DES MÉTADONNÉES AÉRÉE (Localisation, Contrat, Niveau) */}
+                        {/* 🏷️ 3. BADGES DE CATÉGORIE & CONTRAT (Style OPP221) */}
                         <div className="flex flex-wrap items-center gap-2 mb-4">
-                          <span className="inline-flex items-center gap-1.5 text-xs bg-[#041619] border border-white/5 text-gray-300 px-3 py-1.5 rounded-xl font-medium">
-                            <MapPin className="w-3.5 h-3.5 text-[#00f098] flex-shrink-0" />
-                            {offre.localisation || 'Dakar, Sénégal'}
+                          <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs font-semibold px-3 py-1.5 rounded-xl">
+                            {offre.secteur || 'Technologies'}
                           </span>
-                          <span className="inline-flex items-center gap-1.5 text-xs bg-[#041619] border border-white/5 text-[#00f098] px-3 py-1.5 rounded-xl font-black">
-                            <Briefcase className="w-3.5 h-3.5 text-[#00f098] flex-shrink-0" />
-                            {offre.typeContrat || 'CDI'}
+                          <span className="bg-[#041619] border border-white/5 text-[#00f098] text-xs font-bold px-3 py-1.5 rounded-xl">
+                            {offre.typeContrat}
                           </span>
                           {offre.niveauRequis && (
-                            <span className="inline-flex items-center gap-1.5 text-xs bg-[#041619] border border-white/5 text-gray-300 px-3 py-1.5 rounded-xl font-medium">
-                              <GraduationCap className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+                            <span className="bg-[#041619] border border-white/5 text-gray-300 text-xs font-medium px-3 py-1.5 rounded-xl">
                               {offre.niveauRequis}
                             </span>
                           )}
                         </div>
 
-                        {/* 💰 4. BANDEAU DE RÉMUNÉRATION DÉDIÉ (Plus de troncature) */}
-                        <div className="flex items-center justify-between py-3 border-t border-b border-white/5 mb-4 text-xs">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <Coins className="w-4 h-4 text-[#00f098] flex-shrink-0" />
-                            <span className="text-white font-black truncate">
-                              {offre.salaire && offre.salaire !== 'À négocier' ? offre.salaire : 'Rémunération à négocier'}
-                            </span>
+                        {/* 📊 4. TABLEAU 3 COLONNES OPPORTUNITÉS221 (Localisation, Publication, Rémunération) */}
+                        <div className="grid grid-cols-3 gap-3 border-t border-b border-white/5 py-3.5 my-3">
+                          
+                          {/* Colonne 1 : Localisation (avec retours à la ligne naturels) */}
+                          <div className="min-w-0">
+                            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider mb-1">
+                              Localisation
+                            </p>
+                            <p className="text-xs text-white font-bold leading-tight line-clamp-2">
+                              {offre.localisation || 'Sénégal'}
+                            </p>
                           </div>
-                          <span className="text-gray-400 text-[11px] font-medium flex-shrink-0">
-                            {new Date(offre.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })}
-                          </span>
+
+                          {/* Colonne 2 : Date Publication */}
+                          <div>
+                            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider mb-1">
+                              Publication
+                            </p>
+                            <p className="text-xs text-white font-bold leading-tight">
+                              {new Date(offre.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
+                            </p>
+                          </div>
+
+                          {/* Colonne 3 : Rémunération */}
+                          <div className="min-w-0">
+                            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider mb-1">
+                              Rémunération
+                            </p>
+                            <p className="text-xs text-[#00f098] font-black leading-tight line-clamp-2">
+                              {offre.salaire && offre.salaire !== 'À négocier' ? offre.salaire : 'À négocier'}
+                            </p>
+                          </div>
+
                         </div>
 
                         {/* 🧩 5. COMPÉTENCES CLÉS */}
