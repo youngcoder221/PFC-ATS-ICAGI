@@ -77,7 +77,7 @@ const getOffre = async (req, res) => {
   }
 }
 
-// ─── MODIFIER UNE OFFRE ──────────────────────────────────
+// ─── MODIFIER UNE OFFRE (Propriétaire ou Administrateur) ──
 const modifierOffre = async (req, res) => {
   try {
     const offre = await Offre.findById(req.params.id)
@@ -86,8 +86,8 @@ const modifierOffre = async (req, res) => {
       return res.status(404).json({ message: '❌ Offre introuvable' })
     }
 
-    // Vérifier que c'est bien le recruteur propriétaire
-    if (offre.recruteurId.toString() !== req.user.id) {
+    // 🛡️ Autorise le recruteur propriétaire OU l'administrateur
+    if (offre.recruteurId.toString() !== req.user.id && req.user.role !== 'admin') {
       return res.status(403).json({ message: '❌ Non autorisé' })
     }
 
@@ -97,7 +97,7 @@ const modifierOffre = async (req, res) => {
       { new: true }   // retourner le document mis à jour
     )
 
-    res.status(200).json({ message: '✅ Offre mise à jour', offre: offreMaj })
+    res.status(200).json({ message: '✅ Offre mise à jour avec succès', offre: offreMaj })
 
   } catch (error) {
     res.status(500).json({ message: '❌ Erreur serveur', erreur: error.message })

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react'
-import { Users, Briefcase, FileText, Shield, Trash2, ChevronRight, ChevronDown, Download } from 'lucide-react'
+import { Users, Briefcase, FileText, Shield, Trash2, ChevronRight, ChevronDown, Download, Pencil, X } from 'lucide-react'
 import Layout from '../components/layout/Layout'
 import { useSearchParams } from 'react-router-dom'
 import api from '../services/api'
@@ -14,6 +14,39 @@ export default function Admin() {
   const [offres, setOffres]             = useState([])
   const [loading, setLoading]           = useState(true)
   const [expandedUserId, setExpandedUserId] = useState(null)
+
+  // 📝 États pour la modale d'édition d'offre
+  const [offreEnEdition, setOffreEnEdition] = useState(null)
+  const [editForm, setEditForm]             = useState({})
+  const [sauvegardeEnCours, setSauvegardeEnCours] = useState(false)
+
+  const ouvrirEditionOffre = (offre) => {
+    setOffreEnEdition(offre._id)
+    setEditForm({
+      titre: offre.titre || '',
+      entreprise: offre.entreprise || '',
+      localisation: offre.localisation || '',
+      modeTravail: offre.modeTravail || 'Sur site',
+      typeContrat: offre.typeContrat || 'CDI',
+      salaire: offre.salaire || '',
+      description: offre.description || ''
+    })
+  }
+
+  const handleEnregistrerOffre = async (e) => {
+    e.preventDefault()
+    setSauvegardeEnCours(true)
+    try {
+      await api.put(`/offres/${offreEnEdition}`, editForm)
+      setOffreEnEdition(null)
+      chargerDonnees()
+    } catch (err) {
+      console.error("Erreur lors de la modification de l'offre :", err)
+      alert("❌ Erreur lors de la mise à jour de l'offre")
+    } finally {
+      setSauvegardeEnCours(false)
+    }
+  }
 
   const chargerDonnees = async () => {
     try {
@@ -333,20 +366,30 @@ export default function Admin() {
                       </div>
                     </div>
 
-                    {/* Bouton d'action Fermer / Rouvrir */}
+                    {/* Actions Admin : Modifier l'offre & Basculer le statut */}
+                  <div className="flex items-center gap-2 pt-2">
+                    <button
+                      onClick={() => ouvrirEditionOffre(offre)}
+                      className="flex-1 py-3 px-3 rounded-xl text-xs font-black uppercase tracking-wider bg-[#0b1a19] border border-white/10 hover:border-[#00f098]/40 hover:text-[#00f098] text-gray-300 transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                    >
+                      <Pencil className="w-3.5 h-3.5" />
+                      Modifier
+                    </button>
+
                     <button
                       onClick={async () => {
                         await api.patch(`/offres/${offre._id}/statut`)
                         chargerDonnees()
                       }}
-                      className={`w-full py-3 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-md ${
+                      className={`flex-1 py-3 px-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                         offre.statut === 'ouverte'
                           ? 'bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500 hover:text-white'
-                          : 'bg-[#00f098] text-[#0b1a19] hover:bg-[#00d084] shadow-[0_0_15px_rgba(0,240,152,0.2)]'
+                          : 'bg-[#00f098] text-[#0b1a19] hover:bg-[#00d084]'
                       }`}
                     >
-                      {offre.statut === 'ouverte' ? 'Fermer l\'offre' : 'Rouvrir l\'offre'}
+                      {offre.statut === 'ouverte' ? 'Fermer' : 'Rouvrir'}
                     </button>
+                  </div>
                   </div>
                 ))}
               </div>
@@ -510,6 +553,113 @@ export default function Admin() {
                 </p>
               </div>
             ))}
+          </div>
+        )}
+
+      {/* ── MODALE D'ÉDITION D'OFFRE PAR L'ADMINISTRATEUR ── */}
+        {offreEnEdition && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#041619]/85 backdrop-blur-sm">
+            <div className="relative w-full max-w-2xl bg-[#0b1a19] border border-[#00f098]/30 rounded-2xl md:rounded-[2rem] p-7 md:p-8 shadow-2xl animate-in fade-in zoom-in duration-200">
+              <button
+                onClick={() => setOffreEnEdition(null)}
+                className="absolute top-6 right-6 text-gray-400 hover:text-[#00f098] bg-[#041619] p-2 rounded-full border border-white/5 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+
+              <h2 className="text-xl font-black text-white tracking-tight mb-5 flex items-center gap-2">
+                <Pencil className="w-4 h-4 text-[#00f098]" />
+                Modifier l'offre d'emploi
+              </h2>
+
+              <form onSubmit={handleEnregistrerOffre} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                  <div className="md:col-span-2">
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Titre du poste</label>
+                    <input
+                      type="text"
+                      value={editForm.titre}
+                      onChange={(e) => setEditForm({...editForm, titre: e.target.value})}
+                      required
+                      className="w-full bg-[#041619] border border-white/10 text-white rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-[#00f098]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Nom de l'entreprise (PME)</label>
+                    <input
+                      type="text"
+                      value={editForm.entreprise}
+                      onChange={(e) => setEditForm({...editForm, entreprise: e.target.value})}
+                      required
+                      className="w-full bg-[#041619] border border-white/10 text-white rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-[#00f098]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Localisation</label>
+                    <input
+                      type="text"
+                      value={editForm.localisation}
+                      onChange={(e) => setEditForm({...editForm, localisation: e.target.value})}
+                      required
+                      className="w-full bg-[#041619] border border-white/10 text-white rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-[#00f098]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Mode de travail</label>
+                    <select
+                      value={editForm.modeTravail}
+                      onChange={(e) => setEditForm({...editForm, modeTravail: e.target.value})}
+                      className="w-full bg-[#041619] border border-white/10 text-white rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-[#00f098]"
+                    >
+                      {['Sur site', 'Hybride', 'Télétravail'].map(m => (
+                        <option key={m} value={m} className="bg-[#0b1a19]">{m}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Rémunération</label>
+                    <input
+                      type="text"
+                      value={editForm.salaire}
+                      onChange={(e) => setEditForm({...editForm, salaire: e.target.value})}
+                      placeholder="ex: 700k – 950k FCFA"
+                      className="w-full bg-[#041619] border border-white/10 text-white rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-[#00f098]"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Description</label>
+                  <textarea
+                    rows={3}
+                    value={editForm.description}
+                    onChange={(e) => setEditForm({...editForm, description: e.target.value})}
+                    className="w-full bg-[#041619] border border-white/10 text-white rounded-xl p-3 text-xs focus:outline-none focus:border-[#00f098] resize-none"
+                  />
+                </div>
+
+                <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/5">
+                  <button
+                    type="button"
+                    onClick={() => setOffreEnEdition(null)}
+                    className="px-5 py-2.5 rounded-xl text-xs font-bold text-gray-400 hover:text-white cursor-pointer"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={sauvegardeEnCours}
+                    className="bg-[#00f098] hover:bg-[#00d084] text-[#0b1a19] px-6 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider shadow-[0_0_15px_rgba(0,240,152,0.2)] cursor-pointer"
+                  >
+                    {sauvegardeEnCours ? 'Enregistrement...' : 'Enregistrer les modifications'}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         )}
 
