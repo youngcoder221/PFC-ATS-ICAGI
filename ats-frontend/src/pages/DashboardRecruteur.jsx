@@ -5,14 +5,22 @@ import Layout from '../components/layout/Layout'
 import api from '../services/api'
 import OffreCardRecruteur from '../components/OffreCardRecruteur'
 
-// ── Formulaire d'offre SaaS B2B Premium FDE (Standard Greenhouse / Lever) ──
-function FormulaireOffre({ form, setForm, handleSubmit }) {
+// ── Formulaire d'offre SaaS B2B Premium FDE avec gestion d'état ──
+function FormulaireOffre({ form, setForm, handleSubmit, erreurForm, submitting }) {
   return (
     <div className="bg-[#041619] border border-white/5 rounded-2xl md:rounded-[2rem] p-6 md:p-8 mb-8 shadow-2xl transition-all">
       <div className="flex items-center gap-2 mb-6">
         <div className="w-2 h-2 rounded-full bg-[#00f098] shadow-[0_0_8px_#00f098]" />
         <h3 className="text-white font-black text-xl tracking-tight">Publier une nouvelle offre d'emploi</h3>
       </div>
+
+      {/* Message d'erreur visible si le backend renvoie un problème */}
+      {erreurForm && (
+        <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-3.5 rounded-xl text-xs font-bold mb-5 flex items-center gap-2">
+          <XCircle className="w-4 h-4 flex-shrink-0" />
+          <span>{erreurForm}</span>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         
@@ -232,12 +240,20 @@ function FormulaireOffre({ form, setForm, handleSubmit }) {
           </div>
         </div>
 
-        {/* Bouton de publication */}
+        {/* Bouton de publication avec indicateur de chargement */}
         <button
           type="submit"
-          className="w-full bg-[#00f098] hover:bg-[#00d084] text-[#041619] py-3.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,240,152,0.2)] cursor-pointer"
+          disabled={submitting}
+          className="w-full bg-[#00f098] hover:bg-[#00d084] text-[#0b1a19] py-3.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,240,152,0.2)] disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
         >
-          Publier l'offre
+          {submitting ? (
+            <>
+              <span className="w-4 h-4 border-2 border-[#0b1a19]/30 border-t-[#0b1a19] rounded-full animate-spin" />
+              <span>Publication en cours...</span>
+            </>
+          ) : (
+            "Publier l'offre"
+          )}
         </button>
 
       </form>
@@ -266,7 +282,9 @@ export default function DashboardRecruteur() {
     typeContrat: 'Stage'
   }
 
-  const [form, setForm] = useState(formInitial)
+  const [form, setForm]             = useState(formInitial)
+  const [erreurForm, setErreurForm] = useState(null)
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/immutability
@@ -286,6 +304,9 @@ export default function DashboardRecruteur() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setSubmitting(true)
+    setErreurForm(null)
+
     try {
       await api.post('/offres', {
         ...form,
@@ -296,6 +317,12 @@ export default function DashboardRecruteur() {
       chargerOffres()
     } catch (err) {
       console.error("Erreur lors de la création de l'offre :", err)
+      setErreurForm(
+        err.response?.data?.message || 
+        (err.response?.status === 413 ? "❌ L'image du logo est trop volumineuse pour le serveur." : "❌ Erreur lors de la publication de l'offre.")
+      )
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -336,6 +363,8 @@ export default function DashboardRecruteur() {
               form={form}
               setForm={setForm}
               handleSubmit={handleSubmit}
+              erreurForm={erreurForm}
+              submitting={submitting}
             />
           )}
 
@@ -392,6 +421,8 @@ export default function DashboardRecruteur() {
               form={form}
               setForm={setForm}
               handleSubmit={handleSubmit}
+              erreurForm={erreurForm}
+              submitting={submitting}
             />
           )}
 
