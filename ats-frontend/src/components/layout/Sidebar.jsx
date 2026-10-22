@@ -36,7 +36,7 @@ export default function Sidebar() {
 
   const handleLogout = () => {
     logout()
-    navigate('/')
+    window.location.replace('/')
   }
 
   const isActive = (item) => {

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { Bell, Search, LogOut, User, CheckCircle, Clock, X } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import api from '../../services/api'
@@ -15,7 +15,6 @@ const initialesDe = (prenom, nom) =>
 
 export default function Topbar() {
   const location              = useLocation()
-  const navigate              = useNavigate()
   const { user, logout }      = useAuth()
   const [openNotif, setOpenNotif]   = useState(false)
   const [openProfil, setOpenProfil] = useState(false)
@@ -77,7 +76,7 @@ export default function Topbar() {
 
   const handleLogout = () => {
     logout()
-    navigate('/')
+    window.location.replace('/')
   }
 
   return (
