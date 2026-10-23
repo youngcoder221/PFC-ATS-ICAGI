@@ -11,10 +11,12 @@ import OffreDetailsPublic from './pages/OffreDetailsPublic'
 import EntreprisePublic from './pages/EntreprisePublic' 
 
 // Route protégée selon le rôle
+// Route protégée selon le rôle
 const PrivateRoute = ({ children, role }) => {
   const { user } = useAuth()
-  if (!user) return <Navigate to="/login" />
-  if (role && user.role !== role) return <Navigate to="/login" />
+  // On utilise 'replace' pour écraser l'historique et éviter les boucles de redirection au clic sur "Retour"
+  if (!user) return <Navigate to="/login" replace />
+  if (role && user.role !== role) return <Navigate to="/login" replace />
   return children
 }
 

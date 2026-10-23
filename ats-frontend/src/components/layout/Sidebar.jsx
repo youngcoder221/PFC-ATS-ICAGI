@@ -35,8 +35,14 @@ export default function Sidebar() {
                  user?.role === 'admin'     ? menuAdmin     : menuCandidat
 
   const handleLogout = () => {
-    logout()
-    window.location.replace('/')
+    // 1. On retourne sur l'accueil immédiatement
+    navigate('/', { replace: true })
+    
+    // 2. On décale la destruction de la session de quelques millisecondes
+    // pour éviter que le composant de sécurité (PrivateRoute) n'intercepte le changement
+    setTimeout(() => {
+      logout()
+    }, 50)
   }
 
   const isActive = (item) => {
