@@ -76,6 +76,7 @@ export default function Topbar() {
   }, [])
 
   const handleLogout = () => {
+    window.scrollTo(0, 0)
     navigate('/', { replace: true })
     
     setTimeout(() => {

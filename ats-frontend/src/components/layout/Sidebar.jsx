@@ -35,11 +35,13 @@ export default function Sidebar() {
                  user?.role === 'admin'     ? menuAdmin     : menuCandidat
 
   const handleLogout = () => {
-    // 1. On retourne sur l'accueil immédiatement
+    // 1. On force le scroll tout en haut de la page
+    window.scrollTo(0, 0)
+    
+    // 2. On retourne sur l'accueil immédiatement
     navigate('/', { replace: true })
     
-    // 2. On décale la destruction de la session de quelques millisecondes
-    // pour éviter que le composant de sécurité (PrivateRoute) n'intercepte le changement
+    // 3. On décale la destruction de la session
     setTimeout(() => {
       logout()
     }, 50)
