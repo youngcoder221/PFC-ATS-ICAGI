@@ -216,7 +216,8 @@ export default function Landing() {
 
           {/* Barre de recherche "Pill" Wellfound x FDE avec Dropdown interactif */}
           <div className="max-w-4xl mx-auto mb-5 relative" id="region-dropdown-container">
-            <div className={`bg-white border ${isDropdownOpen ? 'border-[#00f098] ring-2 ring-[#00f098]/30' : 'border-gray-200'} rounded-full p-2 shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex flex-col md:flex-row items-center gap-2 transition-all focus-within:ring-2 focus-within:ring-[#00f098]/30 focus-within:border-[#00f098]`}>
+            {/* Suppression du focus global pour bien séparer visuellement les deux actions */}
+            <div className="bg-white border border-gray-200 hover:border-gray-300 hover:shadow-md rounded-full p-2 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col md:flex-row items-center gap-2 transition-all duration-300">
               
               {/* Champ de recherche texte */}
               <div className="flex-1 flex items-center gap-3 px-5 py-2.5 w-full">
