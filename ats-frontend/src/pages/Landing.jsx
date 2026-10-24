@@ -10,8 +10,27 @@ export default function Landing() {
   const navigate                      = useNavigate()
   const location                      = useLocation()
   const { user }                      = useAuth()
-  const [searchQuery, setSearchQuery] = useState('')
-  const [offres, setOffres]           = useState([])
+  
+  // --- ÉTATS DE RECHERCHE ET FILTRAGE ---
+  const [searchQuery, setSearchQuery]       = useState('')
+  const [regionSelected, setRegionSelected] = useState('Toutes régions')
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [offres, setOffres]                 = useState([])
+
+  const regionsSenegal = [
+    'Toutes régions', 'Dakar', 'Thiès', 'Diourbel', 'Saint-Louis', 
+    'Ziguinchor', 'Kaolack', 'Louga', 'Fatick', 'Kolda', 
+    'Matam', 'Tambacounda', 'Kaffrine', 'Kédougou', 'Sédhiou'
+  ]
+
+  // Fermer le dropdown si on clique en dehors
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('#region-dropdown-container')) setIsDropdownOpen(false)
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   // Chargement des offres au montage de la page
   useEffect(() => {
@@ -195,10 +214,11 @@ export default function Landing() {
             </p>
           </div>
 
-          {/* Barre de recherche "Pill" compactée */}
-          <div className="max-w-4xl mx-auto mb-5">
-            <div className="bg-white border border-gray-200 rounded-full p-2 shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex flex-col md:flex-row items-center gap-2 transition-all focus-within:ring-2 focus-within:ring-[#00f098]/30 focus-within:border-[#00f098]">
+          {/* Barre de recherche "Pill" Wellfound x FDE avec Dropdown interactif */}
+          <div className="max-w-4xl mx-auto mb-5 relative" id="region-dropdown-container">
+            <div className={`bg-white border ${isDropdownOpen ? 'border-[#00f098] ring-2 ring-[#00f098]/30' : 'border-gray-200'} rounded-full p-2 shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex flex-col md:flex-row items-center gap-2 transition-all focus-within:ring-2 focus-within:ring-[#00f098]/30 focus-within:border-[#00f098]`}>
               
+              {/* Champ de recherche texte */}
               <div className="flex-1 flex items-center gap-3 px-5 py-2.5 w-full">
                 <Search className="w-4 h-4 text-[#041619]" />
                 <input
@@ -213,19 +233,46 @@ export default function Landing() {
               {/* Ligne de séparation verticale (Desktop) */}
               <div className="hidden md:block w-px h-6 bg-gray-200"></div>
 
-              {/* Faux champ localisation pour l'esthétique */}
-              <div className="flex-1 flex items-center gap-3 px-5 py-2.5 w-full opacity-70 pointer-events-none">
-                <MapPin className="w-4 h-4 text-[#041619]" />
-                <span className="font-medium text-gray-500 text-sm truncate">Sénégal (Toutes régions)</span>
+              {/* Champ Localisation Interactif */}
+              <div 
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="flex-1 flex items-center gap-3 px-5 py-2.5 w-full cursor-pointer hover:bg-gray-50 rounded-full transition-colors"
+              >
+                <MapPin className={`w-4 h-4 transition-colors ${regionSelected !== 'Toutes régions' ? 'text-[#00f098]' : 'text-gray-400'}`} />
+                <span className={`font-medium text-sm truncate ${regionSelected !== 'Toutes régions' ? 'text-[#041619] font-bold' : 'text-gray-500'}`}>
+                  {regionSelected}
+                </span>
               </div>
 
+              {/* Bouton d'action */}
               <button 
-                onClick={() => setSearchQuery('')}
+                onClick={() => { setSearchQuery(''); setRegionSelected('Toutes régions') }}
                 className="w-full md:w-auto bg-[#041619] hover:bg-[#0b1a19] text-white font-black px-7 py-3 rounded-full transition-all text-xs uppercase tracking-wider shadow-md cursor-pointer"
               >
-                {searchQuery ? 'Réinitialiser' : 'Rechercher'}
+                {(searchQuery || regionSelected !== 'Toutes régions') ? 'Réinitialiser' : 'Rechercher'}
               </button>
             </div>
+
+            {/* Menu Déroulant des Régions (Thème FDE) */}
+            {isDropdownOpen && (
+              <div className="absolute top-full right-0 md:right-[150px] mt-3 w-full md:w-64 bg-[#0b1a19] border border-white/10 rounded-2xl shadow-[0_15px_40px_rgba(4,22,25,0.2)] overflow-hidden z-50 animate-in fade-in slide-in-from-top-2">
+                <div className="max-h-64 overflow-y-auto no-scrollbar py-2">
+                  {regionsSenegal.map((region) => (
+                    <div
+                      key={region}
+                      onClick={() => { setRegionSelected(region); setIsDropdownOpen(false) }}
+                      className={`px-5 py-3 text-sm cursor-pointer transition-colors ${
+                        regionSelected === region
+                          ? 'bg-[#00f098]/10 text-[#00f098] font-bold border-l-2 border-[#00f098]'
+                          : 'text-gray-400 hover:bg-white/5 hover:text-white font-medium border-l-2 border-transparent'
+                      }`}
+                    >
+                      {region}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Filtres de contrats équilibrés (Marge resserrée) */}
@@ -261,11 +308,16 @@ export default function Landing() {
               {/* Grille des cartes avec effet Flottant (Soft Shadow) pour casser la découpe */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {offres
-                  .filter(o => 
-                    searchQuery === '' || 
-                    o.titre.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    o.competences?.some(c => c.toLowerCase().includes(searchQuery.toLowerCase()))
-                  )
+                  .filter(o => {
+                    const matchText = searchQuery === '' || 
+                      o.titre.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                      o.competences?.some(c => c.toLowerCase().includes(searchQuery.toLowerCase()));
+                    
+                    const matchRegion = regionSelected === 'Toutes régions' ||
+                      (o.localisation && o.localisation.toLowerCase().includes(regionSelected.toLowerCase()));
+
+                    return matchText && matchRegion;
+                  })
                   .map((offre) => {
                     const nomEntreprise = offre.entreprise || offre.recruteurId?.entreprise || 'Entreprise Partenaire'
 
