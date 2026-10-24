@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Search, Briefcase, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles, MapPin, Laptop } from 'lucide-react'
+import { Search, Briefcase, ArrowUpRight, ArrowRight, FileText, Bot, Sparkles, MapPin, Laptop, X } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import logo from '../assets/logo-icon-small.png'
 import heroBg from '../assets/hero-bg.png'
@@ -233,15 +233,31 @@ export default function Landing() {
               {/* Ligne de séparation verticale (Desktop) */}
               <div className="hidden md:block w-px h-6 bg-gray-200"></div>
 
-              {/* Champ Localisation Interactif */}
+              {/* Champ Localisation Interactif (Style Wellfound) */}
               <div 
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex-1 flex items-center gap-3 px-5 py-2.5 w-full cursor-pointer hover:bg-gray-50 rounded-full transition-colors"
+                // Le cursor-text donne l'illusion d'un vrai champ de saisie au survol
+                className="flex-1 flex items-center gap-3 px-5 py-2.5 w-full cursor-text hover:bg-gray-50 rounded-full transition-colors group"
               >
-                <MapPin className={`w-4 h-4 transition-colors ${regionSelected !== 'Toutes régions' ? 'text-[#00f098]' : 'text-gray-400'}`} />
-                <span className={`font-medium text-sm truncate ${regionSelected !== 'Toutes régions' ? 'text-[#041619] font-bold' : 'text-gray-500'}`}>
+                <MapPin className={`w-4 h-4 transition-colors ${regionSelected !== 'Toutes régions' ? 'text-[#041619]' : 'text-gray-400'}`} />
+                
+                <span className={`flex-1 font-medium text-sm truncate ${regionSelected !== 'Toutes régions' ? 'text-gray-900' : 'text-gray-400'}`}>
                   {regionSelected}
                 </span>
+
+                {/* Bouton "X" pour annuler la sélection (Visible uniquement si une région est choisie) */}
+                {regionSelected !== 'Toutes régions' && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation(); // ⛔ Empêche le clic d'ouvrir le menu déroulant
+                      setRegionSelected('Toutes régions');
+                    }}
+                    className="p-1 rounded-full text-gray-400 hover:text-gray-800 hover:bg-gray-200 transition-colors flex-shrink-0 cursor-pointer"
+                    title="Effacer la sélection"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
               </div>
 
               {/* Bouton d'action */}
