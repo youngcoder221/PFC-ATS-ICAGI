@@ -234,23 +234,30 @@ export default function Landing() {
               {/* Ligne de séparation verticale (Desktop) */}
               <div className="hidden md:block w-px h-6 bg-gray-200"></div>
 
-              {/* Champ Localisation Interactif (Style Wellfound) */}
+              {/* Champ Localisation Interactif (Vrai Input style Wellfound) */}
               <div 
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                // Le cursor-text donne l'illusion d'un vrai champ de saisie au survol
-                className="flex-1 flex items-center gap-3 px-5 py-2.5 w-full cursor-text hover:bg-gray-50 rounded-full transition-colors group"
+                className="flex-1 flex items-center gap-3 px-5 py-2.5 w-full hover:bg-gray-50 rounded-full transition-colors group cursor-text"
+                onClick={() => setIsDropdownOpen(true)}
               >
-                <MapPin className={`w-4 h-4 transition-colors ${regionSelected !== 'Toutes régions' ? 'text-[#041619]' : 'text-gray-400'}`} />
+                <MapPin className={`w-4 h-4 transition-colors ${(regionSelected && regionSelected !== 'Toutes régions') ? 'text-[#041619]' : 'text-gray-400'}`} />
                 
-                <span className={`flex-1 font-medium text-sm truncate ${regionSelected !== 'Toutes régions' ? 'text-gray-900' : 'text-gray-400'}`}>
-                  {regionSelected}
-                </span>
+                <input
+                  type="text"
+                  placeholder="Sénégal (Toutes régions)"
+                  value={regionSelected === 'Toutes régions' ? '' : regionSelected}
+                  onChange={(e) => {
+                    setRegionSelected(e.target.value);
+                    setIsDropdownOpen(true);
+                  }}
+                  onFocus={() => setIsDropdownOpen(true)}
+                  className="w-full bg-transparent border-none outline-none text-gray-900 placeholder-gray-500 font-medium text-sm"
+                />
 
-                {/* Bouton "X" pour annuler la sélection (Visible uniquement si une région est choisie) */}
-                {regionSelected !== 'Toutes régions' && (
+                {/* Bouton "X" pour annuler la sélection */}
+                {(regionSelected && regionSelected !== 'Toutes régions') && (
                   <button
                     onClick={(e) => {
-                      e.stopPropagation(); // ⛔ Empêche le clic d'ouvrir le menu déroulant
+                      e.stopPropagation();
                       setRegionSelected('Toutes régions');
                     }}
                     className="p-1 rounded-full text-gray-400 hover:text-gray-800 hover:bg-gray-200 transition-colors flex-shrink-0 cursor-pointer"
@@ -266,7 +273,7 @@ export default function Landing() {
                 onClick={() => { setSearchQuery(''); setRegionSelected('Toutes régions') }}
                 className="w-full md:w-auto bg-[#041619] hover:bg-[#0b1a19] text-white font-black px-7 py-3 rounded-full transition-all text-xs uppercase tracking-wider shadow-md cursor-pointer"
               >
-                {(searchQuery || regionSelected !== 'Toutes régions') ? 'Réinitialiser' : 'Rechercher'}
+                {(searchQuery || (regionSelected !== 'Toutes régions' && regionSelected !== '')) ? 'Réinitialiser' : 'Rechercher'}
               </button>
             </div>
 
