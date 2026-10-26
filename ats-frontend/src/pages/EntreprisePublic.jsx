@@ -1,16 +1,29 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, MapPin, Briefcase, Coins, ExternalLink, ArrowUpRight } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
 import logoAts from '../assets/logo-icon-small.png'
 
 export default function EntreprisePublic() {
   const { nom } = useParams()
   const navigate = useNavigate()
+  const { user } = useAuth()
   const nomEntreprise = decodeURIComponent(nom)
 
   const [offres, setOffres]   = useState([])
   const [loading, setLoading] = useState(true)
+
+  // 🚀 Redirection intelligente vers le Login avec mémorisation de l'offre
+  const handlePostuler = (offreId) => {
+    if (!user) {
+      navigate('/login', { state: { targetOffreId: offreId } })
+    } else if (user.role === 'candidat') {
+      navigate(`/candidat?postulerOffreId=${offreId}`)
+    } else {
+      navigate('/login')
+    }
+  }
 
   useEffect(() => {
     const fetchOffresEntreprise = async () => {
@@ -167,11 +180,11 @@ export default function EntreprisePublic() {
                   </div>
                 </div>
 
-                {/* Bouton Postuler / Détails */}
+                {/* Bouton Postuler menant au Login avec le colis de l'offre */}
                 <button
                   onClick={(e) => {
                     e.stopPropagation()
-                    navigate(`/offres/${o._id}`)
+                    handlePostuler(o._id)
                   }}
                   className="bg-[#041619] hover:bg-[#00f098] text-white hover:text-[#041619] px-6 py-3 rounded-xl font-black text-xs uppercase tracking-wider transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer flex-shrink-0"
                 >
