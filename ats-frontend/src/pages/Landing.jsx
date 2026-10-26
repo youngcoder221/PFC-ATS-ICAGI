@@ -14,6 +14,7 @@ export default function Landing() {
   // --- ÉTATS DE RECHERCHE ET FILTRAGE ---
   const [searchQuery, setSearchQuery]       = useState('')
   const [regionSelected, setRegionSelected] = useState('Toutes régions')
+  const [contratFilter, setContratFilter]   = useState('Tous') // Nouvel état pour les filtres de contrats
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [offres, setOffres]                 = useState([])
 
@@ -270,14 +271,14 @@ export default function Landing() {
 
               {/* Bouton d'action */}
               <button 
-                onClick={() => { setSearchQuery(''); setRegionSelected('Toutes régions') }}
+                onClick={() => { setSearchQuery(''); setRegionSelected('Toutes régions'); setContratFilter('Tous'); }}
                 className="w-full md:w-auto bg-[#041619] hover:bg-[#0b1a19] text-white font-black px-7 py-3 rounded-full transition-all text-xs uppercase tracking-wider shadow-md cursor-pointer"
               >
-                {(searchQuery || (regionSelected !== 'Toutes régions' && regionSelected !== '')) ? 'Réinitialiser' : 'Rechercher'}
+                {(searchQuery || (regionSelected !== 'Toutes régions' && regionSelected !== '') || contratFilter !== 'Tous') ? 'Réinitialiser' : 'Rechercher'}
               </button>
             </div>
 
-            {/* Menu Déroulant des Régions (Thème FDE) */}
+            {/* 🔽 LE MENU DÉROULANT MANQUANT EST ICI 🔽 */}
             {isDropdownOpen && (
               <div className="absolute top-full right-0 md:right-[150px] mt-3 w-full md:w-64 bg-[#0b1a19] border border-white/10 rounded-2xl shadow-[0_15px_40px_rgba(4,22,25,0.2)] overflow-hidden z-50 animate-in fade-in slide-in-from-top-2">
                 <div className="max-h-64 overflow-y-auto no-scrollbar py-2">
@@ -297,19 +298,45 @@ export default function Landing() {
                 </div>
               </div>
             )}
+            {/* 🔼 FIN DU MENU DÉROULANT 🔼 */}
+
           </div>
 
-          {/* Filtres de contrats équilibrés (Marge resserrée) */}
-          <div className="flex flex-wrap justify-center gap-2.5 mb-8 text-xs font-bold">
-            <div className="bg-gray-100 border border-gray-200 text-[#041619] px-4 py-2 rounded-full flex items-center gap-2 shadow-sm">
-              Postes ouverts <span className="bg-white text-[#041619] px-2 py-0.5 rounded-full text-[11px] font-black">{offres.length}</span>
-            </div>
-            <div className="bg-white border border-gray-200 text-gray-500 px-4 py-2 rounded-full flex items-center gap-2">
-              CDI & CDD <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-[11px] font-bold">{offres.filter(o => ['CDI', 'CDD'].includes(o.typeContrat)).length}</span>
-            </div>
-            <div className="bg-white border border-gray-200 text-gray-500 px-4 py-2 rounded-full flex items-center gap-2">
-              Stages <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-[11px] font-bold">{offres.filter(o => o.typeContrat === 'Stage').length}</span>
-            </div>
+          {/* Filtres de contrats INTERACTIFS sous forme de tags discrets centrés */}
+          {/* 💡 Les marges géantes (mb-24 lg:mb-36) repoussent les cartes sous la ligne de flottaison */}
+          <div className="flex flex-wrap justify-center gap-3 mb-24 lg:mb-36 text-sm font-bold">
+            <button 
+              onClick={() => setContratFilter('Tous')}
+              className={`px-5 py-2.5 rounded-full flex items-center gap-3 transition-colors cursor-pointer border ${
+                contratFilter === 'Tous' 
+                  ? 'bg-gray-100 border-gray-200 text-[#041619]' 
+                  : 'bg-white border-gray-200 text-gray-400 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              Postes ouverts <span className={`px-2.5 py-0.5 rounded-full text-xs ${contratFilter === 'Tous' ? 'bg-white text-[#041619] shadow-sm' : 'bg-gray-50 text-gray-400 border border-gray-100'}`}>{offres.length}</span>
+            </button>
+            
+            <button 
+              onClick={() => setContratFilter('CDI_CDD')}
+              className={`px-5 py-2.5 rounded-full flex items-center gap-3 transition-colors cursor-pointer border ${
+                contratFilter === 'CDI_CDD' 
+                  ? 'bg-gray-100 border-gray-200 text-[#041619]' 
+                  : 'bg-white border-gray-200 text-gray-400 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              CDI & CDD <span className={`px-2.5 py-0.5 rounded-full text-xs ${contratFilter === 'CDI_CDD' ? 'bg-white text-[#041619] shadow-sm' : 'bg-gray-50 text-gray-400 border border-gray-100'}`}>{offres.filter(o => ['CDI', 'CDD'].includes(o.typeContrat)).length}</span>
+            </button>
+            
+            <button 
+              onClick={() => setContratFilter('Stage')}
+              className={`px-5 py-2.5 rounded-full flex items-center gap-3 transition-colors cursor-pointer border ${
+                contratFilter === 'Stage' 
+                  ? 'bg-gray-100 border-gray-200 text-[#041619]' 
+                  : 'bg-white border-gray-200 text-gray-400 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              Stages <span className={`px-2.5 py-0.5 rounded-full text-xs ${contratFilter === 'Stage' ? 'bg-white text-[#041619] shadow-sm' : 'bg-gray-50 text-gray-400 border border-gray-100'}`}>{offres.filter(o => o.typeContrat === 'Stage').length}</span>
+            </button>
           </div>
 
           {/* Titre direct sans séparateur superflu */}
@@ -340,7 +367,12 @@ export default function Landing() {
                     const matchRegion = regionSelected === 'Toutes régions' ||
                       (o.localisation && o.localisation.toLowerCase().includes(regionSelected.toLowerCase()));
 
-                    return matchText && matchRegion;
+                    // Filtrage des contrats
+                    const matchContrat = contratFilter === 'Tous' ||
+                      (contratFilter === 'CDI_CDD' && ['CDI', 'CDD'].includes(o.typeContrat)) ||
+                      (contratFilter === 'Stage' && o.typeContrat === 'Stage');
+
+                    return matchText && matchRegion && matchContrat;
                   })
                   .map((offre) => {
                     const nomEntreprise = offre.entreprise || offre.recruteurId?.entreprise || 'Entreprise Partenaire'
