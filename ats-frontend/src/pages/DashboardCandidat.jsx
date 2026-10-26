@@ -529,10 +529,12 @@ export default function DashboardCandidat() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#041619]/80 backdrop-blur-sm">
           <div className="relative w-full max-w-4xl bg-[#0b1a19] border border-[#00f098]/30 rounded-[2rem] p-8 md:p-10 shadow-2xl animate-in fade-in zoom-in duration-300">
             <button 
+              type="button"
               onClick={() => setIsModalOpen(false)} 
-              className="absolute top-6 right-6 text-gray-500 hover:text-[#00f098] transition-colors bg-[#041619] p-2 rounded-full border border-white/5"
+              className="absolute top-6 right-6 z-50 w-9 h-9 flex items-center justify-center text-gray-400 hover:text-[#00f098] hover:border-[#00f098]/30 transition-all bg-[#041619] rounded-full border border-white/10 cursor-pointer shadow-lg active:scale-95"
+              title="Fermer la fenêtre"
             >
-              <X className="w-5 h-5" />
+              <X className="w-5 h-5 pointer-events-none" />
             </button>
             
             <div className="absolute top-0 right-0 w-96 h-96 bg-[#00f098]/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
