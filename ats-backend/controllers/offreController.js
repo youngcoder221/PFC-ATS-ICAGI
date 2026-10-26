@@ -87,7 +87,7 @@ const modifierOffre = async (req, res) => {
     const offreMaj = await Offre.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true }   // retourner le document mis à jour
+      { returnDocument: 'after' }   // Standard Mongoose 9+ pour retourner le document mis à jour
     )
 
     res.status(200).json({ message: '✅ Offre mise à jour avec succès', offre: offreMaj })

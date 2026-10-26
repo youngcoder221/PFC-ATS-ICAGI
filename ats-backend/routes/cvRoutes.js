@@ -20,7 +20,7 @@ router.put('/candidatures/:id/statut', protect, autoriser('recruteur', 'admin'),
     const candidature = await Candidature.findByIdAndUpdate(
       req.params.id,
       { statut: req.body.statut },
-      { new: true }
+      { returnDocument: 'after' }
     )
     if (!candidature) {
       return res.status(404).json({ message: '❌ Candidature introuvable' })
