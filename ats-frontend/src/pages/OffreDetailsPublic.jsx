@@ -250,7 +250,9 @@ export default function OffreDetailsPublic() {
                 <p className="text-gray-500 uppercase tracking-wider text-[10px] mb-1">Date limite</p>
                 <p className="text-white font-bold flex items-center gap-1.5">
                   <Clock className="w-3.5 h-3.5 text-gray-400" />
-                  Non précisée
+                  {offre.dateLimite 
+                    ? new Date(offre.dateLimite).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }) 
+                    : 'Non précisée'}
                 </p>
               </div>
             </div>

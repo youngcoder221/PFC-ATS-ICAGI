@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Plus, X, Briefcase, Users, ChevronRight, Clock, TrendingUp, XCircle, Sparkles, Building2, MapPin, Image, Coins } from 'lucide-react'
+import { Plus, X, Briefcase, Users, ChevronRight, Clock, TrendingUp, XCircle, Sparkles, Building2, MapPin, Image, Coins, Calendar } from 'lucide-react'
 import Layout from '../components/layout/Layout'
 import api from '../services/api'
 import OffreCardRecruteur from '../components/OffreCardRecruteur'
@@ -185,7 +185,7 @@ function FormulaireOffre({ form, setForm, handleSubmit, erreurForm, submitting }
             </div>
 
             {/* Niveau d'études requis */}
-            <div className="md:col-span-2">
+            <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Niveau d'études requis</label>
               <select
                 value={form.niveauRequis}
@@ -196,6 +196,22 @@ function FormulaireOffre({ form, setForm, handleSubmit, erreurForm, submitting }
                   <option key={n} value={n} className="bg-[#0b1a19] text-white">{n}</option>
                 ))}
               </select>
+            </div>
+
+            {/* Date limite optionnelle */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
+                Date limite <span className="text-[#00f098] text-[10px] font-semibold lowercase tracking-normal">(Optionnelle)</span>
+              </label>
+              <div className="relative">
+                <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                <input
+                  type="date"
+                  value={form.dateLimite}
+                  onChange={e => setForm({...form, dateLimite: e.target.value})}
+                  className="w-full bg-[#0b1a19] border border-white/10 text-white rounded-xl pl-12 pr-4 py-3 text-sm focus:outline-none focus:border-[#00f098] transition-all cursor-pointer [color-scheme:dark]"
+                />
+              </div>
             </div>
 
           </div>
@@ -279,7 +295,8 @@ export default function DashboardRecruteur() {
     salaire: '',
     competences: '',
     niveauRequis: 'Licence',
-    typeContrat: 'Stage'
+    typeContrat: 'Stage',
+    dateLimite: '' 
   }
 
   const [form, setForm]             = useState(formInitial)

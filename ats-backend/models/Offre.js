@@ -12,6 +12,7 @@ const offreSchema = new mongoose.Schema({
   competences:  [{ type: String }],
   niveauRequis: { type: String, enum: ['Licence', 'Master', 'Ingénieur', 'Doctorat'] },
   typeContrat:  { type: String, enum: ['Stage', 'CDD', 'CDI', 'Freelance'] },
+  dateLimite:   { type: Date }, // Nouveau champ optionnel
   statut:       { type: String, enum: ['ouverte', 'fermée'], default: 'ouverte' },
   recruteurId:  { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 }, { timestamps: true })

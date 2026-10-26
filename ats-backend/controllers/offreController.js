@@ -4,17 +4,9 @@ const Offre = require('../models/Offre')
 const creerOffre = async (req, res) => {
   try {
     const { 
-      titre, 
-      description, 
-      entreprise,
-      logoUrl,
-      localisation,
-      modeTravail,
-      secteur,
-      salaire,
-      competences, 
-      niveauRequis, 
-      typeContrat 
+      titre, description, entreprise, logoUrl, localisation,
+      modeTravail, secteur, salaire, competences, 
+      niveauRequis, typeContrat, dateLimite // <-- Récupération ajoutée
     } = req.body
 
     const offre = await Offre.create({
@@ -29,7 +21,8 @@ const creerOffre = async (req, res) => {
       competences,
       niveauRequis,
       typeContrat,
-      recruteurId: req.user.id   // vient du token JWT
+      dateLimite: dateLimite || null, // <-- Ajouté en base (null si vide)
+      recruteurId: req.user.id
     })
 
     res.status(201).json({ message: '✅ Offre créée avec succès', offre })
