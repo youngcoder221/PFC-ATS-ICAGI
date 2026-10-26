@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react'
-import { Users, Briefcase, FileText, Shield, Trash2, ChevronRight, ChevronDown, Download, Pencil, X } from 'lucide-react'
+import { Users, Briefcase, FileText, Shield, Trash2, ChevronRight, ChevronDown, Download, Pencil, X, Calendar,  } from 'lucide-react'
 import Layout from '../components/layout/Layout'
 import { useSearchParams } from 'react-router-dom'
 import api from '../services/api'
@@ -29,6 +29,8 @@ export default function Admin() {
       modeTravail: offre.modeTravail || 'Sur site',
       typeContrat: offre.typeContrat || 'CDI',
       salaire: offre.salaire || '',
+      // Formatage en YYYY-MM-DD pour que l'input type="date" l'affiche correctement
+      dateLimite: offre.dateLimite ? new Date(offre.dateLimite).toISOString().split('T')[0] : '',
       description: offre.description || ''
     })
   }
@@ -37,7 +39,12 @@ export default function Admin() {
     e.preventDefault()
     setSauvegardeEnCours(true)
     try {
-      await api.put(`/offres/${offreEnEdition}`, editForm)
+      // Évite l'erreur Mongoose CastError si la date est vidée
+      const donneesAEnvoyer = {
+        ...editForm,
+        dateLimite: editForm.dateLimite ? editForm.dateLimite : null
+      }
+      await api.put(`/offres/${offreEnEdition}`, donneesAEnvoyer)
       setOffreEnEdition(null)
       chargerDonnees()
     } catch (err) {
@@ -629,6 +636,22 @@ export default function Admin() {
                       placeholder="ex: 700k – 950k FCFA"
                       className="w-full bg-[#041619] border border-white/10 text-white rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-[#00f098]"
                     />
+                  </div>
+
+                  {/* 📅 Date limite optionnelle */}
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">
+                      Date limite <span className="text-[#00f098] lowercase font-normal">(optionnelle)</span>
+                    </label>
+                    <div className="relative">
+                      <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" />
+                      <input
+                        type="date"
+                        value={editForm.dateLimite || ''}
+                        onChange={(e) => setEditForm({...editForm, dateLimite: e.target.value})}
+                        className="w-full bg-[#041619] border border-white/10 text-white rounded-xl pl-9 pr-4 py-2.5 text-xs focus:outline-none focus:border-[#00f098] cursor-pointer [color-scheme:dark]"
+                      />
+                    </div>
                   </div>
                 </div>
 
