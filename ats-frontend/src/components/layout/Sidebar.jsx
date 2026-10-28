@@ -81,8 +81,18 @@ export default function Sidebar() {
   return (
     <aside className={`${isCollapsed ? 'w-20' : 'w-64'} min-h-screen bg-[#0b1a19] border-r border-white/5 flex flex-col transition-all duration-300 ease-in-out relative flex-shrink-0 select-none`}>
 
-      {/* En-tête : Logo + Bouton Réduire/Agrandir */}
-      <div className={`p-4 border-b border-gray-800/80 flex items-center ${isCollapsed ? 'flex-col gap-3 justify-center' : 'justify-between px-5 py-5'} transition-all`}>
+      {/* 🔘 Bouton flottant moderne sur la bordure latérale (Style Linear/Notion) */}
+      <button
+        type="button"
+        onClick={toggleSidebar}
+        className="absolute -right-3 top-5 z-30 w-6 h-6 rounded-full bg-[#041619] border border-white/15 text-gray-400 hover:text-[#00f098] hover:border-[#00f098] hover:scale-110 flex items-center justify-center shadow-lg cursor-pointer transition-all"
+        title={isCollapsed ? "Déplier le menu" : "Réduire le menu"}
+      >
+        {isCollapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
+      </button>
+
+      {/* En-tête : Aligné exactement sur la hauteur h-16 de la Topbar */}
+      <div className={`h-16 border-b border-white/5 flex items-center ${isCollapsed ? 'justify-center px-0' : 'justify-between px-5'} transition-all`}>
         <div 
           onClick={() => isCollapsed && toggleSidebar()}
           className={`flex items-center gap-3 overflow-hidden ${isCollapsed ? 'cursor-pointer' : ''}`}
@@ -95,25 +105,15 @@ export default function Sidebar() {
           />
           {!isCollapsed && (
             <div className="min-w-0">
-              <h1 className="text-white font-bold text-sm truncate">ATS Platform</h1>
-              <p className="text-gray-500 text-xs capitalize truncate">{user?.role}</p>
+              <h1 className="text-white font-bold text-sm tracking-tight truncate">ATS Platform</h1>
+              <p className="text-gray-500 text-[11px] capitalize truncate">{user?.role}</p>
             </div>
           )}
         </div>
-
-        {/* Bouton de bascule */}
-        <button
-          type="button"
-          onClick={toggleSidebar}
-          className="p-1.5 rounded-lg bg-[#041619] border border-white/10 text-gray-400 hover:text-[#00f098] hover:border-[#00f098]/40 transition-colors cursor-pointer shadow-sm flex items-center justify-center"
-          title={isCollapsed ? "Déplier la barre latérale" : "Réduire la barre latérale"}
-        >
-          {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-        </button>
       </div>
 
-      {/* Menu de navigation */}
-      <nav className={`flex-1 ${isCollapsed ? 'p-2 space-y-2' : 'p-4 space-y-1'}`}>
+      {/* Menu de navigation avec géométrie en carrés parfaits en mode réduit */}
+      <nav className={`flex-1 py-4 ${isCollapsed ? 'px-2 space-y-2' : 'px-3 space-y-1.5'}`}>
         {menu.map((item) => {
           const Icon   = item.icon
           const active = isActive(item)
@@ -123,17 +123,21 @@ export default function Sidebar() {
               type="button"
               onClick={() => handleClick(item)}
               title={isCollapsed ? item.label : undefined}
-              className={`w-full flex items-center ${isCollapsed ? 'justify-center px-0 py-3' : 'gap-3 px-3 py-2.5'} rounded-xl text-sm font-medium transition-all cursor-pointer ${
+              className={`flex items-center transition-all cursor-pointer ${
+                isCollapsed
+                  ? 'w-11 h-11 mx-auto justify-center rounded-xl'
+                  : 'w-full gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium'
+              } ${
                 active
-                  ? 'bg-[#00f098] text-[#0b1a19] shadow-[0_0_15px_rgba(0,240,152,0.2)]'
-                  : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                  ? 'bg-[#00f098] text-[#0b1a19] shadow-[0_0_15px_rgba(0,240,152,0.25)] font-bold'
+                  : 'text-gray-400 hover:bg-white/5 hover:text-white'
               }`}
             >
-              <Icon className="w-4 h-4 flex-shrink-0" />
+              <Icon className={`${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'} flex-shrink-0`} />
               {!isCollapsed && (
                 <>
                   <span className="flex-1 text-left truncate">{item.label}</span>
-                  {active && <ChevronRight className="w-3 h-3 flex-shrink-0" />}
+                  {active && <ChevronRight className="w-3.5 h-3.5 flex-shrink-0" />}
                 </>
               )}
             </button>
@@ -141,23 +145,23 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Profil + Déconnexion */}
-      <div className={`border-t border-gray-800/80 ${isCollapsed ? 'p-3 flex flex-col items-center gap-3' : 'p-4'}`}>
+      {/* Profil + Déconnexion avec alignement géométrique parfait */}
+      <div className={`border-t border-white/5 transition-all ${isCollapsed ? 'p-3 flex flex-col items-center gap-2.5' : 'p-4'}`}>
         {!isCollapsed ? (
           <>
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-8 h-8 bg-[#00f098] rounded-full flex items-center justify-center text-[#0b1a19] text-xs font-black flex-shrink-0 shadow-sm">
+              <div className="w-9 h-9 bg-[#00f098] rounded-xl flex items-center justify-center text-[#0b1a19] text-xs font-black flex-shrink-0 shadow-sm">
                 {user?.prenom?.[0]}{user?.nom?.[0]}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-white text-xs font-medium truncate">{user?.prenom} {user?.nom}</p>
-                <p className="text-gray-500 text-xs truncate">{user?.email}</p>
+                <p className="text-white text-xs font-bold truncate">{user?.prenom} {user?.nom}</p>
+                <p className="text-gray-500 text-[11px] truncate">{user?.email}</p>
               </div>
             </div>
             <button
               type="button"
               onClick={handleLogout}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-400 hover:bg-red-900/20 hover:text-red-400 transition-all cursor-pointer"
+              className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-gray-400 hover:bg-red-900/20 hover:text-red-400 transition-all cursor-pointer"
             >
               <LogOut className="w-4 h-4 flex-shrink-0" />
               <span className="truncate">Déconnexion</span>
@@ -166,7 +170,7 @@ export default function Sidebar() {
         ) : (
           <>
             <div 
-              className="w-9 h-9 bg-[#00f098] rounded-xl flex items-center justify-center text-[#0b1a19] text-xs font-black shadow-sm cursor-pointer"
+              className="w-11 h-11 bg-[#00f098] rounded-xl flex items-center justify-center text-[#0b1a19] text-xs font-black shadow-sm cursor-pointer hover:scale-105 transition-transform"
               title={`${user?.prenom} ${user?.nom} (${user?.role})`}
             >
               {user?.prenom?.[0]}{user?.nom?.[0]}
@@ -174,10 +178,10 @@ export default function Sidebar() {
             <button
               type="button"
               onClick={handleLogout}
-              className="w-9 h-9 flex items-center justify-center rounded-xl text-gray-400 hover:bg-red-900/20 hover:text-red-400 transition-all cursor-pointer"
+              className="w-11 h-11 flex items-center justify-center rounded-xl text-gray-400 hover:bg-red-900/20 hover:text-red-400 transition-all cursor-pointer"
               title="Déconnexion"
             >
-              <LogOut className="w-4 h-4" />
+              <LogOut className="w-5 h-5" />
             </button>
           </>
         )}
