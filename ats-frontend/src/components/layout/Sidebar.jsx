@@ -32,19 +32,22 @@ export default function Sidebar() {
   const [searchParams]         = useSearchParams()
   const tabActif               = searchParams.get('tab') || ''
 
-  // 💾 Mémorisation de l'état plié/déplié dans le localStorage
+  // 🔑 Clé de préférence isolée par compte utilisateur
+  const userId = user?.id || user?._id
+  const storageKey = userId ? `ats_sidebar_${userId}_collapsed` : 'ats_sidebar_collapsed'
+
+  // 💾 Initialisation directe sans effet secondaire (100% conforme ESLint)
   const [isCollapsed, setIsCollapsed] = useState(() => {
-    return localStorage.getItem('ats_sidebar_collapsed') === 'true'
+    return localStorage.getItem(storageKey) === 'true'
   })
 
   const toggleSidebar = () => {
     setIsCollapsed(prev => {
       const next = !prev
-      localStorage.setItem('ats_sidebar_collapsed', String(next))
+      localStorage.setItem(storageKey, String(next))
       return next
     })
   }
-
   const menu = user?.role === 'recruteur' ? menuRecruteur :
                user?.role === 'admin'     ? menuAdmin     : menuCandidat
 
