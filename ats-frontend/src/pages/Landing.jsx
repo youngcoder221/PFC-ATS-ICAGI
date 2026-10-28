@@ -106,17 +106,17 @@ export default function Landing() {
           ))}
         </div>
 
-        {/* 3. SECTION DROITE (Authentification style Handshake) */}
-        <div className="flex-1 flex items-center justify-end gap-3.5">
+        {/* 3. SECTION DROITE (Authentification adaptative mobile/desktop) */}
+        <div className="flex-1 flex items-center justify-end gap-2 sm:gap-3.5">
           <button
             onClick={() => navigate('/login')}
-            className="bg-transparent border border-white text-white font-bold px-5 py-2.5 rounded-xl hover:bg-white/10 hover:border-white transition-all text-sm cursor-pointer"
+            className="bg-transparent border border-white text-white font-bold px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl hover:bg-white/10 transition-all text-xs sm:text-sm cursor-pointer"
           >
             Se connecter
           </button>
           <button
             onClick={() => navigate('/register')}
-            className="bg-[#00f098] text-[#0b1a19] font-black px-5 py-2.5 rounded-xl transition-all hover:bg-[#00d084] shadow-[0_0_15px_rgba(0,240,152,0.2)] text-sm tracking-wide cursor-pointer"
+            className="bg-[#00f098] text-[#0b1a19] font-black px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl transition-all hover:bg-[#00d084] shadow-[0_0_15px_rgba(0,240,152,0.2)] text-xs sm:text-sm tracking-wide cursor-pointer"
           >
             S'inscrire
           </button>
@@ -142,8 +142,8 @@ export default function Landing() {
             <span className="text-[#00f098] font-bold text-xs tracking-widest uppercase">Recrutement 2.0</span>
           </div>
           
-          {/* Titre principal */}
-          <h1 className="text-4xl md:text-5xl lg:text-[4.2rem] font-extrabold text-white mb-4 tracking-tight leading-[1.1] max-w-3xl">
+          {/* Titre principal fluide sur smartphone */}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[4.2rem] font-extrabold text-white mb-4 tracking-tight leading-[1.15] md:leading-[1.1] max-w-3xl">
             Le recrutement réinventé <br className="hidden md:block"/> par l'<span className="text-[#00f098]">Intelligence Artificielle.</span>
           </h1>
           
@@ -215,14 +215,13 @@ export default function Landing() {
             </p>
           </div>
 
-          {/* Barre de recherche "Pill" Wellfound x FDE avec Dropdown interactif */}
+          {/* Barre de recherche adaptative (Coins arrondis 2xl sur mobile, pilule complète sur desktop) */}
           <div className="max-w-4xl mx-auto mb-5 relative" id="region-dropdown-container">
-            {/* Suppression du focus global pour bien séparer visuellement les deux actions */}
-            <div className="bg-white border border-gray-200 hover:border-gray-300 hover:shadow-md rounded-full p-2 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col md:flex-row items-center gap-2 transition-all duration-300">
+            <div className="bg-white border border-gray-200 hover:border-gray-300 hover:shadow-md rounded-2xl md:rounded-full p-2.5 md:p-2 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col md:flex-row items-center gap-2 transition-all duration-300">
               
               {/* Champ de recherche texte */}
-              <div className="flex-1 flex items-center gap-3 px-5 py-2.5 w-full">
-                <Search className="w-4 h-4 text-[#041619]" />
+              <div className="flex-1 flex items-center gap-3 px-3.5 md:px-5 py-2 w-full">
+                <Search className="w-4 h-4 text-[#041619] flex-shrink-0" />
                 <input
                   type="text"
                   placeholder="Poste, entreprise, compétence..."
@@ -232,15 +231,15 @@ export default function Landing() {
                 />
               </div>
 
-              {/* Ligne de séparation verticale (Desktop) */}
+              {/* Ligne de séparation verticale visible uniquement sur desktop */}
               <div className="hidden md:block w-px h-6 bg-gray-200"></div>
 
-              {/* Champ Localisation Interactif (Vrai Input style Wellfound) */}
+              {/* Champ Localisation Interactif */}
               <div 
-                className="flex-1 flex items-center gap-3 px-5 py-2.5 w-full hover:bg-gray-50 rounded-full transition-colors group cursor-text"
+                className="flex-1 flex items-center gap-3 px-3.5 md:px-5 py-2 w-full hover:bg-gray-50 rounded-xl md:rounded-full transition-colors group cursor-text"
                 onClick={() => setIsDropdownOpen(true)}
               >
-                <MapPin className={`w-4 h-4 transition-colors ${(regionSelected && regionSelected !== 'Toutes régions') ? 'text-[#041619]' : 'text-gray-400'}`} />
+                <MapPin className={`w-4 h-4 flex-shrink-0 transition-colors ${(regionSelected && regionSelected !== 'Toutes régions') ? 'text-[#041619]' : 'text-gray-400'}`} />
                 
                 <input
                   type="text"
@@ -254,7 +253,6 @@ export default function Landing() {
                   className="w-full bg-transparent border-none outline-none text-gray-900 placeholder-gray-500 font-medium text-sm"
                 />
 
-                {/* Bouton "X" pour annuler la sélection */}
                 {(regionSelected && regionSelected !== 'Toutes régions') && (
                   <button
                     onClick={(e) => {
@@ -269,10 +267,10 @@ export default function Landing() {
                 )}
               </div>
 
-              {/* Bouton d'action */}
+              {/* Bouton d'action adaptatif */}
               <button 
                 onClick={() => { setSearchQuery(''); setRegionSelected('Toutes régions'); setContratFilter('Tous'); }}
-                className="w-full md:w-auto bg-[#041619] hover:bg-[#0b1a19] text-white font-black px-7 py-3 rounded-full transition-all text-xs uppercase tracking-wider shadow-md cursor-pointer"
+                className="w-full md:w-auto bg-[#041619] hover:bg-[#0b1a19] text-white font-black px-6 md:px-7 py-3 rounded-xl md:rounded-full transition-all text-xs uppercase tracking-wider shadow-md cursor-pointer flex-shrink-0"
               >
                 {(searchQuery || (regionSelected !== 'Toutes régions' && regionSelected !== '') || contratFilter !== 'Tous') ? 'Réinitialiser' : 'Rechercher'}
               </button>
@@ -302,40 +300,39 @@ export default function Landing() {
 
           </div>
 
-          {/* Filtres de contrats INTERACTIFS sous forme de tags discrets centrés */}
-          {/* 💡 Les marges géantes (mb-24 lg:mb-36) repoussent les cartes sous la ligne de flottaison */}
-          <div className="flex flex-wrap justify-center gap-3 mb-24 lg:mb-36 text-sm font-bold">
+          {/* Filtres de contrats avec espacement fluide */}
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10 md:mb-14 text-xs sm:text-sm font-bold">
             <button 
               onClick={() => setContratFilter('Tous')}
-              className={`px-5 py-2.5 rounded-full flex items-center gap-3 transition-colors cursor-pointer border ${
+              className={`px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full flex items-center gap-2 sm:gap-3 transition-colors cursor-pointer border ${
                 contratFilter === 'Tous' 
                   ? 'bg-gray-100 border-gray-200 text-[#041619]' 
                   : 'bg-white border-gray-200 text-gray-400 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
-              Postes ouverts <span className={`px-2.5 py-0.5 rounded-full text-xs ${contratFilter === 'Tous' ? 'bg-white text-[#041619] shadow-sm' : 'bg-gray-50 text-gray-400 border border-gray-100'}`}>{offres.length}</span>
+              Postes ouverts <span className={`px-2 py-0.5 rounded-full text-[11px] ${contratFilter === 'Tous' ? 'bg-white text-[#041619] shadow-sm' : 'bg-gray-50 text-gray-400 border border-gray-100'}`}>{offres.length}</span>
             </button>
             
             <button 
               onClick={() => setContratFilter('CDI_CDD')}
-              className={`px-5 py-2.5 rounded-full flex items-center gap-3 transition-colors cursor-pointer border ${
+              className={`px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full flex items-center gap-2 sm:gap-3 transition-colors cursor-pointer border ${
                 contratFilter === 'CDI_CDD' 
                   ? 'bg-gray-100 border-gray-200 text-[#041619]' 
                   : 'bg-white border-gray-200 text-gray-400 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
-              CDI & CDD <span className={`px-2.5 py-0.5 rounded-full text-xs ${contratFilter === 'CDI_CDD' ? 'bg-white text-[#041619] shadow-sm' : 'bg-gray-50 text-gray-400 border border-gray-100'}`}>{offres.filter(o => ['CDI', 'CDD'].includes(o.typeContrat)).length}</span>
+              CDI & CDD <span className={`px-2 py-0.5 rounded-full text-[11px] ${contratFilter === 'CDI_CDD' ? 'bg-white text-[#041619] shadow-sm' : 'bg-gray-50 text-gray-400 border border-gray-100'}`}>{offres.filter(o => ['CDI', 'CDD'].includes(o.typeContrat)).length}</span>
             </button>
             
             <button 
               onClick={() => setContratFilter('Stage')}
-              className={`px-5 py-2.5 rounded-full flex items-center gap-3 transition-colors cursor-pointer border ${
+              className={`px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full flex items-center gap-2 sm:gap-3 transition-colors cursor-pointer border ${
                 contratFilter === 'Stage' 
                   ? 'bg-gray-100 border-gray-200 text-[#041619]' 
                   : 'bg-white border-gray-200 text-gray-400 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
-              Stages <span className={`px-2.5 py-0.5 rounded-full text-xs ${contratFilter === 'Stage' ? 'bg-white text-[#041619] shadow-sm' : 'bg-gray-50 text-gray-400 border border-gray-100'}`}>{offres.filter(o => o.typeContrat === 'Stage').length}</span>
+              Stages <span className={`px-2 py-0.5 rounded-full text-[11px] ${contratFilter === 'Stage' ? 'bg-white text-[#041619] shadow-sm' : 'bg-gray-50 text-gray-400 border border-gray-100'}`}>{offres.filter(o => o.typeContrat === 'Stage').length}</span>
             </button>
           </div>
 
@@ -380,7 +377,7 @@ export default function Landing() {
                     return (
                       <div 
                         key={offre._id} 
-                        className="bg-[#08282d] border border-transparent rounded-[2rem] p-7 shadow-[0_15px_40px_rgba(4,22,25,0.08)] hover:shadow-[0_20px_50px_rgba(4,22,25,0.15)] hover:border-[#00f098]/30 hover:-translate-y-2 transition-all duration-500 flex flex-col group relative overflow-hidden"
+                        className="bg-[#08282d] border border-transparent rounded-2xl sm:rounded-[2rem] p-5 sm:p-7 shadow-[0_15px_40px_rgba(4,22,25,0.08)] hover:shadow-[0_20px_50px_rgba(4,22,25,0.15)] hover:border-[#00f098]/30 hover:-translate-y-2 transition-all duration-500 flex flex-col group relative overflow-hidden"
                       >
                         {/* Subtil reflet de lumière au survol */}
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -440,8 +437,8 @@ export default function Landing() {
                           )}
                         </div>
 
-                        {/* 📊 4. TABLEAU 3 COLONNES OPPORTUNITÉS221 (Localisation, Publication, Rémunération) */}
-                        <div className="grid grid-cols-3 gap-3 border-t border-b border-white/5 py-3.5 my-3">
+                        {/* 📊 4. TABLEAU 3 COLONNES ADAPTATIF */}
+                        <div className="grid grid-cols-3 gap-2 sm:gap-3 border-t border-b border-white/5 py-3 my-3 text-[11px] sm:text-xs">
                           
                           {/* Colonne 1 : Localisation (avec retours à la ligne naturels) */}
                           <div className="min-w-0">

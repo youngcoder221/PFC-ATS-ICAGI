@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Bell, Search, LogOut, User, CheckCircle, Clock, X } from 'lucide-react'
+import { Bell, Search, LogOut, User, CheckCircle, Clock, X, Menu } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import api from '../../services/api'
 
@@ -13,7 +13,7 @@ const pageTitles = {
 const initialesDe = (prenom, nom) =>
   `${prenom?.[0] || ''}${nom?.[0] || ''}`.toUpperCase()
 
-export default function Topbar() {
+export default function Topbar({ onToggleMenu }) {
   const location              = useLocation()
   const navigate              = useNavigate()
   const { user, logout }      = useAuth()
@@ -26,7 +26,6 @@ export default function Topbar() {
 
   const page = pageTitles[location.pathname] || { title: 'ATS', sub: '' }
 
-  // Charger les notifications selon le rôle
   useEffect(() => {
     // eslint-disable-next-line react-hooks/immutability
     chargerNotifs()
@@ -85,14 +84,26 @@ export default function Topbar() {
   }
 
   return (
-    <header className="sticky top-0 z-40 h-16 flex items-center gap-4 px-6 bg-[#0b1a19]/95 backdrop-blur-md border-b border-white/5 shadow-sm">
+    <header className="sticky top-0 z-30 h-16 flex items-center justify-between gap-3 px-4 sm:px-6 bg-[#0b1a19]/95 backdrop-blur-md border-b border-white/5 shadow-sm">
 
-      {/* Titre de page */}
-      <div>
-        <h1 className="text-[16px] font-semibold text-white">{page.title}</h1>
-        <p className="text-[11px] text-gray-500 mt-0.5">
-          ATS / <span className="text-[#00f098]">{page.sub}</span>
-        </p>
+      <div className="flex items-center gap-3 min-w-0">
+        {/* Bouton Hamburger visible uniquement sur mobile/tablette */}
+        <button
+          type="button"
+          onClick={onToggleMenu}
+          className="md:hidden p-2 rounded-xl bg-[#041619] border border-white/10 text-gray-400 hover:text-[#00f098] transition-colors cursor-pointer flex-shrink-0"
+          title="Ouvrir le menu"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+
+        {/* Titre de page adaptatif */}
+        <div className="min-w-0">
+          <h1 className="text-sm sm:text-[16px] font-semibold text-white truncate">{page.title}</h1>
+          <p className="text-[10px] sm:text-[11px] text-gray-500 truncate">
+            ATS / <span className="text-[#00f098]">{page.sub}</span>
+          </p>
+        </div>
       </div>
 
       {/* Recherche */}

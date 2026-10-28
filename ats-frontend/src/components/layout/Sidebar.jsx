@@ -3,7 +3,7 @@ import { useAuth } from '../../context/AuthContext'
 import logo from '../../assets/logo-icon-small.png'
 import {
   LayoutDashboard, Briefcase, FileText,
-  Users, LogOut, ChevronRight, Shield
+  Users, LogOut, ChevronRight, Shield, X
 } from 'lucide-react'
 
 const menuAdmin = [
@@ -24,7 +24,7 @@ const menuCandidat = [
   { label: 'Mes candidatures', icon: FileText,         path: '/candidat', tab: 'candidatures' },
 ]
 
-export default function Sidebar() {
+export default function Sidebar({ mobileMenuOpen, setMobileMenuOpen }) {
   const { user, logout }       = useAuth()
   const navigate               = useNavigate()
   const location               = useLocation()
@@ -53,25 +53,50 @@ export default function Sidebar() {
     } else {
       navigate(item.path)
     }
+    // Ferme automatiquement le tiroir sur mobile après sélection
+    if (setMobileMenuOpen) setMobileMenuOpen(false)
   }
 
   return (
-    <aside className="w-64 min-h-screen bg-[#0b1a19] border-r border-white/5 flex flex-col flex-shrink-0 select-none">
+    <>
+      {/* Fond sombre transparent pour fermer le menu au clic extérieur (Mobile) */}
+      {mobileMenuOpen && (
+        <div 
+          onClick={() => setMobileMenuOpen && setMobileMenuOpen(false)}
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 md:hidden transition-opacity"
+        />
+      )}
 
-      {/* Logo */}
-      <div className="p-6 border-b border-gray-800">
-        <div className="flex items-center gap-3">
-          <img
-            src={logo}
-            alt="ATS Platform"
-            className="w-9 h-9 object-contain"
-          />
-          <div>
-            <h1 className="text-white font-bold text-sm tracking-tight">ATS Platform</h1>
-            <p className="text-gray-500 text-xs capitalize">{user?.role}</p>
+      {/* Barre latérale : tiroir coulissant z-50 sur mobile, fixe w-64 sur desktop (md:) */}
+      <aside className={`
+        fixed inset-y-0 left-0 z-50 w-64 min-h-screen bg-[#0b1a19] border-r border-white/5 flex flex-col select-none transition-transform duration-300 ease-in-out
+        ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
+        md:translate-x-0 md:static md:flex-shrink-0
+      `}>
+
+        {/* En-tête Logo + Bouton fermer sur mobile */}
+        <div className="p-5 sm:p-6 border-b border-gray-800 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img
+              src={logo}
+              alt="ATS Platform"
+              className="w-9 h-9 object-contain"
+            />
+            <div>
+              <h1 className="text-white font-bold text-sm tracking-tight">ATS Platform</h1>
+              <p className="text-gray-500 text-xs capitalize">{user?.role}</p>
+            </div>
           </div>
+
+          {/* Bouton X de fermeture visible uniquement sur mobile */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen && setMobileMenuOpen(false)}
+            className="md:hidden p-1.5 rounded-lg bg-[#041619] border border-white/10 text-gray-400 hover:text-white"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
-      </div>
 
       {/* Menu */}
       <nav className="flex-1 p-4 space-y-1">
@@ -116,6 +141,7 @@ export default function Sidebar() {
         </button>
       </div>
 
-    </aside>
+      </aside>
+    </>
   )
 }
