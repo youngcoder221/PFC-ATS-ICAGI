@@ -219,7 +219,7 @@ export default function Landing() {
           <div className="max-w-4xl mx-auto mb-5 relative" id="region-dropdown-container">
             <div className="bg-white border border-gray-200 hover:border-gray-300 hover:shadow-md rounded-2xl md:rounded-full p-2.5 md:p-2 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col md:flex-row items-center gap-2 transition-all duration-300">
               
-              {/* Champ de recherche texte */}
+              {/* Champ de recherche texte avec fermeture automatique du dropdown */}
               <div className="flex-1 flex items-center gap-3 px-3.5 md:px-5 py-2 w-full">
                 <Search className="w-4 h-4 text-[#041619] flex-shrink-0" />
                 <input
@@ -227,6 +227,7 @@ export default function Landing() {
                   placeholder="Poste, entreprise, compétence..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setIsDropdownOpen(false)}
                   className="w-full bg-transparent border-none outline-none text-gray-900 placeholder-gray-400 font-medium text-sm"
                 />
               </div>
@@ -267,9 +268,9 @@ export default function Landing() {
                 )}
               </div>
 
-              {/* Bouton d'action adaptatif */}
+              {/* Bouton d'action */}
               <button 
-                onClick={() => { setSearchQuery(''); setRegionSelected('Toutes régions'); setContratFilter('Tous'); }}
+                onClick={() => { setSearchQuery(''); setRegionSelected('Toutes régions'); setContratFilter('Tous'); setIsDropdownOpen(false); }}
                 className="w-full md:w-auto bg-[#041619] hover:bg-[#0b1a19] text-white font-black px-6 md:px-7 py-3 rounded-xl md:rounded-full transition-all text-xs uppercase tracking-wider shadow-md cursor-pointer flex-shrink-0"
               >
                 {(searchQuery || (regionSelected !== 'Toutes régions' && regionSelected !== '') || contratFilter !== 'Tous') ? 'Réinitialiser' : 'Rechercher'}
